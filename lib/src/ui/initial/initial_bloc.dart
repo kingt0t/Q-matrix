@@ -16,9 +16,9 @@
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:matrix_sdk/matrix_sdk.dart';
-import 'package:pattle/src/ui/main/overview/models/chat_overview.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:pattle/src/di.dart' as di;
+import 'package:pattle/src/push.dart' as push;
 import 'package:respect_24_hour/respect_24_hour.dart';
 
 final bloc = InitialBloc();
@@ -41,6 +41,7 @@ class InitialBloc {
 
     if (localUser != null) {
       di.registerLocalUser(localUser);
+      push.initializePushNotifications();
     }
 
     _loggedInSubj.add(localUser != null);

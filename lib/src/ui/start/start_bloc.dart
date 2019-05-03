@@ -19,6 +19,8 @@ import 'package:matrix_sdk/matrix_sdk.dart';
 import 'package:pattle/src/di.dart' as di;
 import 'package:rxdart/rxdart.dart';
 
+import 'package:pattle/src/push.dart' as push;
+
 final bloc = StartBloc();
 
 class StartBloc {
@@ -140,7 +142,7 @@ class StartBloc {
   Observable<LoginState> get loginStream
   => _loginSubj.stream;
 
-  void login(String password) {
+  void login(String password) async {
     _loginSubj.add(LoginState.trying);
 
     // If after three seconds it's still checking, change state to
@@ -153,16 +155,16 @@ class StartBloc {
       });
     });
 
-    homeserver.login(
-      _username,
-      password,
-      store: di.getStore()
-    )
-    .then((user) {
-      di.registerLocalUser(user);
-      _loginSubj.add(LoginState.succeeded);
-    })
-    .catchError((error) => _loginSubj.addError(error));
+    final user = await homeserver.login(
+          _username,
+            password,
+          store: di.getStore()
+    ).catchError((err){throw err;});
+    di.registerLocalUser(user);
+
+    await push.initializePushNotifications();
+
+    _loginSubj.add(LoginState.succeeded);
   }
 
 }

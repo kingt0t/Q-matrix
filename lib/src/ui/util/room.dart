@@ -26,7 +26,7 @@ import 'package:pattle/src/di.dart' as di;
 Uri avatarUrlOf(Room room)
   => room.avatarUrl ?? (room.isDirect ? room.directUser.avatarUrl : room.avatarUrl);
 
-FutureOr<String> nameOf(BuildContext context, Room room) {
+FutureOr<String> nameOf(Room room, {BuildContext context}) {
   if (room.name != null) {
     return room.name;
   }
@@ -40,7 +40,11 @@ FutureOr<String> nameOf(BuildContext context, Room room) {
     var name = '';
     if (members != null) {
       if (members.length == 1) {
-        return l(context).you;
+        if (context != null) {
+          return l(context).you;
+        } else {
+          return "You"; // TODO context in notif ??
+        }
         // TODO: Check for aliases (public chats)
       } else {
         final nonMeMembers = members = members

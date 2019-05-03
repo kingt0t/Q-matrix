@@ -37,7 +37,7 @@ class ChatName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureOrBuilder<String>(
-      futureOr: nameOf(context, room),
+      futureOr: nameOf(room, context: context),
       builder: (BuildContext context, String name) {
         return Text(name,
           overflow: TextOverflow.ellipsis,

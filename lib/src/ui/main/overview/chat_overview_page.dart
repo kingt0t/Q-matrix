@@ -29,6 +29,7 @@ import 'package:pattle/src/ui/util/matrix_image.dart';
 import 'package:pattle/src/ui/util/room.dart';
 import 'package:pattle/src/ui/util/user.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:pattle/src/notification.dart' as notif;
 
 import 'widgets/subtitle.dart';
 
@@ -151,7 +152,8 @@ class ChatOverviewPageState extends State<ChatOverviewPage> {
         ]
       ),
       dense: false,
-      onTap: () {
+      onTap: () async {
+        notif.dismissRoomNotifFirstEvent(chat.room);
         Navigator.pushNamed(context, Routes.chats, arguments: chat.room);
       },
       leading: avatar,
