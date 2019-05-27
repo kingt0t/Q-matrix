@@ -24,7 +24,7 @@ class ChatBloc {
 
   JoinedRoom room;
 
-  int _eventCount = 20;
+  int _eventCount = 50;
 
   PublishSubject<bool> _isLoadingEventsSubj = PublishSubject<bool>();
   Stream<bool> get isLoadingEvents => _isLoadingEventsSubj.stream.distinct();
@@ -49,28 +49,31 @@ class ChatBloc {
   Stream<List<ChatItem>> get items => _itemSubj.stream;
 
   Future<void> startLoadingEvents() async {
-    await loadEvents();
+    // Do a first load only from memory/disk
+    // A remote request can be longggg, especially during
+    // startup when the first sync happens at the same time
+    await loadEvents(false);
 
-    syncBloc.stream.listen((success) async => await loadEvents());
+    syncBloc.stream.listen((success) async => await loadEvents(true));
   }
 
   Future<void> requestMoreEvents() async {
     if (!_isLoading) {
       isLoading = true;
-      _eventCount += 30;
-      await loadEvents();
+      _eventCount += 50;
+      await loadEvents(true);
       isLoading = false;
     }
   }
 
-  Future<void> loadEvents() async {
+  Future<void> loadEvents(bool allowRemote) async {
     final chatItems = List<ChatItem>();
 
     // Get all rooms and push them as a single list
 
     // Remember: 'previous' is actually next in time
     RoomEvent previousEvent;
-    await for(RoomEvent event in room.timeline.upTo(_eventCount)) {
+    await for(RoomEvent event in room.timeline.upTo(_eventCount, allowRemote: allowRemote)) {
 
       if (event is RedactionEvent) {
         continue;
@@ -95,7 +98,7 @@ class ChatBloc {
     if (text.isNotEmpty) {
       // Refresh the list every time the sent state changes.
       await for (var sentState in room.send(TextMessage(body: text))) {
-        await loadEvents();
+        await loadEvents(false);
       }
     }
   }
