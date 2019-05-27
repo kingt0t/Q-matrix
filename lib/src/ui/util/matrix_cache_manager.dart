@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:pattle/src/di.dart' as di;
@@ -38,17 +39,24 @@ class MatrixCacheManager extends BaseCacheManager {
     return p.join(directory.path, key);
   }
 
+  Future<File> getThumbnailFile(String url, int width, int height) async {
+    return getSingleFile(url + ':::' + width.toString() + 'x' + height.toString() + ':::');
+  }
+
+  static RegExp _thumbnailUrlRe = new RegExp(r"(.+):::(\d+)x(\d+):::");
 
   static Future<FileFetcherResponse> _fetch(
-    String url, {Map<String, String> headers}) async {
-
-    final uri = Uri.parse(url);
+      String url, {Map<String, String> headers}) async {
     int width, height;
 
-    try {
-      width = int.parse(headers['width']);
-      height = int.parse(headers['height']);
-    } on FormatException { }
+    final m = _thumbnailUrlRe.firstMatch(url);
+    if (m != null) {
+      width = int.parse(m.group(2));
+      height = int.parse(m.group(3));
+      url = m.group(1);
+    }
+
+    final uri = Uri.parse(url);
 
     var bytes;
     if (width != null && height != null) {
@@ -57,7 +65,7 @@ class MatrixCacheManager extends BaseCacheManager {
         height: height
       );
     } else {
-      bytes = await homeserver.download(Uri.parse(url));
+      bytes = await homeserver.download(uri);
     }
 
     return MatrixFileFetcherResponse(bytes);

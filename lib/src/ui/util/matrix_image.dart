@@ -35,10 +35,12 @@ class MatrixImage extends ImageProvider<MatrixImage> {
   const MatrixImage(this.uri, {this.scale = 1.0, this.width, this.height});
 
   Future<Codec> _load(MatrixImage key) async {
-    final file = await cacheManager.getSingleFile(key.uri.toString(), headers: {
-      'width': key.width.toString(),
-      'height': key.height.toString()
-    });
+    var file;
+    if (width != null && height != null) {
+      file = await cacheManager.getThumbnailFile(key.uri.toString(), key.width, key.height);
+    } else {
+      file = await cacheManager.getSingleFile(key.uri.toString());
+    }
 
     if (file == null) {
       return null;
