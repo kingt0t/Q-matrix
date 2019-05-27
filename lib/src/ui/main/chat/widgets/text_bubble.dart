@@ -71,7 +71,7 @@ class TextBubble extends MessageBubble {
     final repliedId = event.content.inReplyToId;
     if (repliedId != null) {
       return FutureBuilder<Event>(
-        future: event.room.events[repliedId],
+        future: Future.value(event.room.events[repliedId]),
         builder: (BuildContext context, AsyncSnapshot<Event> snapshot) {
           final repliedTo = snapshot.data;
           if (repliedTo != null && repliedTo is TextMessageEvent) {
