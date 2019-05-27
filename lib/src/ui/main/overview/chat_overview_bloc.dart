@@ -36,10 +36,10 @@ class ChatOverviewBloc {
 
     // Get all rooms and push them as a single list
     await for(Room room in _user.rooms.all()) {
-      final latestEvent = await room.timeline.all()
+      final latestEvent = await room.timeline.upTo(20, allowRemote: false)
           .firstWhere((event) => event is! RedactionEvent, orElse: () => null);
 
-      var latestEventForSorting = await room.timeline.upTo(10)
+      var latestEventForSorting = await room.timeline.upTo(20, allowRemote: false)
           .firstWhere(
             (event) =>
               (event is! MemberChangeEvent
