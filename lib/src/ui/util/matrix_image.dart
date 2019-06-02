@@ -1,4 +1,5 @@
 // Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2019  Mathieu Velten
 //
 // This file is part of Pattle.
 //
@@ -29,15 +30,18 @@ class MatrixImage extends ImageProvider<MatrixImage> {
   final Uri uri;
 
   final double scale;
+  final bool roundThumbnail;
   final int width, height;
 
-  /// A Matrx image. If width and height are provided, downloads a thumbnail.
-  const MatrixImage(this.uri, {this.scale = 1.0, this.width, this.height});
+  /// A Matrix image. roundThumbnail will provide a round transparent thumbnail.
+  /// If width and height are provided, downloads a thumbnail of this size,
+  /// can be used in combination with roundThumbnail.
+  const MatrixImage(this.uri, {this.scale = 1.0, this.roundThumbnail = false, this.width, this.height});
 
   Future<Codec> _load(MatrixImage key) async {
     var file;
-    if (width != null && height != null) {
-      file = await cacheManager.getThumbnailFile(key.uri.toString(), key.width, key.height);
+    if (roundThumbnail || (width != null && height != null)) {
+      file = await cacheManager.getThumbnailFile(key.uri.toString(), round: roundThumbnail, width: width, height: height);
     } else {
       file = await cacheManager.getSingleFile(key.uri.toString());
     }

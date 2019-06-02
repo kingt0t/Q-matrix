@@ -1,4 +1,5 @@
 // Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2019  Mathieu Velten
 //
 // This file is part of Pattle.
 //
@@ -14,8 +15,6 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:pattle/src/app.dart';
 import 'package:pattle/src/ui/main/overview/models/chat_overview.dart';
@@ -28,7 +27,6 @@ import 'package:pattle/src/ui/util/date_format.dart';
 import 'package:pattle/src/ui/util/matrix_image.dart';
 import 'package:pattle/src/ui/util/room.dart';
 import 'package:pattle/src/ui/util/user.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 import 'widgets/subtitle.dart';
 
@@ -108,13 +106,10 @@ class ChatOverviewPageState extends State<ChatOverviewPage> {
         child: Container(
           width: 48,
           height: 48,
-          child: ClipOval(
-            child: FadeInImage(
+          child: Image(
               fit: BoxFit.cover,
-              placeholder: MemoryImage(kTransparentImage),
-              image: MatrixImage(avatarUrl, width: 64, height: 64)
+              image: MatrixImage(avatarUrl, roundThumbnail: true)
             )
-          ),
         ),
       );
     } else {
