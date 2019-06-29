@@ -18,39 +18,49 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
+import 'package:pattle/src/ui/main/chat/image/image_bloc.dart';
 import 'package:pattle/src/ui/util/date_format.dart';
 import 'package:pattle/src/ui/util/user.dart';
 import 'package:pattle/src/ui/util/matrix_image.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 import 'package:pattle/src/di.dart' as di;
 
 class ImagePageState extends State<ImagePage> {
 
   final me = di.getLocalUser();
+  ImageBloc bloc;
   final ImageMessageEvent message;
 
-  ImagePageState(this.message);
+  var _messageSender;
+  var _date;
+
+  ImagePageState(this.message) {
+    bloc = ImageBloc(message);
+    bloc.room = message.room;
+  }
 
   @override
   void initState() {
     super.initState();
+    bloc.startLoadingEvents();
+    _messageSender = message.sender;
+  }
+
+  @override
+  void didChangeDependencies() {
+    _date =
+      '${formatAsDate(context, message.time)}, ${formatAsTime(message.time)}';
   }
 
   @override
   Widget build(BuildContext context) {
-    final date =
-      '${formatAsDate(context, message.time)}, ${formatAsTime(message.time)}';
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: <Widget>[
-          PhotoView(
-            imageProvider: MatrixImage(message.content.url),
-            heroTag: message.id,
-            minScale: PhotoViewComputedScale.contained,
-          ),
+          _buildPhotoViewList(),
           Positioned(
             top: 0,
             left: 0,
@@ -60,10 +70,10 @@ class ImagePageState extends State<ImagePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(displayNameOf(message.sender)),
+                  Text(displayNameOf(_messageSender)),
                   SizedBox(height: 2),
                   Text(
-                    date,
+                    _date,
                     style: Theme.of(context).textTheme.body1.copyWith(
                       color: Colors.white,
                     )
@@ -75,6 +85,43 @@ class ImagePageState extends State<ImagePage> {
           )
         ]
       )
+    );
+  }
+
+  Widget _buildPhotoViewList() {
+    return StreamBuilder<List<ImageMessageEvent>>(
+      stream: bloc.events,
+      builder: (BuildContext context, AsyncSnapshot<List<ImageMessageEvent>> snapshot) {
+        switch(snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return Center(child: CircularProgressIndicator());
+          case ConnectionState.active:
+          case ConnectionState.done:
+            var events = snapshot.data;
+            print(snapshot.data.toString());
+            return PhotoViewGallery.builder(
+              itemCount: events.length,
+              builder: (context, index) {
+                return PhotoViewGalleryPageOptions(
+                  imageProvider: MatrixImage(events[index].content.url),
+                  heroTag: message.id,
+                  minScale: PhotoViewComputedScale.contained
+                );
+              },
+              onPageChanged: (index) {
+                setState(() {
+                  _messageSender = events[index].sender;
+    _date =
+      '${formatAsDate(context, events[index].time)}, ${formatAsTime(events[index].time)}';
+                });
+                //(index) => _messageSender = events[index].sender
+              },
+              pageController: 
+                  PageController(initialPage: events.indexOf(message))
+            );
+        }
+      }
     );
   }
 }
