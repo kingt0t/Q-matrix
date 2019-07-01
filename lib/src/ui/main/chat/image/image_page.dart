@@ -112,8 +112,9 @@ class ImagePageState extends State<ImagePage> {
               onPageChanged: (index) {
                 setState(() {
                   _messageSender = events[index].sender;
-    _date =
-      '${formatAsDate(context, events[index].time)}, ${formatAsTime(events[index].time)}';
+                  _date =
+                    '${formatAsDate(context, events[index].time)},
+                        ${formatAsTime(events[index].time)}';
                 });
                 //(index) => _messageSender = events[index].sender
               },
