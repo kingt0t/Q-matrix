@@ -98,7 +98,7 @@ class ImagePageState extends State<ImagePage> {
             return Center(child: CircularProgressIndicator());
           case ConnectionState.active:
           case ConnectionState.done:
-            var events = snapshot.data;
+            final events = snapshot.data;
             return PhotoViewGallery.builder(
               itemCount: events.length,
               builder: (context, index) {
