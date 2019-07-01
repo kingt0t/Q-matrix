@@ -12,8 +12,6 @@ class ImageBloc {
 
   ImageBloc(this.event);
 
-  int _eventCount = 500;
-
   PublishSubject<bool> _isLoadingEventsSubj = PublishSubject<bool>();
   Stream<bool> get isLoadingEvents => _isLoadingEventsSubj.stream.distinct();
 
@@ -43,20 +41,11 @@ class ImageBloc {
     syncBloc.stream.listen((success) async => await loadEvents());
   }
 
-  Future<void> requestMoreEvents() async {
-    if (!_isLoading) {
-      isLoading = true;
-      _eventCount += 10;
-      await loadEvents();
-      isLoading = false;
-    }
-  }
-
   Future<void> loadEvents() async {
     final imageMessageEvents = List<ImageMessageEvent>();
 
     RoomEvent event;
-    await for (event in room.timeline.upTo(count: _eventCount)) {
+    await for (event in room.timeline.retrieveAll()) {
       if (event is ImageMessageEvent) {
         imageMessageEvents.add(event);
       }
