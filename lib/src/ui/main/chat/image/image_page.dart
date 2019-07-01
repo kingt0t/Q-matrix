@@ -115,7 +115,6 @@ class ImagePageState extends State<ImagePage> {
                     '${formatAsDate(context, events[index].time)},
                         ${formatAsTime(events[index].time)}';
                 });
-                //(index) => _messageSender = events[index].sender
               },
               pageController: 
                   PageController(initialPage: events.indexOf(message))
