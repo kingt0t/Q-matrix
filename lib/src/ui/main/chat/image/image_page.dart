@@ -99,7 +99,6 @@ class ImagePageState extends State<ImagePage> {
           case ConnectionState.active:
           case ConnectionState.done:
             var events = snapshot.data;
-            print(snapshot.data.toString());
             return PhotoViewGallery.builder(
               itemCount: events.length,
               builder: (context, index) {
