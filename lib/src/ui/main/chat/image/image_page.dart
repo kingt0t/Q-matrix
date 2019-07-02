@@ -1,5 +1,5 @@
 // Copyright (C) 2019  Wilko Manger
-// Copyright (c) 2019  Nathan van Beelen
+// Copyright (C) 2019  Nathan van Beelen (CLA signed)
 //
 // This file is part of Pattle.
 //
