@@ -102,6 +102,7 @@ class ImagePageState extends State<ImagePage> {
             final events = snapshot.data;
             return PhotoViewGallery.builder(
               itemCount: events.length,
+              reverse: true,
               builder: (context, index) {
                 return PhotoViewGalleryPageOptions(
                   imageProvider: MatrixImage(events[index].content.url),
