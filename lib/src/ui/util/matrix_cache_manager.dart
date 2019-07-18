@@ -50,19 +50,28 @@ class MatrixCacheManager extends BaseCacheManager {
       height = int.parse(headers['height']);
     } on FormatException { }
 
-    var bytes;
+    Stream<List<int>> stream;
     if (width != null && height != null) {
-      bytes = await homeserver.downloadThumbnail(
+      stream = await homeserver.downloadThumbnail(
         parsedUrl,
         width: width,
         height: height
       );
     } else {
-      bytes = await homeserver.download(parsedUrl);
+      stream = await homeserver.download(parsedUrl);
     }
 
-    return MatrixFileFetcherResponse(bytes);
+    return MatrixFileFetcherResponse(await consumeStream(stream));
   }
+}
+
+// TODO implements streams in cache manager to avoid that
+Future<Uint8List> consumeStream(Stream<List<int>> stream) async {
+  final bytes = List<int>();
+  await stream.forEach((d) {
+    bytes.addAll(d);
+  });
+  return Uint8List.fromList(bytes);
 }
 
 class MatrixFileFetcherResponse implements FileFetcherResponse {
