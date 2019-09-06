@@ -51,8 +51,9 @@
   root of the project. You can just `cp .env.example .env`, because
   Sentry is not used in debug mode.
 
-  Since Pattle uses the beta branch of the Flutter SDK, make sure to switch
-  to this branch by running `flutter channel beta`. 
+  Since Pattle uses the beta branch of the Flutter, make sure to
+  switch to this branch by running `flutter channel beta`. Then,
+  run `flutter upgrade`.
 
   After the Flutter SDK is setup and ready, you can build Pattle with:
   `flutter build apk` for Android, or
