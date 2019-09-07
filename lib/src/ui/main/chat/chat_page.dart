@@ -147,13 +147,21 @@ class ChatPageState extends State<ChatPage> {
           ),
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          ErrorBanner(),
-          Expanded(
-            child: _buildBody(),
-          )
-        ],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage("https://www.loudwallpapers.com/wp-content/uploads/2018/12/pine-trees-background-for-mobile-phone.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: <Widget>[
+            ErrorBanner(),
+            Expanded(
+              child: _buildBody(),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -177,16 +185,17 @@ class ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildInput() {
-    const elevation = 8.0;
+    const elevation = 0.0;
 
     if (bloc.room is JoinedRoom) {
       return Material(
         elevation: elevation,
-        color: chatBackgroundColor(context),
+        //color: chatBackgroundColor(context),
+        color: Colors.transparent,
         // On dark theme, draw a divider line because the shadow is gone
-        shape: Theme.of(context).brightness == Brightness.dark
-            ? Border(top: BorderSide(color: Colors.grey[800]))
-            : null,
+        //shape: Theme.of(context).brightness == Brightness.dark
+        //    ? Border(top: BorderSide(color: Colors.grey[800]))
+        //    : null,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Material(
