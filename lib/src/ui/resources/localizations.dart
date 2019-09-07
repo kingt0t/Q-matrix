@@ -109,6 +109,7 @@ class Strings {
   final brightness = 'Brightness';
   final light = 'Light';
   final dark = 'Dark';
+  final background = 'Background picture';
 
   final editNameDescription = 'This is not your username.'
       ' This is the name that will be visible to others.';

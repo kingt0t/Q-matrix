@@ -1,4 +1,5 @@
 // Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2019  Nathan van Beelen
 //
 // This file is part of Pattle.
 //
@@ -71,6 +72,14 @@ class AppearancePageState extends State<AppearancePage> {
               DynamicTheme.of(context).setBrightness(brightness);
             },
             title: Text(l(context).dark),
+          ),
+          Divider(height: 1),
+          ListTile(
+            leading: Icon(
+              Icons.image,
+              color: redOnBackground(context),
+            ),
+            title: Header(l(context).background),
           ),
           Divider(height: 1)
         ],
