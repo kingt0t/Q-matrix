@@ -77,6 +77,11 @@ class ImageCropPageState extends State<ImageCropPage> {
       area: area,
     );
 
+    final directory = await getApplicationDocumentsDirectory();
+    final extension = croppedImage.path.split('.').last;
+    final path = directory.path + 'background' + '.' + extension;
+    croppedImage.copy(path);
+
     Navigator.pop(context);
   }
 }
