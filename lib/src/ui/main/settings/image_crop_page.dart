@@ -19,6 +19,7 @@ import 'dart:core';
 
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_crop/image_crop.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pattle/src/app_bloc.dart';
@@ -84,6 +85,7 @@ class ImageCropPageState extends State<ImageCropPage> {
     final path = directory.path + 'background' + '.' + extension;
     croppedImage.copy(path);
     AppBloc().storage[_chatBackgroundImagePath] = path;
+    imageCache.clear();
 
     Navigator.pop(context);
   }
