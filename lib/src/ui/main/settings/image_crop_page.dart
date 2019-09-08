@@ -21,12 +21,14 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:image_crop/image_crop.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pattle/src/app_bloc.dart';
 import 'package:pattle/src/ui/resources/localizations.dart';
 import 'package:pattle/src/ui/resources/theme.dart';
 
 import 'package:pattle/src/ui/main/settings/widgets/header.dart';
 
 class ImageCropPageState extends State<ImageCropPage> {
+  final String _chatBackgroundImagePath = 'chat_background_image_path';
   final cropKey = GlobalKey<CropState>();
 
   @override
@@ -81,6 +83,7 @@ class ImageCropPageState extends State<ImageCropPage> {
     final extension = croppedImage.path.split('.').last;
     final path = directory.path + 'background' + '.' + extension;
     croppedImage.copy(path);
+    AppBloc().storage[_chatBackgroundImagePath] = path;
 
     Navigator.pop(context);
   }

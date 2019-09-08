@@ -15,12 +15,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 import 'package:pattle/src/app.dart';
+import 'package:pattle/src/app_bloc.dart';
 import 'package:pattle/src/ui/main/chat/chat_bloc.dart';
 import 'package:pattle/src/ui/main/chat/util/typing_span.dart';
 import 'package:pattle/src/ui/main/chat/widgets/date_header.dart';
@@ -41,6 +44,7 @@ import 'package:pattle/src/ui/util/room.dart';
 import 'widgets/bubble.dart';
 
 class ChatPageState extends State<ChatPage> {
+  final String _chatBackgroundImagePath = 'chat_background_image_path';
   final me = di.getLocalUser();
   final ChatBloc bloc;
   final Room room;
@@ -150,7 +154,7 @@ class ChatPageState extends State<ChatPage> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage("https://www.loudwallpapers.com/wp-content/uploads/2018/12/pine-trees-background-for-mobile-phone.jpg"),
+            image: FileImage(File(AppBloc().storage[_chatBackgroundImagePath])),
             fit: BoxFit.cover,
           ),
         ),
