@@ -18,8 +18,10 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:pattle/src/ui/main/settings/settings_bloc.dart';
+import 'package:pattle/src/ui/main/settings/image_crop_page.dart';
 import 'package:pattle/src/ui/resources/localizations.dart';
 import 'package:pattle/src/ui/resources/theme.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:pattle/src/ui/main/settings/widgets/header.dart';
 
@@ -80,9 +82,19 @@ class AppearancePageState extends State<AppearancePage> {
               color: redOnBackground(context),
             ),
             title: Header(l(context).background),
+            onTap: () => _selectBackground()
           ),
           Divider(height: 1)
         ],
+      ),
+    );
+  }
+
+  Future<void> _selectBackground() async {
+    final file = await ImagePicker.pickImage(source: ImageSource.gallery);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ImageCropPage(image: file),
       ),
     );
   }

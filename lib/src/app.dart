@@ -1,4 +1,5 @@
 // Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2019  Nathan van Beelen
 //
 // This file is part of Pattle.
 //
@@ -25,6 +26,7 @@ import 'package:pattle/src/ui/main/chat/image/image_page.dart';
 import 'package:pattle/src/ui/main/chat/settings/chat_settings_page.dart';
 import 'package:pattle/src/ui/main/overview/chat_overview_page.dart';
 import 'package:pattle/src/ui/main/settings/appearance_page.dart';
+import 'package:pattle/src/ui/main/settings/image_crop_page.dart';
 import 'package:pattle/src/ui/resources/localizations.dart';
 import 'package:pattle/src/ui/resources/theme.dart';
 import 'package:pattle/src/ui/start/advanced_page.dart';
@@ -58,6 +60,10 @@ final routes = {
         settings: RouteSettings(name: Routes.settingsAppearance),
         builder: (context) => AppearancePage(),
       ),
+  Routes.settingsImageCrop: (Object params) => MaterialPageRoute(
+        settings: RouteSettings(name: Routes.settingsImageCrop),
+        builder: (context) => ImageCropPage(),
+        ),
   Routes.chats: (Object arguments) => MaterialPageRoute(
         settings: RouteSettings(name: Routes.chats),
         builder: (context) =>
@@ -104,6 +110,7 @@ class Routes {
   static const settingsProfile = '/settings/profile';
   static const settingsProfileName = '/settings/profile/name';
   static const settingsAppearance = '/settings/appearance';
+  static const settingsImageCrop = '/settings/imagecrop';
   static const chats = '/chats';
   static const chatsSettings = '/chats/settings';
   static const image = '/image';
