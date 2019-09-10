@@ -22,7 +22,6 @@ import 'package:image_crop/image_crop.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pattle/src/app_bloc.dart';
 import 'package:pattle/src/ui/resources/localizations.dart';
-import 'package:pattle/src/ui/resources/theme.dart';
 
 class ImageCropPageState extends State<ImageCropPage> {
   final String _chatBackgroundImagePath = 'chat_background_image_path';
