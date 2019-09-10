@@ -15,6 +15,7 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
+import 'dart:io';
 
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -60,10 +61,11 @@ final routes = {
         settings: RouteSettings(name: Routes.settingsAppearance),
         builder: (context) => AppearancePage(),
       ),
-  Routes.settingsImageCrop: (Object params) => MaterialPageRoute(
+  Routes.settingsImageCrop: (Object arguments) => MaterialPageRoute(
         settings: RouteSettings(name: Routes.settingsImageCrop),
-        builder: (context) => ImageCropPage(),
-        ),
+        builder: (context) => arguments is File 
+            ? ImageCropPage(image: arguments) : AppearancePage(),
+       ),
   Routes.chats: (Object arguments) => MaterialPageRoute(
         settings: RouteSettings(name: Routes.chats),
         builder: (context) =>

@@ -17,16 +17,12 @@
 import 'dart:io';
 import 'dart:core';
 
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_crop/image_crop.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pattle/src/app_bloc.dart';
 import 'package:pattle/src/ui/resources/localizations.dart';
 import 'package:pattle/src/ui/resources/theme.dart';
-
-import 'package:pattle/src/ui/main/settings/widgets/header.dart';
 
 class ImageCropPageState extends State<ImageCropPage> {
   final String _chatBackgroundImagePath = 'chat_background_image_path';
@@ -72,7 +68,6 @@ class ImageCropPageState extends State<ImageCropPage> {
   }
 
   Future<void> _cropImage() async {
-    final scale = cropKey.currentState.scale;
     final area = cropKey.currentState.area;
 
     final croppedImage = await ImageCrop.cropImage(
@@ -83,7 +78,7 @@ class ImageCropPageState extends State<ImageCropPage> {
     final directory = await getApplicationDocumentsDirectory();
     final extension = croppedImage.path.split('.').last;
     final path = directory.path + 'background' + '.' + extension;
-    croppedImage.copy(path);
+    await croppedImage.copy(path);
     AppBloc().storage[_chatBackgroundImagePath] = path;
     imageCache.clear();
 

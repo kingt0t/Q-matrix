@@ -17,6 +17,7 @@
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:pattle/src/app.dart';
 import 'package:pattle/src/ui/main/settings/settings_bloc.dart';
 import 'package:pattle/src/ui/main/settings/image_crop_page.dart';
 import 'package:pattle/src/ui/resources/localizations.dart';
@@ -92,11 +93,7 @@ class AppearancePageState extends State<AppearancePage> {
 
   Future<void> _selectBackground() async {
     final file = await ImagePicker.pickImage(source: ImageSource.gallery);
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ImageCropPage(image: file),
-      ),
-    );
+    Navigator.of(context).pushNamed(Routes.settingsImageCrop, arguments: file);
   }
 }
 
