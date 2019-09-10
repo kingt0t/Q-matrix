@@ -40,10 +40,10 @@ class ImageCropPageState extends State<ImageCropPage> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height 
-        - MediaQuery.of(context).padding.bottom
-        - MediaQuery.of(context).padding.top
-        - kToolbarHeight;
+    final screenHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        MediaQuery.of(context).padding.top -
+        kToolbarHeight;
 
     return Scaffold(
       appBar: AppBar(
@@ -56,13 +56,12 @@ class ImageCropPageState extends State<ImageCropPage> {
         ],
       ),
       body: Container(
-        color: Colors.black,
-        child: Crop.file(
-          widget.image,
-          key: cropKey,
-          aspectRatio: screenWidth / screenHeight,
-        )
-      ),
+          color: Colors.black,
+          child: Crop.file(
+            widget.image,
+            key: cropKey,
+            aspectRatio: screenWidth / screenHeight,
+          )),
     );
   }
 
@@ -88,7 +87,7 @@ class ImageCropPageState extends State<ImageCropPage> {
 class ImageCropPage extends StatefulWidget {
   final File image;
 
-  ImageCropPage({Key key, @required this.image}): super(key: key);
+  ImageCropPage({Key key, @required this.image}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ImageCropPageState();

@@ -76,13 +76,12 @@ class AppearancePageState extends State<AppearancePage> {
           ),
           Divider(height: 1),
           ListTile(
-            leading: Icon(
-              Icons.image,
-              color: redOnBackground(context),
-            ),
-            title: Header(l(context).background),
-            onTap: () => _selectBackground()
-          ),
+              leading: Icon(
+                Icons.image,
+                color: redOnBackground(context),
+              ),
+              title: Header(l(context).background),
+              onTap: () => _selectBackground()),
           Divider(height: 1)
         ],
       ),

@@ -63,9 +63,10 @@ final routes = {
       ),
   Routes.settingsImageCrop: (Object arguments) => MaterialPageRoute(
         settings: RouteSettings(name: Routes.settingsImageCrop),
-        builder: (context) => arguments is File 
-            ? ImageCropPage(image: arguments) : AppearancePage(),
-       ),
+        builder: (context) => arguments is File
+            ? ImageCropPage(image: arguments)
+            : AppearancePage(),
+      ),
   Routes.chats: (Object arguments) => MaterialPageRoute(
         settings: RouteSettings(name: Routes.chats),
         builder: (context) =>
