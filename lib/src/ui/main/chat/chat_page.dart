@@ -1,4 +1,5 @@
 // Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2019  Nathan van Beelen
 //
 // This file is part of Pattle.
 //
