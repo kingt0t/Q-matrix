@@ -189,17 +189,27 @@ class ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildInput() {
-    const elevation = 0.0;
+    var elevation;
+    var color;
+    bool hasBackgroundImage =
+        AppBloc().storage[_chatBackgroundImagePath] != null;
+    if (hasBackgroundImage) {
+      elevation = 0.0;
+      color = Colors.transparent;
+    } else {
+      elevation = 8.0;
+      color = chatBackgroundColor(context);
+    }
 
     if (bloc.room is JoinedRoom) {
       return Material(
         elevation: elevation,
-        //color: chatBackgroundColor(context),
-        color: Colors.transparent,
+        color: color,
         // On dark theme, draw a divider line because the shadow is gone
-        //shape: Theme.of(context).brightness == Brightness.dark
-        //    ? Border(top: BorderSide(color: Colors.grey[800]))
-        //    : null,
+        shape: Theme.of(context).brightness == Brightness.dark &&
+                !hasBackgroundImage
+            ? Border(top: BorderSide(color: Colors.grey[800]))
+            : null,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Material(
