@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:pattle/src/ui/main/models/chat_item.dart';
+import 'package:pattle/src/ui/resources/theme.dart';
 import 'package:pattle/src/ui/util/date_format.dart';
 
 import 'item.dart';
@@ -43,11 +44,25 @@ class DateHeaderState extends ItemState<DateHeader> {
           top: marginTop(),
           bottom: DateHeader.betweenMargin,
         ),
-        child: Text(
-          formatAsDate(context, widget.item.date).toUpperCase(),
-          style: Theme.of(context).textTheme.display1.copyWith(
+        child: Stack(
+          children: <Widget>[
+            Text(
+              formatAsDate(context, widget.item.date).toUpperCase(),
+              style: TextStyle(
                 fontSize: 16,
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = 2
+                  ..color = chatBackgroundColor(context),
               ),
+            ),
+            Text(
+              formatAsDate(context, widget.item.date).toUpperCase(),
+              style: Theme.of(context).textTheme.display1.copyWith(
+                    fontSize: 16,
+                  ),
+            ),
+          ],
         ),
       ),
     );
