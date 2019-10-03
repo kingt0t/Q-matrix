@@ -18,6 +18,8 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:pattle/src/app.dart';
+import 'package:pattle/src/app_bloc.dart';
+import 'package:pattle/src/ui/resources/theme.dart';
 import 'package:pattle/src/ui/main/settings/settings_bloc.dart';
 import 'package:pattle/src/ui/resources/localizations.dart';
 import 'package:pattle/src/ui/resources/theme.dart';
@@ -26,6 +28,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pattle/src/ui/main/settings/widgets/header.dart';
 
 class AppearancePageState extends State<AppearancePage> {
+  final String _chatBackgroundImagePath = 'chat_background_image_path';
+
   final bloc = SettingsBloc();
 
   Brightness brightness;
@@ -82,14 +86,43 @@ class AppearancePageState extends State<AppearancePage> {
                 color: redOnBackground(context),
               ),
               title: Header(l(context).background),
-              onTap: () => _selectBackground()),
+              onTap: () => _showSelectionMenu()),
           Divider(height: 1)
         ],
       ),
     );
   }
 
+  Future<void> _showSelectionMenu() async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                  leading: new Icon(Icons.collections),
+                  title: Header(l(context).gallery),
+                  onTap: () => _selectBackground()
+                ),
+                new ListTile(
+                  leading: new Icon(Icons.delete),
+                  title: Header(l(context).remove),
+                  onTap: () => _removeBackground()
+                )
+              ]
+            )
+      )
+    );
+  }
+
+  void _removeBackground() {
+    Navigator.pop(context);
+    AppBloc().storage[_chatBackgroundImagePath] = null;
+    imageCache.clear();
+  }
+
   Future<void> _selectBackground() async {
+    Navigator.pop(context);
     final file = await ImagePicker.pickImage(source: ImageSource.gallery);
     Navigator.of(context).pushNamed(Routes.settingsImageCrop, arguments: file);
   }

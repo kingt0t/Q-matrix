@@ -37,6 +37,8 @@ class Storage {
       prefs.setInt(key, value);
     } else if (value is double) {
       prefs.setDouble(key, value);
+    } else if (value == null) {
+      prefs.remove(key);
     } else {
       throw TypeError();
     }
