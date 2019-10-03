@@ -58,6 +58,8 @@ class ChatPageState extends State<ChatPage> {
 
   Timer readTimer;
 
+  bool hasBackgroundImage;
+
   ChatPageState(this.room) : bloc = ChatBloc(room) {
     textController.addListener(() {
       bloc.notifyInputChanged(textController.text);
@@ -81,6 +83,8 @@ class ChatPageState extends State<ChatPage> {
     }
 
     readTimer = Timer(const Duration(seconds: 2), bloc.markAllAsRead);
+
+    hasBackgroundImage = AppBloc().storage[_chatBackgroundImagePath] != null;
 
     bloc.hasReachedEnd.listen((hasReachedEnd) {
       if (hasReachedEnd) {
@@ -151,22 +155,7 @@ class ChatPageState extends State<ChatPage> {
           ),
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: FileImage(File(AppBloc().storage[_chatBackgroundImagePath])),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Column(
-          children: <Widget>[
-            ErrorBanner(),
-            Expanded(
-              child: _buildBody(),
-            )
-          ],
-        ),
-      ),
+      body: _buildBackground()
     );
   }
 
@@ -188,11 +177,33 @@ class ChatPageState extends State<ChatPage> {
     );
   }
 
+  Widget _buildBackground() {
+    final column = Column(
+                      children: <Widget>[
+                        ErrorBanner(),
+                        Expanded(
+                          child: _buildBody(),
+                        )
+                      ]
+                   );
+    if (hasBackgroundImage) {
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: FileImage(File(AppBloc().storage[_chatBackgroundImagePath])),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: column
+      );
+    } else {
+      return column;
+    }
+  }
+
   Widget _buildInput() {
     var elevation;
     var color;
-    bool hasBackgroundImage =
-        AppBloc().storage[_chatBackgroundImagePath] != null;
     if (hasBackgroundImage) {
       elevation = 0.0;
       color = Colors.transparent;
