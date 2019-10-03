@@ -95,24 +95,18 @@ class AppearancePageState extends State<AppearancePage> {
 
   Future<void> _showSelectionMenu() async {
     await showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-            child: new Wrap(
-              children: <Widget>[
-                new ListTile(
-                  leading: new Icon(Icons.collections),
+        context: context,
+        builder: (context) => Container(
+                child: Wrap(children: <Widget>[
+              ListTile(
+                  leading: Icon(Icons.collections),
                   title: Header(l(context).gallery),
-                  onTap: () => _selectBackground()
-                ),
-                new ListTile(
-                  leading: new Icon(Icons.delete),
+                  onTap: () => _selectBackground()),
+              ListTile(
+                  leading: Icon(Icons.delete),
                   title: Header(l(context).remove),
-                  onTap: () => _removeBackground()
-                )
-              ]
-            )
-      )
-    );
+                  onTap: () => _removeBackground())
+            ])));
   }
 
   void _removeBackground() {

@@ -140,23 +140,22 @@ class ChatPageState extends State<ChatPage> {
             : ChatName(room: room);
 
     return Scaffold(
-      backgroundColor: chatBackgroundColor(context),
-      appBar: AppBar(
-        titleSpacing: 0,
-        title: settingsGestureDetector(
-          child: Row(
-            children: <Widget>[
-              avatar,
-              SizedBox(width: 16),
-              Expanded(
-                child: title,
-              ),
-            ],
+        backgroundColor: chatBackgroundColor(context),
+        appBar: AppBar(
+          titleSpacing: 0,
+          title: settingsGestureDetector(
+            child: Row(
+              children: <Widget>[
+                avatar,
+                SizedBox(width: 16),
+                Expanded(
+                  child: title,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body: _buildBackground()
-    );
+        body: _buildBackground());
   }
 
   Widget _buildBody() {
@@ -178,24 +177,22 @@ class ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildBackground() {
-    final column = Column(
-                      children: <Widget>[
-                        ErrorBanner(),
-                        Expanded(
-                          child: _buildBody(),
-                        )
-                      ]
-                   );
+    final column = Column(children: <Widget>[
+      ErrorBanner(),
+      Expanded(
+        child: _buildBody(),
+      )
+    ]);
     if (hasBackgroundImage) {
       return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: FileImage(File(AppBloc().storage[_chatBackgroundImagePath])),
-            fit: BoxFit.cover,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image:
+                  FileImage(File(AppBloc().storage[_chatBackgroundImagePath])),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: column
-      );
+          child: column);
     } else {
       return column;
     }
