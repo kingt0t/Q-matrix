@@ -117,7 +117,7 @@ class AppearancePageState extends State<AppearancePage> {
   Future<void> _selectBackground() async {
     Navigator.pop(context);
     final file = await ImagePicker.pickImage(source: ImageSource.gallery);
-    Navigator.of(context).pushNamed(Routes.settingsImageCrop, arguments: file);
+    await Navigator.of(context).pushNamed(Routes.settingsImageCrop, arguments: file);
   }
 }
 
