@@ -1,4 +1,5 @@
 // Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2019  Joel S
 //
 // This file is part of Pattle.
 //
@@ -22,23 +23,12 @@ import 'package:pattle/src/ui/main/overview/chat_overview_bloc.dart';
 import 'package:pattle/src/ui/main/overview/widgets/chat_overview_list.dart';
 import 'package:pattle/src/ui/main/widgets/error.dart';
 import 'package:pattle/src/ui/resources/localizations.dart';
+import 'package:pattle/src/ui/resources/theme.dart';
 
 class ChatOverviewPageState extends State<ChatOverviewPage> {
-  int _currentTab = 0;
 
   final personalTab = ChatOverviewList(chats: bloc.personalChats);
   final publicTab = ChatOverviewList(chats: bloc.publicChats);
-
-  void _switchTabTo(int index) {
-    // Temporary: Don't do anything for the calls tab
-    if (index > 1) {
-      return;
-    }
-
-    setState(() {
-      _currentTab = index;
-    });
-  }
 
   void goToCreateGroup() {
     Navigator.of(context).pushNamed(Routes.chatsNew);
@@ -58,53 +48,59 @@ class ChatOverviewPageState extends State<ChatOverviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l(context).appName),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () => Navigator.pushNamed(context, Routes.settings),
-          )
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          ErrorBanner(),
-          Expanded(
-            child: AnimatedCrossFade(
-              duration: const Duration(milliseconds: 200),
-              firstChild: personalTab,
-              secondChild: publicTab,
-              crossFadeState: _currentTab == 0
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
-              alignment: Alignment.center,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l(context).appName),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () => Navigator.pushNamed(context, Routes.settings),
+            )
+          ],
+        ),
+        body: Column(
+          children: <Widget>[
+            ErrorBanner(),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  personalTab,
+                  publicTab,
+                  Container(),
+                ],
+              ),
             ),
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: goToCreateGroup,
-        child: Icon(Icons.chat),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            title: Text(l(context).personal),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: goToCreateGroup,
+          child: Icon(Icons.chat),
+        ),
+        bottomNavigationBar: Material(
+          elevation: 16.0,
+          child: TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.chat_bubble),
+                text: l(context).personal,
+              ),
+              Tab(
+                icon: Icon(Mdi.bullhorn),
+                text: l(context).public,
+              ),
+              Tab(
+                icon: Icon(Icons.phone),
+                text: l(context).calls,
+              ),
+            ],
+            labelColor: LightColors.red,
+            unselectedLabelColor: Colors.grey,
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorColor: LightColors.red,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Mdi.bullhorn),
-            title: Text(l(context).public),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.phone),
-            title: Text(l(context).calls),
-          )
-        ],
-        currentIndex: _currentTab,
-        onTap: _switchTabTo,
+        ),
       ),
     );
   }

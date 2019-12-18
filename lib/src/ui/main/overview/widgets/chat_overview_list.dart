@@ -1,4 +1,5 @@
 // Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2019  Joel S
 //
 // This file is part of Pattle.
 //
@@ -20,6 +21,7 @@ import 'package:pattle/src/app.dart';
 import 'package:pattle/src/ui/main/overview/models/chat_overview.dart';
 import 'package:pattle/src/ui/main/overview/widgets/chat_avatar.dart';
 import 'package:pattle/src/ui/main/widgets/chat_name.dart';
+import 'package:pattle/src/ui/resources/localizations.dart';
 import 'package:pattle/src/ui/util/date_format.dart';
 
 import 'subtitle.dart';
@@ -33,9 +35,13 @@ class ChatOverviewList extends StatefulWidget {
   State<StatefulWidget> createState() => ChatOverviewListState();
 }
 
-class ChatOverviewListState extends State<ChatOverviewList> {
+class ChatOverviewListState extends State<ChatOverviewList> with AutomaticKeepAliveClientMixin<ChatOverviewList> {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return StreamBuilder<List<ChatOverview>>(
       stream: widget.chats,
       builder: (
@@ -54,7 +60,14 @@ class ChatOverviewListState extends State<ChatOverviewList> {
             final chats = snapshot.data;
 
             if (chats == null || chats.isEmpty) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(l(context).newChatPart1),
+                  Icon(Icons.chat),
+                  Text(l(context).newChatPart2),
+                ],
+              ));
             }
 
             widget = Scrollbar(

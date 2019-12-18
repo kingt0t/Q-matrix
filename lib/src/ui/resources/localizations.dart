@@ -1,4 +1,5 @@
 // Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2019  Joel S
 //
 // This file is part of Pattle.
 //
@@ -68,6 +69,9 @@ class Strings {
   final anErrorHasOccurred = 'An error has occurred:';
   final thisErrorHasBeenReported =
       'This error has been reported. Please restart Pattle.';
+
+  final newChatPart1 = 'Click ';
+  final newChatPart2 = ' button to create a new chat';
 
   final youDeletedThisMessage = 'You deleted this message';
 
