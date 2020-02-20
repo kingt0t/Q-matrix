@@ -23,9 +23,6 @@ import 'message_bubble.dart';
 
 class LoadingBubble extends MessageBubble {
   static final _mockEvent = TextMessageEvent(
-    TextMessage(
-      body: 'Blabla',
-    ),
     RoomEventArgs(
       id: EventId('1234'),
       sender: User(
@@ -35,6 +32,9 @@ class LoadingBubble extends MessageBubble {
               displayName: 'Wilko',
               since: DateTime.now())),
       time: DateTime.now(),
+    ),
+    content: TextMessage(
+      body: 'Blabla',
     ),
   );
 

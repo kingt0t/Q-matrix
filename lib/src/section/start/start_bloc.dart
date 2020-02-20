@@ -46,7 +46,7 @@ class StartBloc extends Bloc {
     return _instance;
   }
   final _homeserverChangedSubj = BehaviorSubject<bool>();
-  Observable<bool> get homeserverChanged => _homeserverChangedSubj.stream;
+  Stream<bool> get homeserverChanged => _homeserverChangedSubj.stream;
 
   bool homeserverSetViaAdvanced = false;
   Homeserver get homeserver => di.getHomeserver();
@@ -86,7 +86,7 @@ class StartBloc extends Bloc {
   }
 
   final _isUsernameValidSubj = BehaviorSubject<bool>();
-  Observable<bool> get isUsernameValid => _isUsernameValidSubj.stream;
+  Stream<bool> get isUsernameValid => _isUsernameValidSubj.stream;
 
   static bool _defaultValidate(Function addError) => true;
   Future<void> _do({
@@ -178,7 +178,7 @@ class StartBloc extends Bloc {
   }
 
   final _loginSubj = BehaviorSubject<RequestState>();
-  Observable<RequestState> get loginStream => _loginSubj.stream;
+  Stream<RequestState> get loginStream => _loginSubj.stream;
 
   void login(String password) {
     _do(

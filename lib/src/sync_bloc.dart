@@ -27,13 +27,13 @@ class SyncBloc {
   LocalUser _user = di.getLocalUser();
 
   ReplaySubject<SyncState> _syncSubj = ReplaySubject<SyncState>(maxSize: 1);
-  Observable<SyncState> get stream => _syncSubj.stream;
+  Stream<SyncState> get stream => _syncSubj.stream;
 
   Future<void> start() async {
     if (!_user.isSyncing) {
       await _user.sendAllUnsent();
 
-      unawaited(_user.startSync());
+      _user.startSync();
       unawaited(_syncSubj.addStream(_user.sync));
     }
   }

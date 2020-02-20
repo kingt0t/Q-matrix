@@ -31,19 +31,19 @@ List<TextSpan> spanFor(
     style: style,
   );
   final subject = TextSpan(
-    text: event.content.subject.displayName,
+    text: event.subject.displayName,
     style: style,
   );
   var text;
 
   if (event is DisplayNameChangeEvent) {
     final oldName = TextSpan(
-      text: event.content.subject.nameOrDisplayId(name: event.oldSubjectName),
+      text: event.subject.nameOrDisplayId(name: event.oldSubjectName),
       style: style,
     );
 
     final newName = TextSpan(
-      text: event.content.subject.displayName,
+      text: event.subject.displayName,
       style: style,
     );
 

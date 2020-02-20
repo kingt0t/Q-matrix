@@ -27,7 +27,7 @@ final bloc = ChatOverviewBloc();
 
 class ChatOverviewBloc {
   final _chatsSubj = PublishSubject<List<ChatOverview>>();
-  Observable<List<ChatOverview>> get personalChats =>
+  Stream<List<ChatOverview>> get personalChats =>
       _chatsSubj.stream.flatMapIterable(
         (list) => Stream.value([
           list
@@ -37,7 +37,7 @@ class ChatOverviewBloc {
         ]),
       );
 
-  Observable<List<ChatOverview>> get publicChats =>
+  Stream<List<ChatOverview>> get publicChats =>
       _chatsSubj.stream.flatMapIterable(
         (list) => Stream.value([
           list
@@ -75,7 +75,7 @@ class ChatOverviewBloc {
                 (event is JoinEvent &&
                     event is! DisplayNameChangeEvent &&
                     event is! AvatarChangeEvent &&
-                    event.content.subject.id == _user.id)) &&
+                    event.subject.id == _user.id)) &&
             event is! RedactionEvent,
         orElse: () => null,
       );

@@ -69,7 +69,7 @@ class AppBloc {
   }
 
   final _loggedInSubj = BehaviorSubject<bool>();
-  Observable<bool> get loggedIn => _loggedInSubj.stream;
+  Stream<bool> get loggedIn => _loggedInSubj.stream;
 
   Future<void> checkIfLoggedIn() async {
     di.registerStore();

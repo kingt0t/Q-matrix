@@ -101,7 +101,6 @@ class NamePageState extends State<NamePage> {
               BuildContext context,
               AsyncSnapshot<RequestState> snapshot,
             ) {
-              print(snapshot.connectionState);
               if (snapshot.data == RequestState.active) {
                 return LinearProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(LightColors.red[300]),

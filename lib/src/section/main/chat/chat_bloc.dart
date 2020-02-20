@@ -78,21 +78,21 @@ class ChatBloc extends Bloc {
         if (room.isDirect) {
           if (event is InviteEvent) {
             final iInvitedYou =
-                event.sender == me && event.content.subject == room.directUser;
+                event.sender == me && event.subject == room.directUser;
 
             final youInvitedMe =
-                event.sender == room.directUser && event.content.subject == me;
+                event.sender == room.directUser && event.subject == me;
 
             shouldIgnore = iInvitedYou || youInvitedMe;
           } else if (event is JoinEvent) {
-            final subject = event.content.subject;
+            final subject = event.subject;
             shouldIgnore = subject == me || subject == room.directUser;
           }
         }
 
         shouldIgnore |= event is JoinEvent &&
             event is! DisplayNameChangeEvent &&
-            room.creator == event.content.subject;
+            room.creator == event.subject;
 
         // Don't show creation events in rooms that are replacements
         shouldIgnore |= event is RoomCreationEvent && room.isReplacement;

@@ -39,7 +39,6 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(bloc.me.avatarUrl);
 
     return Scaffold(
       appBar: AppBar(
