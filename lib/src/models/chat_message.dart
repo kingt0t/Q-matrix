@@ -32,6 +32,10 @@ class ChatMessage {
 
   final bool read;
 
+  /// True if the message was loaded because of scrolling up. Can be null if
+  /// not relevant.
+  final bool historical;
+
   /// Message that redacted this message, if any.
   final ChatMessage redaction;
 
@@ -45,6 +49,7 @@ class ChatMessage {
     this.redaction,
     this.subject,
     @required this.read,
+    this.historical,
   });
   @override
   bool operator ==(dynamic other) {
@@ -62,6 +67,7 @@ class ChatMessage {
     RoomEvent event, {
     ChatMessage inReplyTo,
     @required bool Function(UserId) isMe,
+    bool historical,
   }) {
     ChatMessage redactionMessage;
     ChatMember subject;
@@ -103,6 +109,7 @@ class ChatMessage {
       redaction: redactionMessage,
       subject: subject,
       read: isRead(event),
+      historical: historical,
     );
   }
 

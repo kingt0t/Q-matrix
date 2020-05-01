@@ -20,6 +20,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 
+import '../../../models/chat_message.dart';
+
 import '../../../app.dart';
 
 import '../../../notifications/bloc.dart';
@@ -204,13 +206,25 @@ class _MessageListState extends State<_MessageList> {
   final _scrollController = ScrollController();
   final double _scrollThreshold = 200;
 
+  final _key = GlobalKey<AnimatedListState>();
+
   bool _requestingMore = false;
+
+  List<ChatMessage> _initialMessages;
+  List<ChatMessage> _messages;
+
+  bool _intitiallyEndReached = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     final bloc = BlocProvider.of<ChatBloc>(context);
+
+    _initialMessages = bloc.state.messages;
+    _intitiallyEndReached = bloc.state.endReached;
+
+    _messages = _initialMessages;
 
     _scrollController.addListener(() {
       final maxScroll = _scrollController.position.maxScrollExtent;
@@ -229,79 +243,230 @@ class _MessageListState extends State<_MessageList> {
 
   void _onStateChange(ChatState state) {
     _requestingMore = false;
+
+    var insertIndex = !state.wasTimelineLoad ? 0 : _messages.length;
+
+    var needsSetState = false;
+    for (final message in state.newMessages) {
+      final sameMessageIndex = _messages.indexWhere(
+        (m) =>
+            m.event.id == message.event.id ||
+            m.event.id.toString() == message.event.transactionId,
+      );
+
+      // If a sent message gets replaced, don't animate, just refresh
+      if (sameMessageIndex != -1) {
+        needsSetState = true;
+        _messages[sameMessageIndex] = message;
+      } else {
+        _messages.insert(insertIndex, message);
+        _key.currentState.insertItem(
+          insertIndex,
+          duration: Duration(milliseconds: 200),
+        );
+      }
+
+      insertIndex++;
+    }
+
+    if (needsSetState) {
+      _key.currentState.setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ChatBloc, ChatState>(
+    return BlocListener<ChatBloc, ChatState>(
       listener: (context, state) => _onStateChange(state),
-      builder: (context, state) {
-        var messages = state.messages;
-        if (state.wasTimelineLoad) {
-          messages = [...state.newMessages, ...messages];
-        } else {
-          messages = [...messages, ...state.newMessages];
+      child: AnimatedList(
+        key: _key,
+        controller: _scrollController,
+        reverse: true,
+        initialItemCount: _intitiallyEndReached
+            ? _initialMessages.length
+            : _initialMessages.length + 1,
+        itemBuilder: (context, index, animation) {
+          if (index >= _messages.length) {
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          final message = _messages[index];
+
+          final event = message.event;
+
+          var previousMessage, nextMessage;
+          // Note: Because the items are reversed in the
+          // ListView.builder, the 'previous' event is actually the next
+          // one in the list.
+          if (index != _messages.length - 1) {
+            previousMessage = _messages[index + 1];
+          }
+
+          if (index != 0) {
+            nextMessage = _messages[index - 1];
+          }
+
+          Widget bubble;
+          if (event is StateEvent) {
+            bubble = StateBubble.withContent(message: message);
+          } else {
+            bubble = MessageBubble.withContent(
+              chat: widget.chat,
+              message: message,
+              previousMessage: previousMessage,
+              nextMessage: nextMessage,
+            );
+          }
+
+          final key = ValueKey(
+            message.event.transactionId ?? message.event.id.toString(),
+          );
+
+          // TODO: Don't apply key twice if a DateHeader is used
+          bubble = _AnimatedBubble(
+            key: key,
+            message: message,
+            animation: animation,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: bubble,
+            ),
+          );
+
+          // Insert DateHeader if there's a day difference
+          if (previousMessage != null &&
+              event != null &&
+              previousMessage.event.time.day != event.time.day) {
+            return DateHeader(
+              key: key,
+              date: event.time,
+              child: bubble,
+            );
+          } else {
+            return bubble;
+          }
+        },
+      ),
+    );
+  }
+}
+
+class _AnimatedBubble extends StatefulWidget {
+  final ChatMessage message;
+  final Animation<double> animation;
+  final Widget child;
+
+  const _AnimatedBubble({
+    Key key,
+    @required this.message,
+    @required this.animation,
+    @required this.child,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _AnimatedBubbleState();
+}
+
+class _AnimatedBubbleState extends State<_AnimatedBubble> {
+  final _key = GlobalKey();
+
+  double _childHeight;
+
+  static const _curve = Curves.decelerate;
+
+  // Hacky, but necessary because states are recreated on insertion for some
+  // reason.
+  static final Map<ValueKey, double> _heights = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    _childHeight = _heights[widget.key];
+
+    if (!widget.animation.isCompleted &&
+        _childHeight == null &&
+        !widget.message.historical) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          final RenderBox renderBox = _key.currentContext.findRenderObject();
+          setState(() {
+            _childHeight = _heights[widget.key] = renderBox.size.height;
+          });
         }
+      });
+    }
+  }
 
-        return ListView.builder(
-          controller: _scrollController,
-          reverse: true,
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          itemCount: state.endReached
-              ? state.messages.length
-              : state.messages.length + 1,
-          itemBuilder: (context, index) {
-            if (index >= state.messages.length) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
+  @override
+  Widget build(BuildContext context) {
+    if (widget.animation.isCompleted) {
+      return widget.child;
+    }
 
-            final message = state.messages[index];
+    final curvedAnimation = CurvedAnimation(
+      parent: widget.animation,
+      curve: _curve,
+    );
 
-            final event = message.event;
+    if (widget.message.historical) {
+      return FadeTransition(
+        opacity: curvedAnimation,
+        child: SlideTransition(
+          position: curvedAnimation.drive(
+            Tween(
+              begin: Offset(0, -0.3),
+              end: Offset(0, 0),
+            ),
+          ),
+          child: widget.child,
+        ),
+      );
+    }
 
-            var previousMessage, nextMessage;
-            // Note: Because the items are reversed in the
-            // ListView.builder, the 'previous' event is actually the next
-            // one in the list.
-            if (index != state.messages.length - 1) {
-              previousMessage = state.messages[index + 1];
-            }
+    return FadeTransition(
+      opacity: curvedAnimation,
+      child: SlideTransition(
+        position: curvedAnimation.drive(
+          Tween(
+            begin: Offset(widget.message.isMine ? 0.3 : -0.3, 0),
+            end: Offset(0, 0),
+          ),
+        ),
+        child: AnimatedBuilder(
+          animation: curvedAnimation,
+          builder: (context, child) {
+            final height = _childHeight != null
+                ? curvedAnimation.value * _childHeight
+                : 0.0;
 
-            if (index != 0) {
-              nextMessage = state.messages[index - 1];
-            }
-
-            Widget bubble;
-            if (event is StateEvent) {
-              bubble = StateBubble.withContent(message: message);
-            } else {
-              bubble = MessageBubble.withContent(
-                chat: widget.chat,
-                message: message,
-                previousMessage: previousMessage,
-                nextMessage: nextMessage,
-              );
-            }
-
-            // Insert DateHeader if there's a day difference
-            if (previousMessage != null &&
-                event != null &&
-                previousMessage.event.time.day != event.time.day) {
-              return DateHeader(
-                date: event.time,
-                child: bubble,
-              );
-            } else {
-              return bubble;
-            }
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                return SizedBox(
+                  height: height,
+                  child: ClipRect(
+                    child: OverflowBox(
+                      minWidth: constraints.minWidth,
+                      maxWidth: constraints.maxWidth,
+                      minHeight: constraints.minHeight,
+                      maxHeight: constraints.maxHeight,
+                      child: Container(
+                        key: _key,
+                        child: widget.child,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
           },
-        );
-      },
+        ),
+      ),
     );
   }
 }
