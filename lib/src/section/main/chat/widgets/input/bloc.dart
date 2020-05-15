@@ -20,6 +20,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
+import 'package:markdown/markdown.dart';
 
 import '../../../../../matrix.dart';
 
@@ -97,11 +98,14 @@ class InputBloc extends Bloc<InputEvent, InputState> {
   void _sendMessage(String text, EventId inReplyTo) async {
     // TODO: Check if text is just whitespace
     if (text.isNotEmpty) {
+      var formatted = markdownToHtml(text);
       _room
           .send(
             TextMessage(
               body: text,
               inReplyToId: inReplyTo,
+              format: "org.matrix.custom.html",
+              formattedBody: formatted,
             ),
           )
           .forEach((_) {});
