@@ -91,36 +91,34 @@ class _ImagePageState extends State<ImagePage> {
         ),
         backgroundColor: Color(0x64000000),
       ),
-      body: _buildPhotoViewList(),
+      body: BlocBuilder<ImageBloc, ImageState>(builder: (context, state) {
+        final messages = state.messages;
+
+        return PhotoViewGallery.builder(
+          itemCount: messages.length,
+          reverse: true,
+          builder: (context, index) {
+            final event = messages[index].event as ImageMessageEvent;
+
+            return PhotoViewGalleryPageOptions(
+              imageProvider: imageProvider(
+                context: context,
+                url: event.content.url,
+              ),
+              heroTag: _current.event.id,
+              minScale: PhotoViewComputedScale.contained,
+            );
+          },
+          onPageChanged: (index) {
+            setState(() {
+              _current = messages[index];
+            });
+          },
+          pageController: PageController(
+            initialPage: messages.indexOf(_current),
+          ),
+        );
+      }),
     );
-  }
-
-  Widget _buildPhotoViewList() {
-    return BlocBuilder<ImageBloc, ImageState>(builder: (context, state) {
-      final messages = state.messages;
-
-      return PhotoViewGallery.builder(
-        itemCount: messages.length,
-        reverse: true,
-        builder: (context, index) {
-          final event = messages[index].event as ImageMessageEvent;
-
-          return PhotoViewGalleryPageOptions(
-            imageProvider:
-                imageProvider(context: context, url: event.content.url),
-            heroTag: _current.event.id,
-            minScale: PhotoViewComputedScale.contained,
-          );
-        },
-        onPageChanged: (index) {
-          setState(() {
-            _current = messages[index];
-          });
-        },
-        pageController: PageController(
-          initialPage: messages.indexOf(_current),
-        ),
-      );
-    });
   }
 }
