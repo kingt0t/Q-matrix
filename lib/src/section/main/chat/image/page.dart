@@ -71,35 +71,27 @@ class _ImagePageState extends State<ImagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: <Widget>[
-          _buildPhotoViewList(),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: AppBar(
-              title: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(_current.sender.name),
-                  SizedBox(height: 2),
-                  Text(
-                    '${formatAsDate(context, _current.event.time)},'
-                    ' ${formatAsTime(_current.event.time)}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2
-                        .copyWith(color: Colors.white),
-                  ),
-                ],
-              ),
-              backgroundColor: Color(0x64000000),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_current.sender.name),
+            SizedBox(height: 2),
+            Text(
+              '${formatAsDate(context, _current.event.time)},'
+              ' ${formatAsTime(_current.event.time)}',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText2
+                  .copyWith(color: Colors.white),
             ),
-          )
-        ],
+          ],
+        ),
+        backgroundColor: Color(0x64000000),
       ),
+      body: _buildPhotoViewList(),
     );
   }
 
