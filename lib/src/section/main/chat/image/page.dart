@@ -105,7 +105,6 @@ class _ImagePageState extends State<ImagePage> {
                 context: context,
                 url: event.content.url,
               ),
-              heroTag: _current.event.id,
               minScale: PhotoViewComputedScale.contained,
             );
           },

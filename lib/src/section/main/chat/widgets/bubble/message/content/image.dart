@@ -15,10 +15,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 
-import '../../../../../../../app.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../image/page.dart';
 import '../../message.dart';
 
 import '../../../../util/image_provider.dart';
@@ -37,15 +40,6 @@ class _ImageContentState extends State<ImageContent> {
   static const double _width = 256;
   static const double _minHeight = 72;
   static const double _maxHeight = 292;
-
-  void _onTap(BuildContext context) {
-    final bubble = MessageBubble.of(context);
-    Navigator.pushNamed(
-      context,
-      Routes.image,
-      arguments: [bubble.chat.room.id, bubble.message.event.id],
-    );
-  }
 
   bool get _isFile => _fileUri != null;
   Uri _fileUri;
@@ -76,37 +70,52 @@ class _ImageContentState extends State<ImageContent> {
     final bubble = MessageBubble.of(context);
     final event = bubble.message.event as ImageMessageEvent;
 
-    return Container(
-      width: _width,
-      height: _height,
-      decoration: BoxDecoration(borderRadius: bubble.borderRadius),
-      child: Stack(
-        children: <Widget>[
-          Positioned.fill(
-            child: ClipRRect(
-              borderRadius: bubble.borderRadius,
-              child: Hero(
-                tag: event.id,
-                child: Image(
-                  image: imageProvider(
-                    context: context,
-                    url: _isFile ? _fileUri : event.content.url,
+    return OpenContainer(
+      closedElevation: 0,
+      closedShape: RoundedRectangleBorder(borderRadius: bubble.borderRadius),
+      closedBuilder: (_, void Function() action) {
+        // Reprovide the MessageBubble
+        return Provider<MessageBubble>.value(
+          value: bubble,
+          child: Container(
+            width: _width,
+            height: _height,
+            decoration: BoxDecoration(borderRadius: bubble.borderRadius),
+            child: Stack(
+              children: <Widget>[
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: bubble.borderRadius,
+                    child: Image(
+                      image: imageProvider(
+                        context: context,
+                        url: _isFile ? _fileUri : event.content.url,
+                      ),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  fit: BoxFit.cover,
                 ),
-              ),
+                if (MessageInfo.necessary(context)) _MessageInfo(),
+                if (Sender.necessary(context)) _Sender(),
+                Positioned.fill(
+                  child: Clickable(
+                    extraMaterial: true,
+                    onTap: () => action(),
+                  ),
+                ),
+              ],
             ),
           ),
-          if (MessageInfo.necessary(context)) _MessageInfo(),
-          if (Sender.necessary(context)) _Sender(),
-          Positioned.fill(
-            child: Clickable(
-              extraMaterial: true,
-              onTap: () => _onTap(context),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
+      openBuilder: (_, void Function() action) {
+        final bubble = MessageBubble.of(context);
+
+        return ImagePage.withBloc(
+          bubble.chat.room.id,
+          bubble.message.event.id,
+        );
+      },
     );
   }
 }
@@ -138,7 +147,7 @@ class _MessageInfo extends StatelessWidget {
             padding: EdgeInsets.all(4),
             child: DefaultTextStyle(
               style: DefaultTextStyle.of(context).style.copyWith(
-                    color: !bubble.message.isMine ? Colors.white : null,
+                    color: Colors.white,
                   ),
               child: MessageInfo(),
             ),
