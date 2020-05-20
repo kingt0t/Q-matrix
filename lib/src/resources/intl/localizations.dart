@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:characters/characters.dart';
 
 import '../../models/chat_member.dart';
 
@@ -96,35 +97,51 @@ List<TextSpan> _toTextSpans({
     if (args.length >= 2) placeholders[1],
   ]);
 
-  final placeholderPositions = <int, String>{};
+  final placeHolderIndexes = List.generate(
+    placeholders.length,
+    (index) => index,
+  );
 
-  for (final placeholder in placeholders) {
-    final split = message.split(placeholder);
+  final characters = message.characters.toList();
 
-    var i = 0;
-    for (final string in split) {
-      if (string != split.last) {
-        placeholderPositions[i] = placeholder;
-      }
+  final pieces = <TextSpan>[];
+  var currentPieceIndex = 0;
 
+  final placeholderPieceIndexes = <int, int>{};
+
+  for (var i = 0; i < characters.length; i++) {
+    final currentChar = characters[i];
+    final nextChar =
+        i + 1 < characters.length ? characters.toList()[i + 1] : null;
+
+    final placeholderIndex = nextChar != null ? int.tryParse(nextChar) : null;
+    if (placeholderIndex != null &&
+        currentChar == r'$' &&
+        placeHolderIndexes.contains(placeholderIndex)) {
+      placeholderPieceIndexes[currentPieceIndex] = placeholderIndex;
+
+      pieces.add(
+        TextSpan(
+          text: args[placeholderIndex],
+          style: style,
+        ),
+      );
+
+      // Skip the next char
       i++;
+      currentPieceIndex++;
+    } else {
+      if (pieces.length == currentPieceIndex) {
+        pieces.add(TextSpan(text: currentChar));
+      } else {
+        pieces[currentPieceIndex] = TextSpan(
+          text: pieces[currentPieceIndex].text + currentChar,
+        );
+      }
     }
   }
 
-  final split = message.split(RegExp(r'\$\d'));
-  final spans =
-      split.where((s) => s.isNotEmpty).map((s) => TextSpan(text: s)).toList();
-
-  for (final entries in placeholderPositions.entries) {
-    final position = entries.key;
-    final placeholder = entries.value;
-
-    final arg = args[placeholders.indexOf(placeholder)];
-
-    spans.insert(position, TextSpan(text: arg, style: style));
-  }
-
-  return spans;
+  return pieces;
 }
 
 extension LocalizedTextSpansString on String Function(String) {
