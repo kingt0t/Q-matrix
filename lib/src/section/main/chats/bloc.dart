@@ -21,8 +21,6 @@ import 'package:bloc/bloc.dart';
 
 import '../../../chat_order/bloc.dart';
 
-import '../../../models/chat.dart';
-
 import '../../../matrix.dart';
 
 import 'event.dart';
@@ -39,59 +37,22 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   ChatsBloc(this._matrix, this._chatOrderBloc) {
     _matrix.userAvaible.then((_) {
       add(RefreshChats());
-      _subscription = _matrix.user.updates.listen((update) {
+      _subscription = _chatOrderBloc.listen((update) {
         add(RefreshChats());
       });
     });
   }
 
-  Future<List<Chat>> _getChats() async {
-    final chats = _matrix.chats.values.toList();
-
-    chats.sort((a, b) {
-      if (a.room.highlightedUnreadNotificationCount > 0 &&
-          b.room.highlightedUnreadNotificationCount <= 0) {
-        return 1;
-      } else if (a.room.highlightedUnreadNotificationCount <= 0 &&
-          b.room.highlightedUnreadNotificationCount > 0) {
-        return -1;
-      } else if (a.room.totalUnreadNotificationCount > 0 &&
-          b.room.totalUnreadNotificationCount <= 0) {
-        return 1;
-      } else if (a.room.totalUnreadNotificationCount <= 0 &&
-          b.room.totalUnreadNotificationCount > 0) {
-        return -1;
-      } else if (a.latestMessageForSorting != null &&
-          b.latestMessageForSorting != null) {
-        return a.latestMessageForSorting.event.time.compareTo(
-          b.latestMessageForSorting.event.time,
-        );
-      } else if (a.latestMessageForSorting != null &&
-          b.latestMessageForSorting == null) {
-        return 1;
-      } else if (a.latestMessageForSorting == null &&
-          b.latestMessageForSorting != null) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-
-    return chats.reversed.toList();
-  }
-
   Future<ChatsState> _loadChats() async {
-    final chats = await _getChats();
+    final personalChats = _chatOrderBloc.state.personal.keys
+        .map((id) => _matrix.chats[id])
+        .where((c) => c != null)
+        .toList();
 
-    final personalChats = chats.where((chat) => !chat.isChannel).toList();
-    final publicChats = chats.where((chat) => chat.isChannel).toList();
-
-    _chatOrderBloc.add(
-      UpdateChatOrder(
-        personal: personalChats,
-        public: publicChats,
-      ),
-    );
+    final publicChats = _chatOrderBloc.state.public.keys
+        .map((id) => _matrix.chats[id])
+        .where((c) => c != null)
+        .toList();
 
     return ChatsLoaded(personal: personalChats, public: publicChats);
   }

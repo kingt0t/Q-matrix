@@ -19,9 +19,11 @@ import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 
+import 'bloc.dart';
+
 class ChatOrderState extends Equatable {
-  final Map<RoomId, DateTime> personal;
-  final Map<RoomId, DateTime> public;
+  final Map<RoomId, SortData> personal;
+  final Map<RoomId, SortData> public;
 
   ChatOrderState({@required this.personal, @required this.public});
 

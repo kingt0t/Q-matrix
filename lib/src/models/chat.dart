@@ -47,6 +47,8 @@ class Chat {
   bool get isChannel =>
       room.joinRule == JoinRule.public || room.joinRule == JoinRule.knock;
 
+  bool get isInvite => room.myMembership == Membership.invited;
+
   Chat({
     @required this.room,
     this.latestMessage,
@@ -120,4 +122,10 @@ extension RoomToChat on Room {
           : null,
     );
   }
+}
+
+extension Channels on Iterable<Chat> {
+  Iterable<Chat> get channels => where((c) => c.isChannel);
+
+  Iterable<Chat> get notChannels => where((c) => !c.isChannel);
 }

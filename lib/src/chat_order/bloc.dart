@@ -18,6 +18,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:meta/meta.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,14 +45,8 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
   @override
   Stream<ChatOrderState> mapEventToState(ChatOrderEvent event) async* {
     if (event is UpdateChatOrder) {
-      Map<RoomId, DateTime> set(List<Chat> chats, String key) {
-        var map = Map<RoomId, DateTime>.fromIterable(
-          chats,
-          key: (chat) => chat.room.id,
-          value: (chat) =>
-              chat.latestMessageForSorting?.event?.time ??
-              DateTime.fromMillisecondsSinceEpoch(0),
-        );
+      Map<RoomId, SortData> set(List<Chat> chats, String key) {
+        var map = chats.toSortData();
 
         final current = key == _personalKey ? state.personal : state.public;
 
@@ -66,7 +61,7 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
             map.map(
               (key, value) => MapEntry(
                 key.toString(),
-                value.millisecondsSinceEpoch,
+                value.toJson(),
               ),
             ),
           ),
@@ -83,7 +78,7 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
   }
 
   ChatOrderState _getFromPreferences() {
-    Map<RoomId, DateTime> get(String key) {
+    Map<RoomId, SortData> get(String key) {
       final encoded = _preferences.getString(key);
 
       if (encoded == null) {
@@ -95,7 +90,7 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
       return decoded.map(
         (key, value) => MapEntry(
           RoomId(key),
-          DateTime.fromMillisecondsSinceEpoch(value),
+          SortData.fromJson(value),
         ),
       );
     }
@@ -107,13 +102,118 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
   }
 }
 
-extension on Map<RoomId, DateTime> {
-  Map<RoomId, DateTime> get sorted {
-    return Map.fromEntries(
-      entries.toList()
-        ..sort(
-          (a, b) => -a.value.compareTo(b.value),
-        ),
+@immutable
+class SortData {
+  final int highlightedNotificationCount;
+  final int totalNotificationCount;
+  final DateTime latestMessageTime;
+  final bool isInvite;
+
+  SortData({
+    @required this.highlightedNotificationCount,
+    @required this.totalNotificationCount,
+    @required this.latestMessageTime,
+    @required this.isInvite,
+  });
+
+  static const _highlightedNotificationCountKey =
+      'highlighted_notification_count';
+  static const _totalNotificationCountKey = 'total_notification_count';
+  static const _latestMessageTimeKey = 'latest_message_time';
+  static const _isInviteKey = 'is_invite';
+
+  factory SortData.fromJson(Map<String, dynamic> json) {
+    return SortData(
+      highlightedNotificationCount: json[_highlightedNotificationCountKey],
+      totalNotificationCount: json[_totalNotificationCountKey],
+      latestMessageTime: json[_latestMessageTimeKey] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              json[_latestMessageTimeKey],
+            )
+          : null,
+      isInvite: json[_isInviteKey],
     );
+  }
+
+  Map<String, dynamic> toJson() => {
+        _highlightedNotificationCountKey: highlightedNotificationCount,
+        _totalNotificationCountKey: totalNotificationCount,
+        _latestMessageTimeKey: latestMessageTime?.millisecondsSinceEpoch,
+        _isInviteKey: isInvite,
+      };
+}
+
+extension on List<Chat> {
+  Map<RoomId, SortData> toSortData() {
+    return Map.fromEntries(
+      map(
+        (c) => MapEntry(
+          c.room.id,
+          SortData(
+            highlightedNotificationCount:
+                c.room.highlightedUnreadNotificationCount,
+            totalNotificationCount: c.room.totalUnreadNotificationCount,
+            latestMessageTime: c.latestMessageForSorting?.event?.time,
+            isInvite: c.room.myMembership == Membership.invited,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+extension on Map<RoomId, SortData> {
+  Map<RoomId, SortData> get sorted {
+    final entries = this.entries.toList();
+
+    entries.sort((a, b) {
+      final aSortData = a.value;
+      final bSortData = b.value;
+
+      if (!aSortData.isInvite && !bSortData.isInvite) {
+        final aHighlightedNotificationCount =
+            aSortData.highlightedNotificationCount;
+        final bHighlightedNotificationCount =
+            bSortData.highlightedNotificationCount;
+
+        final aTotalNotificationCount = aSortData.totalNotificationCount;
+        final bTotalNotificationCount = bSortData.totalNotificationCount;
+
+        if (aHighlightedNotificationCount > 0 &&
+            bHighlightedNotificationCount <= 0) {
+          return -1;
+        } else if (aHighlightedNotificationCount <= 0 &&
+            bHighlightedNotificationCount > 0) {
+          return 1;
+        } else if (aTotalNotificationCount > 0 &&
+            bTotalNotificationCount <= 0) {
+          return -1;
+        } else if (aTotalNotificationCount <= 0 &&
+            bTotalNotificationCount > 0) {
+          return 1;
+        }
+
+        final aTime = aSortData.latestMessageTime;
+        final bTime = bSortData.latestMessageTime;
+
+        if (aTime != null && bTime != null) {
+          return -aTime.compareTo(bTime);
+        } else if (aTime != null && bTime == null) {
+          return -1;
+        } else if (aTime == null && bTime != null) {
+          return 1;
+        } else {
+          return 0;
+        }
+      } else if (aSortData.isInvite && !bSortData.isInvite) {
+        return -1;
+      } else if (!aSortData.isInvite && bSortData.isInvite) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
+    return Map.fromEntries(entries);
   }
 }

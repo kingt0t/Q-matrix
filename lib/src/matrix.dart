@@ -21,10 +21,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 import 'package:path_provider/path_provider.dart';
+
 import 'package:provider/provider.dart';
 import 'package:moor/moor.dart';
 import 'package:path/path.dart' as path;
 
+import 'chat_order/bloc.dart';
 import 'auth/bloc.dart';
 import 'models/chat.dart';
 
@@ -43,6 +45,9 @@ class Matrix {
   // Used for listening to auth state changes
   final AuthBloc _authBloc;
 
+  // Notified when chats changed.
+  final ChatOrderBloc _chatOrderBloc;
+
   MyUser _user;
   MyUser get user => _user;
 
@@ -55,7 +60,7 @@ class Matrix {
   var _chats = <RoomId, Chat>{};
   Map<RoomId, Chat> get chats => _chats;
 
-  Matrix(this._authBloc) {
+  Matrix(this._authBloc, this._chatOrderBloc) {
     _authBloc.listen(_processAuthState);
   }
 
@@ -107,6 +112,13 @@ class Matrix {
   void _processUpdate(Update update) {
     _processUser(update.user);
 
+    _chatOrderBloc.add(
+      UpdateChatOrder(
+        personal: _chats.values.notChannels.toList(),
+        public: _chats.values.channels.toList(),
+      ),
+    );
+
     _chatUpdatesController.add(
       ChatsUpdate(
         chats: _chats,
@@ -120,6 +132,8 @@ class Matrix {
   }
 
   final _chatUpdatesController = StreamController<ChatsUpdate>.broadcast();
+
+  Stream<ChatsUpdate> get updates => _chatUpdatesController.stream;
 
   Stream<ChatUpdate> updatesFor(RoomId roomId) => _chatUpdatesController.stream
       .map(

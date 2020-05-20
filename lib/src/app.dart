@@ -167,7 +167,7 @@ class App extends StatelessWidget {
         ),
       ],
       child: Provider<Matrix>(
-        create: (_) => Matrix(_authBloc),
+        create: (_) => Matrix(_authBloc, _chatOrderBloc),
         child: PattleTheme(
           data: _settingsBloc.state.themeBrightness == Brightness.dark
               ? pattleDarkTheme
