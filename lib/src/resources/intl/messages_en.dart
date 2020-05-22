@@ -76,6 +76,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(name) => "${name} is typing...";
 
+  static m12(version) => "Version ${version}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
         "Logout": MessageLookupByLibrary.simpleMessage("Logout"),
@@ -145,6 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "_Settings_editNameDescription": MessageLookupByLibrary.simpleMessage(
             "This is not your username. This is the name that will be visible to others."),
         "_Settings_title": MessageLookupByLibrary.simpleMessage("Settings"),
+        "_Settings_version": m12,
         "_StartUsername_hostnameInvalidError":
             MessageLookupByLibrary.simpleMessage("Invalid hostname"),
         "_StartUsername_title":

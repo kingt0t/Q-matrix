@@ -76,8 +76,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(name) => "${name} typt...";
 
+  static m12(version) => "Versie ${version}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+        "Logout": MessageLookupByLibrary.simpleMessage("Uitloggen"),
         "Participants": MessageLookupByLibrary.simpleMessage("Deelnemers"),
         "Profile": MessageLookupByLibrary.simpleMessage("Profiel"),
         "_ChatDetails_description":
@@ -146,6 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "_Settings_editNameDescription": MessageLookupByLibrary.simpleMessage(
             "Dit is niet je gebruikersnaam. Deze naam is zichtbaar voor anderen."),
         "_Settings_title": MessageLookupByLibrary.simpleMessage("Instellingen"),
+        "_Settings_version": m12,
         "_StartUsername_hostnameInvalidError":
             MessageLookupByLibrary.simpleMessage("Ongeldige hostnaam"),
         "_StartUsername_title":

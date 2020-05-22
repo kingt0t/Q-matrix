@@ -791,6 +791,15 @@ class _Settings extends _Category {
     );
   }
 
+  String version(String version) {
+    return Intl.message(
+      'Version $version',
+      name: '_Settings_version',
+      args: [version],
+      locale: _localeName,
+    );
+  }
+
   String get logoutButton {
     return Intl.message(
       'Logout',

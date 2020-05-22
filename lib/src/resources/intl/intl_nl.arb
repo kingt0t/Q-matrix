@@ -319,6 +319,13 @@
     "type": "text",
     "placeholders": {}
   },
+  "_Settings_version": "Versie {version}",
+  "@_Settings_version": {
+    "type": "text",
+    "placeholders": {
+      "version": {}
+    }
+  },
   "Logout": "Uitloggen",
   "@Logout": {
     "type": "text",

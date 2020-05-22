@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-10T21:27:49.243825",
+  "@@last_modified": "2020-05-22T19:51:59.835654",
   "appName": "Pattle",
   "@appName": {
     "type": "text",
@@ -318,6 +318,13 @@
   "@_Settings_editNameDescription": {
     "type": "text",
     "placeholders": {}
+  },
+  "_Settings_version": "Version {version}",
+  "@_Settings_version": {
+    "type": "text",
+    "placeholders": {
+      "version": {}
+    }
   },
   "Logout": "Logout",
   "@Logout": {

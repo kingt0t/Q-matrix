@@ -25,6 +25,7 @@ import '../../../resources/theme.dart';
 import '../../../app.dart';
 
 import 'widgets/logout_button/widget.dart';
+import 'widgets/version/widget.dart';
 
 class SettingsPage extends StatelessWidget {
   SettingsPage({Key key});
@@ -54,7 +55,14 @@ class SettingsPage extends StatelessWidget {
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: LogoutButton.withBloc(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Version.withBloc(),
+                  SizedBox(height: 24),
+                  LogoutButton.withBloc(),
+                ],
+              ),
             ),
           ),
           SizedBox(height: 24),

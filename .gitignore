@@ -32,7 +32,7 @@
 /dev/integration_tests/**/xcuserdata
 /dev/integration_tests/**/Pods
 /packages/flutter/coverage/
-version
+/version
 
 # packages file containing multi-root paths
 .packages.generated
