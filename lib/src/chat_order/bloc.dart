@@ -154,7 +154,7 @@ extension on List<Chat> {
                 c.room.highlightedUnreadNotificationCount,
             totalNotificationCount: c.room.totalUnreadNotificationCount,
             latestMessageTime: c.latestMessageForSorting?.event?.time,
-            isInvite: c.room.myMembership == Membership.invited,
+            isInvite: c.room.me.isInvited,
           ),
         ),
       ),

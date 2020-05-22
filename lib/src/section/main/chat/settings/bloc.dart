@@ -53,7 +53,7 @@ class ChatSettingsBloc extends Bloc<ChatSettingsEvent, ChatSettingsState> {
                 time: DateTime.now(),
               ),
               content: MemberChange(
-                membership: _room.myMembership,
+                membership: _room.me.membership,
                 displayName: _matrix.user.name,
                 avatarUrl: _matrix.user.avatarUrl,
               ),

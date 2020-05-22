@@ -101,6 +101,7 @@ class Subtitle extends StatelessWidget {
                     child: child,
                   ),
                 ),
+                if (_InviteIcon.necessary(context)) _InviteIcon(),
                 if (_NotificationCount.necessary(context)) _NotificationCount(),
               ],
             );
@@ -130,6 +131,21 @@ class Sender extends StatelessWidget {
       '${message.sender.name}: ',
       maxLines: 1,
       style: TextStyle(fontWeight: FontWeight.bold),
+    );
+  }
+}
+
+class _InviteIcon extends StatelessWidget {
+  static bool necessary(BuildContext context) {
+    return Subtitle.of(context).chat.room.me.isInvited;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      Icons.mail,
+      color: Theme.of(context).primaryColor,
+      size: 20,
     );
   }
 }

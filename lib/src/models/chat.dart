@@ -47,7 +47,7 @@ class Chat {
   bool get isChannel =>
       room.joinRule == JoinRule.public || room.joinRule == JoinRule.knock;
 
-  bool get isInvite => room.myMembership == Membership.invited;
+  bool get isInvite => room.me.isInvited;
 
   Chat({
     @required this.room,
@@ -73,7 +73,7 @@ class Chat {
 extension RoomToChat on Room {
   Chat toChat({@required UserId myId}) {
     // We should always have at least 30 items in the timeline, so don't load
-    final latestEvent = timeline.firstWhere(
+    var latestEvent = timeline.firstWhere(
       (event) => !ignoredEvents.contains(event.runtimeType),
       orElse: () => null,
     );
@@ -88,6 +88,11 @@ extension RoomToChat on Room {
           event is! RedactionEvent,
       orElse: () => null,
     );
+
+    // For invited-to chats, the latest event is the invite event
+    if (me.isInvited) {
+      latestEvent = members.get(myId).event;
+    }
 
     // If there is no non-MemberChangeEvent in the last
     // 10 messages, just settle for the most recent one (which ever

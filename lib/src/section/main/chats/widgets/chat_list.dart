@@ -82,15 +82,24 @@ class ChatListState extends State<ChatList> {
             indent: 64,
           ),
           itemCount: widget.chats.length,
-          itemBuilder: (context, index) {
-            return _buildChat(widget.chats[index]);
-          },
+          itemBuilder: (context, index) => _ChatTile(chat: widget.chats[index]),
         ),
       ),
     );
   }
+}
 
-  Widget _buildChat(Chat chat) {
+class _ChatTile extends StatelessWidget {
+  final Chat chat;
+
+  const _ChatTile({Key key, @required this.chat}) : super(key: key);
+
+  void _onTap(BuildContext context) {
+    Navigator.pushNamed(context, Routes.chats, arguments: chat.room.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final time = formatAsListItem(context, chat.latestMessage?.event?.time);
 
     return ListTile(
@@ -113,9 +122,7 @@ class ChatListState extends State<ChatList> {
         ],
       ),
       dense: false,
-      onTap: () {
-        Navigator.pushNamed(context, Routes.chats, arguments: chat.room.id);
-      },
+      onTap: () => _onTap(context),
       leading: ChatAvatar(chat: chat),
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       subtitle: Subtitle.withContent(chat),

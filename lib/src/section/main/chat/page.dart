@@ -36,6 +36,7 @@ import 'bloc.dart';
 import 'widgets/bubble/message.dart';
 import 'widgets/bubble/state.dart';
 import 'widgets/date_header.dart';
+import 'widgets/input/invite/widget.dart';
 import 'widgets/input/widget.dart';
 
 class ChatPage extends StatefulWidget {
@@ -108,6 +109,7 @@ class _ChatPageState extends State<ChatPage> {
       listener: _onStateChange,
       builder: (context, state) {
         final chat = state.chat;
+        final isInvite = chat.isInvite;
 
         Widget avatar = Container();
         final avatarUrl = chat.avatarUrl;
@@ -145,6 +147,7 @@ class _ChatPageState extends State<ChatPage> {
           child: Scaffold(
             backgroundColor: context.pattleTheme.data.chat.backgroundColor,
             appBar: _InkWellAppbar(
+              onTap: !isInvite ? () => _goToChatSettings(context, state) : null,
               appBar: AppBar(
                 leading: SizedBox(
                   width: kToolbarHeight,
@@ -161,7 +164,6 @@ class _ChatPageState extends State<ChatPage> {
                   ],
                 ),
               ),
-              onTap: () => _goToChatSettings(context, state),
             ),
             body: Column(
               children: <Widget>[
@@ -170,7 +172,9 @@ class _ChatPageState extends State<ChatPage> {
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                        child: _MessageList(chat: chat),
+                        child: !isInvite
+                            ? _MessageList(chat: chat)
+                            : _InviteSplash(chat: chat),
                       ),
                       ConstrainedBox(
                         constraints: BoxConstraints.loose(
@@ -178,10 +182,12 @@ class _ChatPageState extends State<ChatPage> {
                             MediaQuery.of(context).size.height / 3,
                           ),
                         ),
-                        child: Input.withBloc(
-                          roomId: chat.room.id,
-                          canSendMessages: chat.room.myMembership is Joined,
-                        ),
+                        child: !isInvite
+                            ? Input.withBloc(
+                                roomId: chat.room.id,
+                                canSendMessages: chat.room.me.hasJoined,
+                              )
+                            : InviteInput.withBloc(roomId: chat.room.id),
                       ),
                     ],
                   ),
@@ -363,4 +369,43 @@ class _InkWellAppbar extends StatelessWidget implements PreferredSize {
 
   @override
   Size get preferredSize => appBar.preferredSize;
+}
+
+class _InviteSplash extends StatelessWidget {
+  final Chat chat;
+
+  const _InviteSplash({Key key, @required this.chat}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Expanded(
+          child: Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: 164,
+              height: 164,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Icon(
+                Icons.mail,
+                size: 96,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 16),
+        StateBubble.withContent(
+          // Latest message should be the invite event
+          message: chat.latestMessage,
+        ),
+        SizedBox(height: 12),
+      ],
+    );
+  }
 }
