@@ -50,7 +50,7 @@ class InviteInputBloc extends Bloc<InviteInputEvent, InviteInputState> {
 
     if (event is RejectInvite) {
       yield Rejecting();
-      /*_room.leave();*/
+      await _room.leave();
       yield Rejected();
     }
   }

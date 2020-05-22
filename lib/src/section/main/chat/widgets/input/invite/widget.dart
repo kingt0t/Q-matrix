@@ -46,11 +46,18 @@ class InviteInput extends StatelessWidget {
     context.bloc<InviteInputBloc>().add(RejectInvite());
   }
 
+  void _onStateChange(BuildContext context, InviteInputState state) {
+    if (state is Rejected) {
+      Navigator.pop(context);
+    }
+  }
+
   static const _linearProgressIndicatorHeight = 6.0;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<InviteInputBloc, InviteInputState>(
+    return BlocConsumer<InviteInputBloc, InviteInputState>(
+      listener: _onStateChange,
       builder: (context, state) {
         // TODO: Use Material outside of widget when Input doesn't need specific
         // changes to it anymore

@@ -323,8 +323,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "41d2b6fe414c105db27be2dc67798ca17121eb9a"
-      resolved-ref: "41d2b6fe414c105db27be2dc67798ca17121eb9a"
+      ref: "74970f44935aab824d5c984a753ae57e07894db3"
+      resolved-ref: "74970f44935aab824d5c984a753ae57e07894db3"
       url: "https://git.pattle.im/pattle/library/matrix-dart-sdk.git"
     source: git
     version: "0.0.0"
