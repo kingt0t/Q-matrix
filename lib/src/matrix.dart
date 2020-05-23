@@ -29,6 +29,7 @@ import 'package:path/path.dart' as path;
 import 'chat_order/bloc.dart';
 import 'auth/bloc.dart';
 import 'models/chat.dart';
+import 'util/store.dart';
 
 class Matrix {
   static MoorStore _store;
