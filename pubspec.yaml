@@ -66,8 +66,6 @@ dependencies:
 
   flutter_local_notifications: ^0.8.4
 
-  moor_ffi: 0.5.0
-
 dev_dependencies:
   flutter_launcher_icons: ^0.7.2+1
 
