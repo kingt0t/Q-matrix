@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:async/async.dart';
 import 'package:bloc/bloc.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 
@@ -22,6 +23,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc(this._startBloc, this._authBloc, this._sentryBloc);
 
+  CancelableCompleter _changeHomeserverCompleter;
+
   @override
   LoginState get initialState => NotLoggedIn(
         homeserverState: HomeserverState.initial(),
@@ -31,12 +34,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is ChangeHomeserver) {
-      yield* _changeHomeserver(event).map(
-        (homeserverState) => NotLoggedIn(
+      final homeserverState = await _changeHomeserver(event);
+      if (homeserverState != null) {
+        yield NotLoggedIn(
           usernameState: state.usernameState,
           homeserverState: homeserverState,
-        ),
-      );
+        );
+      }
     }
 
     if (event is ChangeUsername) {
@@ -82,18 +86,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Stream<HomeserverState> _changeHomeserver(ChangeHomeserver event) async* {
+  Future<HomeserverState> _changeHomeserver(ChangeHomeserver event) async {
     final homeserverState = state.homeserverState;
 
     // Reset if the user clears the homeserver explicitly, meaning
     // that the homeserver can be set by the host part of the user id again.
     if (event.setExplicitly && event.url == 'https://') {
-      yield HomeserverState.initial();
-      return;
+      return HomeserverState.initial();
     }
 
     if (homeserverState.isSetExplicitly && !event.setExplicitly) {
-      return;
+      return null;
     }
 
     final url = Uri.tryParse(event.url);
@@ -102,14 +105,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         !url.isAbsolute ||
         url.authority == null ||
         url.authority.isEmpty) {
-      yield homeserverState.copyWith(
+      return homeserverState.copyWith(
         isValid: false,
       );
-      return;
     }
 
     if (url == homeserverState.value?.url) {
-      return;
+      return null;
     }
 
     Homeserver homeserver;
@@ -120,7 +122,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       homeserver = Homeserver(url);
     }
 
-    yield homeserverState.copyWith(
+    return homeserverState.copyWith(
       value: homeserver,
       isSetExplicitly: event.setExplicitly,
       isValid: true,
@@ -184,17 +186,27 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         return resetHomeserverAndUsername(InvalidReason.userId);
       }
 
+      await _changeHomeserverCompleter?.operation?.cancel();
+      _changeHomeserverCompleter = CancelableCompleter();
+      _changeHomeserverCompleter.operation.value.whenComplete(
+        () => add(
+          ChangeHomeserver(
+            'https://$server',
+            setExplicitly: false,
+          ),
+        ),
+      );
+
+      Future.delayed(
+        Duration(seconds: 1),
+        _changeHomeserverCompleter.complete,
+      );
+
       return currentState.copyWith(
         usernameState: currentState.usernameState.copyWith(
           value: UserId(input).username,
           isValid: true,
         ),
-        homeserverState: await _changeHomeserver(
-          ChangeHomeserver(
-            'https://$server',
-            setExplicitly: false,
-          ),
-        ).last,
       );
     } else {
       if (input.startsWith('@')) {
