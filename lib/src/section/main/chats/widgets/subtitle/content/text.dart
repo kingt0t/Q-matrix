@@ -31,14 +31,11 @@ class TextSubtitleContent extends StatelessWidget {
     final event = message.event as TextMessageEvent;
     final isReply = event.content.inReplyToId != null;
 
-    var text = event.content.formattedBody ?? event.content.body;
+    var text = event.content.body;
 
     if (isReply) {
       // Strip replied-to content
-      final splitReply = text.split(RegExp('(<\\/*mx-reply>)'));
-      if (splitReply.length >= 3) {
-        text = ' ${splitReply[2]}';
-      }
+      text = text.replaceAll(RegExp(r'> <@[^:]+:[^>]+>.+\n\n'), '');
     }
 
     return Row(
