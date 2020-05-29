@@ -71,6 +71,7 @@ class _ImageContentState extends State<ImageContent> {
     final event = bubble.message.event as ImageMessageEvent;
 
     return OpenContainer(
+      tappable: false,
       closedElevation: 0,
       closedShape: RoundedRectangleBorder(borderRadius: bubble.borderRadius),
       closedBuilder: (_, void Function() action) {

@@ -31,6 +31,7 @@ import 'state.dart';
 export 'event.dart';
 export 'state.dart';
 
+// TODO: Purpose slowly broadens to more than chat ordering, rename?
 class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
   static const _personalKey = 'personal';
   static const _publicKey = 'public';
@@ -107,20 +108,20 @@ class SortData {
   final int highlightedNotificationCount;
   final int totalNotificationCount;
   final DateTime latestMessageTime;
-  final bool isInvite;
+  final Membership membership;
 
   SortData({
     @required this.highlightedNotificationCount,
     @required this.totalNotificationCount,
     @required this.latestMessageTime,
-    @required this.isInvite,
+    @required this.membership,
   });
 
   static const _highlightedNotificationCountKey =
       'highlighted_notification_count';
   static const _totalNotificationCountKey = 'total_notification_count';
   static const _latestMessageTimeKey = 'latest_message_time';
-  static const _isInviteKey = 'is_invite';
+  static const _membershipKey = 'membership';
 
   factory SortData.fromJson(Map<String, dynamic> json) {
     return SortData(
@@ -131,7 +132,7 @@ class SortData {
               json[_latestMessageTimeKey],
             )
           : null,
-      isInvite: json[_isInviteKey],
+      membership: Membership.parse(json[_membershipKey]),
     );
   }
 
@@ -139,7 +140,7 @@ class SortData {
         _highlightedNotificationCountKey: highlightedNotificationCount,
         _totalNotificationCountKey: totalNotificationCount,
         _latestMessageTimeKey: latestMessageTime?.millisecondsSinceEpoch,
-        _isInviteKey: isInvite,
+        _membershipKey: membership.toString(),
       };
 }
 
@@ -154,7 +155,7 @@ extension on List<Chat> {
                 c.room.highlightedUnreadNotificationCount,
             totalNotificationCount: c.room.totalUnreadNotificationCount,
             latestMessageTime: c.latestMessageForSorting?.event?.time,
-            isInvite: c.room.me.isInvited,
+            membership: c.room.me.membership,
           ),
         ),
       ),
@@ -170,7 +171,8 @@ extension on Map<RoomId, SortData> {
       final aSortData = a.value;
       final bSortData = b.value;
 
-      if (!aSortData.isInvite && !bSortData.isInvite) {
+      if (aSortData.membership is! Invited &&
+          bSortData.membership is! Invited) {
         final aHighlightedNotificationCount =
             aSortData.highlightedNotificationCount;
         final bHighlightedNotificationCount =
@@ -205,9 +207,11 @@ extension on Map<RoomId, SortData> {
         } else {
           return 0;
         }
-      } else if (aSortData.isInvite && !bSortData.isInvite) {
+      } else if (aSortData.membership is Invited &&
+          bSortData.membership is! Invited) {
         return -1;
-      } else if (!aSortData.isInvite && bSortData.isInvite) {
+      } else if (aSortData.membership is! Invited &&
+          bSortData.membership is Invited) {
         return 1;
       } else {
         return 0;

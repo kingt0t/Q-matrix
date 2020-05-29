@@ -15,21 +15,28 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:matrix_sdk/matrix_sdk.dart';
+import 'package:meta/meta.dart';
 
-import 'bloc.dart';
+import '../../models/channel.dart';
 
-class ChatOrderState extends Equatable {
-  final Map<RoomId, SortData> personal;
-  final Map<RoomId, SortData> public;
+@immutable
+class ChannelListState extends Equatable {
+  final List<Channel> myChannels;
+  final List<Channel> extraChannels;
 
-  /// Not ordered.
-  Iterable<RoomId> get allIds => personal.keys.followedBy(public.keys);
+  ChannelListState({this.myChannels, this.extraChannels});
 
-  ChatOrderState({@required this.personal, @required this.public});
+  ChannelListState copyWith({
+    List<Channel> myChannels,
+    List<Channel> extraChannels,
+  }) {
+    return ChannelListState(
+      myChannels: myChannels ?? this.myChannels,
+      extraChannels: extraChannels ?? this.extraChannels,
+    );
+  }
 
   @override
-  List<Object> get props => [personal, public];
+  List<Object> get props => [myChannels, extraChannels];
 }

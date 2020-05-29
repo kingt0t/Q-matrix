@@ -34,8 +34,7 @@ import 'section/main/chat/page.dart';
 import 'section/main/chat/image/page.dart';
 import 'section/main/chat/settings/page.dart';
 import 'section/main/chats/page.dart';
-import 'section/main/chats/create/group/details_page.dart';
-import 'section/main/chats/create/group/members_page.dart';
+import 'section/main/chats/new/page.dart';
 import 'section/main/settings/appearance/page.dart';
 import 'section/main/settings/profile/name/page.dart';
 import 'section/main/settings/profile/page.dart';
@@ -80,11 +79,11 @@ final Map<String, MaterialPageRoute Function(Object)> routes = {
       ),
   Routes.chatsNew: (arguments) => MaterialPageRoute(
         settings: RouteSettings(name: Routes.chatsNew),
-        builder: (context) => CreateGroupMembersPage.withBloc(),
+        builder: (context) => NewChatPage(),
       ),
-  Routes.chatsNewDetails: (arguments) => MaterialPageRoute(
-        settings: RouteSettings(name: Routes.chatsNewDetails),
-        builder: (context) => CreateGroupDetailsPage.withGivenBloc(arguments),
+  Routes.chatsNewJoinChannel: (arguments) => MaterialPageRoute(
+        settings: RouteSettings(name: Routes.chatsNewJoinChannel),
+        builder: (context) => NewChatPage(),
       ),
   Routes.image: (dynamic arguments) => MaterialPageRoute(
       settings: RouteSettings(name: Routes.image),
@@ -116,7 +115,7 @@ class Routes {
   static const loginUsername = '/login/username';
 
   static const chatsNew = '/chats/new';
-  static const chatsNewDetails = '/chats/new/details';
+  static const chatsNewJoinChannel = '/chats/new/join';
 }
 
 class App extends StatelessWidget {

@@ -649,10 +649,10 @@ class _ChatDetails extends _Category {
 }
 
 class _Chats extends _Category {
-  final _ChatsNewGroup newGroup;
+  final _ChatsNewChat newChat;
 
   _Chats(String localeName)
-      : newGroup = _ChatsNewGroup(localeName),
+      : newChat = _ChatsNewChat(localeName),
         super(localeName);
 
   String get chats {
@@ -670,23 +670,35 @@ class _Chats extends _Category {
       locale: _localeName,
     );
   }
+}
 
-  String get newChannel {
+class _ChatsNewChat extends _Category {
+  final _ChatsNewChatJoinChannel joinChannel;
+  final _ChatsNewChatNewGroup newGroup;
+  final _ChatsNewChatNewChannel newChannel;
+
+  _ChatsNewChat(String localeName)
+      : joinChannel = _ChatsNewChatJoinChannel(localeName),
+        newGroup = _ChatsNewChatNewGroup(localeName),
+        newChannel = _ChatsNewChatNewChannel(localeName),
+        super(localeName);
+
+  String get title {
     return Intl.message(
-      'New channel',
-      name: '_Chats_newChannel',
+      'New chat',
+      name: '_ChatsNewChat_title',
       locale: _localeName,
     );
   }
 }
 
-class _ChatsNewGroup extends _Category {
-  _ChatsNewGroup(String localeName) : super(localeName);
+class _ChatsNewChatNewGroup extends _Category {
+  _ChatsNewChatNewGroup(String localeName) : super(localeName);
 
   String get title {
     return Intl.message(
       'New group',
-      name: '_ChatsNewGroup_title',
+      name: '_ChatsNewChatNewGroup_title',
       locale: _localeName,
     );
   }
@@ -694,7 +706,7 @@ class _ChatsNewGroup extends _Category {
   String get groupName {
     return Intl.message(
       'Group name',
-      name: '_ChatsNewGroup_groupName',
+      name: '_ChatsNewChatNewGroup_groupName',
       locale: _localeName,
     );
   }
@@ -702,6 +714,47 @@ class _ChatsNewGroup extends _Category {
   String get participants {
     return Intl.message(
       'Participants',
+      name: '_ChatsNewChatNewGroup_participants',
+      locale: _localeName,
+    );
+  }
+}
+
+class _ChatsNewChatNewChannel extends _Category {
+  _ChatsNewChatNewChannel(String localeName) : super(localeName);
+
+  String get title {
+    return Intl.message(
+      'New channel',
+      name: '_ChatsNewChatNewChannel_title',
+      locale: _localeName,
+    );
+  }
+}
+
+class _ChatsNewChatJoinChannel extends _Category {
+  _ChatsNewChatJoinChannel(String localeName) : super(localeName);
+
+  String get title {
+    return Intl.message(
+      'Join channel',
+      name: '_ChatsNewChatJoinChannel_title',
+      locale: _localeName,
+    );
+  }
+
+  String get placeholder {
+    return Intl.message(
+      'Search term or alias',
+      name: '_ChatsNewChatJoinChannel_placeholder',
+      locale: _localeName,
+    );
+  }
+
+  String get joinButton {
+    return Intl.message(
+      'Join',
+      name: '_ChatsNewChatJoinChannel_joinButton',
       locale: _localeName,
     );
   }

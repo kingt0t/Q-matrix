@@ -15,9 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../widgets/filled_text_field.dart';
+import '../../../widgets/info.dart';
+import '../../../widgets/reverse_app_bar.dart';
 
 import '../../../../../resources/intl/localizations.dart';
 import '../../../../../resources/theme.dart';
@@ -73,16 +76,9 @@ class _NamePageState extends State<NamePage> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
+        appBar: ReverseAppBar(
           title: Text(
             context.intl.common.name,
-            style: TextStyle(
-              color: context.pattleTheme.data.primaryColorOnBackground,
-            ),
-          ),
-          brightness: Theme.of(context).brightness,
-          iconTheme: IconThemeData(
-            color: context.pattleTheme.data.primaryColorOnBackground,
           ),
           actions: <Widget>[
             IconButton(
@@ -90,28 +86,13 @@ class _NamePageState extends State<NamePage> {
               onPressed: setName,
             )
           ],
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
         body: Column(
           children: <Widget>[
-            TextField(
-              autofocus: true,
+            FilledTextField(
               controller: _textController,
-              autocorrect: false,
-              cursorColor: Colors.white,
-              style: TextStyle(
-                color: Colors.white,
-              ),
               textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(
-                filled: true,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.zero,
-                ),
-                fillColor: context.pattleTheme.data.primaryColor,
-                focusColor: Colors.white,
-              ),
+              autofocus: true,
               onSubmitted: (_) => setName(),
             ),
             BlocBuilder<ProfileBloc, ProfileState>(
@@ -131,25 +112,8 @@ class _NamePageState extends State<NamePage> {
             ),
             Padding(
               padding: EdgeInsets.all(16),
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(right: 16),
-                    child: Icon(
-                      Icons.info_outline,
-                      size: 28,
-                      color: Theme.of(context).textTheme.caption.color,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      context.intl.settings.editNameDescription,
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.caption.color,
-                      ),
-                    ),
-                  )
-                ],
+              child: Info(
+                content: Text(context.intl.settings.editNameDescription),
               ),
             ),
           ],

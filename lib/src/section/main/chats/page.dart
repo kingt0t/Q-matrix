@@ -14,9 +14,11 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
+import 'package:mdi/mdi.dart';
 
 import '../../../chat_order/bloc.dart';
 
@@ -73,7 +75,7 @@ class _ChatsPageState extends State<ChatsPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Icon(Icons.public),
+                    Icon(Mdi.earth),
                     SizedBox(width: 8),
                     Text(context.intl.chats.channels.toUpperCase()),
                   ],
@@ -89,6 +91,28 @@ class _ChatsPageState extends State<ChatsPage> {
             _ChatsTab(personal: false),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.pushNamed(context, Routes.chatsNew),
+          child: Icon(Icons.chat),
+        ),
+        // TODO: Use OpenContainer when state bug is fixed
+        /*OpenContainer(
+          tappable: false,
+          closedElevation: 6,
+          closedColor:
+              Theme.of(context).floatingActionButtonTheme?.backgroundColor ??
+                  Theme.of(context).colorScheme?.secondary,
+          closedShape: CircleBorder(),
+          closedBuilder: (context, void Function() action) {
+            return FloatingActionButton(
+              onPressed: action,
+              child: Icon(Icons.chat),
+            );
+          },
+          openBuilder: (context, void Function() action) {
+            return NewChatPage.withBloc();
+          },
+        ),*/
       ),
     );
   }

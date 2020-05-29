@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-22T19:51:59.835654",
+  "@@last_modified": "2020-05-29T17:49:25.735826",
   "appName": "Pattle",
   "@appName": {
     "type": "text",
@@ -248,23 +248,43 @@
     "type": "text",
     "placeholders": {}
   },
-  "_Chats_newChannel": "New channel",
-  "@_Chats_newChannel": {
+  "_ChatsNewChat_title": "New chat",
+  "@_ChatsNewChat_title": {
     "type": "text",
     "placeholders": {}
   },
-  "_ChatsNewGroup_title": "New group",
-  "@_ChatsNewGroup_title": {
+  "_ChatsNewChatNewGroup_title": "New group",
+  "@_ChatsNewChatNewGroup_title": {
     "type": "text",
     "placeholders": {}
   },
-  "_ChatsNewGroup_groupName": "Group name",
-  "@_ChatsNewGroup_groupName": {
+  "_ChatsNewChatNewGroup_groupName": "Group name",
+  "@_ChatsNewChatNewGroup_groupName": {
     "type": "text",
     "placeholders": {}
   },
-  "Participants": "Participants",
-  "@Participants": {
+  "_ChatsNewChatNewGroup_participants": "Participants",
+  "@_ChatsNewChatNewGroup_participants": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatsNewChatNewChannel_title": "New channel",
+  "@_ChatsNewChatNewChannel_title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatsNewChatJoinChannel_title": "Join channel",
+  "@_ChatsNewChatJoinChannel_title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatsNewChatJoinChannel_placeholder": "Search term or alias",
+  "@_ChatsNewChatJoinChannel_placeholder": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatsNewChatJoinChannel_joinButton": "Join",
+  "@_ChatsNewChatJoinChannel_joinButton": {
     "type": "text",
     "placeholders": {}
   },

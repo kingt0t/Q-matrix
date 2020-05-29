@@ -248,23 +248,43 @@
     "type": "text",
     "placeholders": {}
   },
-  "_Chats_newChannel": "Nieuw kanaal",
-  "@_Chats_newChannel": {
+  "_ChatsNewChat_title": "Nieuwe chat",
+  "@_ChatsNewChat_title": {
     "type": "text",
     "placeholders": {}
   },
-  "_ChatsNewGroup_title": "Nieuwe groep",
-  "@_ChatsNewGroup_title": {
+  "_ChatsNewChatNewGroup_title": "Nieuwe groep",
+  "@_ChatsNewChatNewGroup_title": {
     "type": "text",
     "placeholders": {}
   },
-  "_ChatsNewGroup_groupName": "Groepnaam",
-  "@_ChatsNewGroup_groupName": {
+  "_ChatsNewChatNewGroup_groupName": "Groepnaam",
+  "@_ChatsNewChatNewGroup_groupName": {
     "type": "text",
     "placeholders": {}
   },
-  "Participants": "Deelnemers",
-  "@Participants": {
+  "_ChatsNewChatNewGroup_participants": "Deelnemers",
+  "@_ChatsNewChatNewGroup_participants": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatsNewChatNewChannel_title": "Nieuw kanaal",
+  "@_ChatsNewChatNewChannel_title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatsNewChatJoinChannel_title": "Deelnemen aan kanaal",
+  "@_ChatsNewChatJoinChannel_title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatsNewChatJoinChannel_placeholder": "Zoekterm of alias",
+  "@_ChatsNewChatJoinChannel_placeholder": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatsNewChatJoinChannel_joinButton": "Deelnemen",
+  "@_ChatsNewChatJoinChannel_joinButton": {
     "type": "text",
     "placeholders": {}
   },

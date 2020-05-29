@@ -39,10 +39,79 @@ import 'widgets/date_header.dart';
 import 'widgets/input/invite/widget.dart';
 import 'widgets/input/widget.dart';
 
-class ChatPage extends StatefulWidget {
+class ChatPage extends StatelessWidget {
+  final Widget avatar;
+  final Widget title;
+  final Widget input;
+  final Widget body;
+
+  final VoidCallback onAppBarTap;
+
+  const ChatPage({
+    Key key,
+    this.avatar,
+    this.title,
+    this.onAppBarTap,
+    this.input,
+    this.body,
+  }) : super(key: key);
+
+  static Widget withBloc(RoomId roomId) => _ChatPageWithBloc.withBloc(roomId);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: context.pattleTheme.data.chat.backgroundColor,
+      appBar: _InkWellAppBar(
+        onTap: onAppBarTap,
+        appBar: AppBar(
+          leading: SizedBox(
+            width: kToolbarHeight,
+            height: kToolbarHeight,
+          ),
+          titleSpacing: 0,
+          title: Row(
+            children: <Widget>[
+              if (avatar != null) avatar,
+              SizedBox(width: 16),
+              Expanded(
+                child: title,
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: Column(
+        children: <Widget>[
+          //ErrorBanner(),
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: body,
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: 0,
+                    maxHeight: MediaQuery.of(context).size.height / 3,
+                    minWidth: double.infinity,
+                    maxWidth: double.infinity,
+                  ),
+                  child: input,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChatPageWithBloc extends StatefulWidget {
   final RoomId roomId;
 
-  ChatPage._(this.roomId);
+  _ChatPageWithBloc(this.roomId);
 
   static Widget withBloc(RoomId roomId) {
     return BlocProvider<ChatBloc>(
@@ -51,15 +120,15 @@ class ChatPage extends StatefulWidget {
         c.bloc<NotificationsBloc>(),
         roomId,
       ),
-      child: ChatPage._(roomId),
+      child: _ChatPageWithBloc(roomId),
     );
   }
 
   @override
-  State<StatefulWidget> createState() => _ChatPageState();
+  State<StatefulWidget> createState() => _ChatPageWithBlocState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageWithBlocState extends State<_ChatPageWithBloc> {
   @override
   void dispose() {
     super.dispose();
@@ -144,56 +213,20 @@ class _ChatPageState extends State<ChatPage> {
 
         return WillPopScope(
           onWillPop: () => _onWillPop(context, state),
-          child: Scaffold(
-            backgroundColor: context.pattleTheme.data.chat.backgroundColor,
-            appBar: _InkWellAppbar(
-              onTap: !isInvite ? () => _goToChatSettings(context, state) : null,
-              appBar: AppBar(
-                leading: SizedBox(
-                  width: kToolbarHeight,
-                  height: kToolbarHeight,
-                ),
-                titleSpacing: 0,
-                title: Row(
-                  children: <Widget>[
-                    avatar,
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: title,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            body: Column(
-              children: <Widget>[
-                //ErrorBanner(),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: !isInvite
-                            ? _MessageList(chat: chat)
-                            : _InviteSplash(chat: chat),
-                      ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints.loose(
-                          Size.fromHeight(
-                            MediaQuery.of(context).size.height / 3,
-                          ),
-                        ),
-                        child: !isInvite
-                            ? Input.withBloc(
-                                roomId: chat.room.id,
-                                canSendMessages: chat.room.me.hasJoined,
-                              )
-                            : InviteInput.withBloc(roomId: chat.room.id),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          child: ChatPage(
+            onAppBarTap:
+                !isInvite ? () => _goToChatSettings(context, state) : null,
+            avatar: avatar,
+            title: title,
+            body: !isInvite
+                ? _MessageList(chat: chat)
+                : _InviteSplash(chat: chat),
+            input: !isInvite
+                ? Input.withBloc(
+                    roomId: chat.room.id,
+                    canSendMessages: chat.room.me.hasJoined,
+                  )
+                : InviteInput.withBloc(roomId: chat.room.id),
           ),
         );
       },
@@ -317,12 +350,12 @@ class _MessageListState extends State<_MessageList> {
 }
 
 /// Necessary to show the ink ripples on the whole [AppBar] when tapping it.
-class _InkWellAppbar extends StatelessWidget implements PreferredSize {
+class _InkWellAppBar extends StatelessWidget implements PreferredSize {
   final PreferredSizeWidget appBar;
 
   final VoidCallback onTap;
 
-  const _InkWellAppbar({
+  const _InkWellAppBar({
     Key key,
     @required this.appBar,
     @required this.onTap,

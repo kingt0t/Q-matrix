@@ -81,7 +81,6 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
         "Logout": MessageLookupByLibrary.simpleMessage("Uitloggen"),
-        "Participants": MessageLookupByLibrary.simpleMessage("Deelnemers"),
         "Profile": MessageLookupByLibrary.simpleMessage("Profiel"),
         "_ChatDetails_description":
             MessageLookupByLibrary.simpleMessage("Beschrijving"),
@@ -105,14 +104,24 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Typ een bericht"),
         "_Chat_typing":
             MessageLookupByLibrary.simpleMessage("aan het typen..."),
-        "_ChatsNewGroup_groupName":
+        "_ChatsNewChatJoinChannel_joinButton":
+            MessageLookupByLibrary.simpleMessage("Deelnemen"),
+        "_ChatsNewChatJoinChannel_placeholder":
+            MessageLookupByLibrary.simpleMessage("Zoekterm of alias"),
+        "_ChatsNewChatJoinChannel_title":
+            MessageLookupByLibrary.simpleMessage("Deelnemen aan kanaal"),
+        "_ChatsNewChatNewChannel_title":
+            MessageLookupByLibrary.simpleMessage("Nieuw kanaal"),
+        "_ChatsNewChatNewGroup_groupName":
             MessageLookupByLibrary.simpleMessage("Groepnaam"),
-        "_ChatsNewGroup_title":
+        "_ChatsNewChatNewGroup_participants":
+            MessageLookupByLibrary.simpleMessage("Deelnemers"),
+        "_ChatsNewChatNewGroup_title":
             MessageLookupByLibrary.simpleMessage("Nieuwe groep"),
+        "_ChatsNewChat_title":
+            MessageLookupByLibrary.simpleMessage("Nieuwe chat"),
         "_Chats_channels": MessageLookupByLibrary.simpleMessage("Kanalen"),
         "_Chats_chats": MessageLookupByLibrary.simpleMessage("Chats"),
-        "_Chats_newChannel":
-            MessageLookupByLibrary.simpleMessage("Nieuw kanaal"),
         "_Common_confirm": MessageLookupByLibrary.simpleMessage("Bevestigen"),
         "_Common_name": MessageLookupByLibrary.simpleMessage("Naam"),
         "_Common_next": MessageLookupByLibrary.simpleMessage("Volgende"),

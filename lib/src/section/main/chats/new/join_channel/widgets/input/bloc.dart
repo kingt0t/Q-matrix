@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Wilko Manger
+// Copyright (C) 2019  Wilko Manger
 //
 // This file is part of Pattle.
 //
@@ -15,21 +15,29 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
 
-import 'package:meta/meta.dart';
-import 'package:equatable/equatable.dart';
+import 'package:bloc/bloc.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 
-import 'bloc.dart';
+import 'event.dart';
+import 'state.dart';
 
-class ChatOrderState extends Equatable {
-  final Map<RoomId, SortData> personal;
-  final Map<RoomId, SortData> public;
+export 'event.dart';
+export 'state.dart';
 
-  /// Not ordered.
-  Iterable<RoomId> get allIds => personal.keys.followedBy(public.keys);
-
-  ChatOrderState({@required this.personal, @required this.public});
+class ChannelInputBloc extends Bloc<ChannelInputEvent, ChannelInputState> {
+  @override
+  ChannelInputState get initialState => NoActionAvailable();
 
   @override
-  List<Object> get props => [personal, public];
+  Stream<ChannelInputState> mapEventToState(ChannelInputEvent event) async* {
+    if (event is InputChanged) {
+      if (RoomAlias.isValidFullyQualified(event.input)) {
+        yield CanJoin();
+      } else if (event.input != null && event.input.isNotEmpty) {
+        yield CanClear();
+      } else {
+        yield NoActionAvailable();
+      }
+    }
+  }
 }

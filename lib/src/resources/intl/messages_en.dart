@@ -81,7 +81,6 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
         "Logout": MessageLookupByLibrary.simpleMessage("Logout"),
-        "Participants": MessageLookupByLibrary.simpleMessage("Participants"),
         "Profile": MessageLookupByLibrary.simpleMessage("Profile"),
         "_ChatDetails_description":
             MessageLookupByLibrary.simpleMessage("Description"),
@@ -104,14 +103,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "_Chat_typeAMessage":
             MessageLookupByLibrary.simpleMessage("Type a message"),
         "_Chat_typing": MessageLookupByLibrary.simpleMessage("typing..."),
-        "_ChatsNewGroup_groupName":
+        "_ChatsNewChatJoinChannel_joinButton":
+            MessageLookupByLibrary.simpleMessage("Join"),
+        "_ChatsNewChatJoinChannel_placeholder":
+            MessageLookupByLibrary.simpleMessage("Search term or alias"),
+        "_ChatsNewChatJoinChannel_title":
+            MessageLookupByLibrary.simpleMessage("Join channel"),
+        "_ChatsNewChatNewChannel_title":
+            MessageLookupByLibrary.simpleMessage("New channel"),
+        "_ChatsNewChatNewGroup_groupName":
             MessageLookupByLibrary.simpleMessage("Group name"),
-        "_ChatsNewGroup_title":
+        "_ChatsNewChatNewGroup_participants":
+            MessageLookupByLibrary.simpleMessage("Participants"),
+        "_ChatsNewChatNewGroup_title":
             MessageLookupByLibrary.simpleMessage("New group"),
+        "_ChatsNewChat_title": MessageLookupByLibrary.simpleMessage("New chat"),
         "_Chats_channels": MessageLookupByLibrary.simpleMessage("Channels"),
         "_Chats_chats": MessageLookupByLibrary.simpleMessage("Chats"),
-        "_Chats_newChannel":
-            MessageLookupByLibrary.simpleMessage("New channel"),
         "_Common_confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "_Common_name": MessageLookupByLibrary.simpleMessage("Name"),
         "_Common_next": MessageLookupByLibrary.simpleMessage("Next"),
