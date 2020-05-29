@@ -44,7 +44,7 @@ class ChannelListBloc extends Bloc<ChannelListEvent, ChannelListState> {
   Future<Homeserver> get _extraHomeserver async {
     if (__extraHomeserver == null) {
       __extraHomeserver = await Homeserver.fromWellKnown(
-        Uri.parse('https://feneas.org'),
+        Uri.parse('https://matrix.org'),
       );
     }
 
