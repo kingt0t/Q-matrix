@@ -7,14 +7,11 @@
   Pattle is an easy to use Android app for Matrix, with
   design inspired by other popular IM apps.
 
-  The goal of Pattle is to create an app that behaves similiary
-  (and almost exactly) like many modern popular chat apps of today,
-  like WhatsApp, Telegram and Signal. This is not the only goal,
-  however: the primary goal of Pattle is to be a Matrix app that
+  The goal of Pattle is to create an app that behaves similarly
+  like many modern popular chat apps of today, such as WhatsApp,
+  Telegram and Signal. This is not the only goal, however:
+  the primary goal of Pattle is to be a Matrix app that
   everyone can use, in terms of simplicity.
-
-  For more details, see the
-  [design philosophy](https://docs.pattle.im/design/philosophy/).
 
 ## Get Pattle
   
@@ -41,10 +38,6 @@
   Before building a debug build, make sure you have a `.env` file in the
   root of the project. You can just `cp .env.example .env`, because
   Sentry is not used in debug mode.
-
-  Since Pattle uses the beta branch of the Flutter, make sure to
-  switch to this branch by running `flutter channel beta`. Then,
-  run `flutter upgrade`.
 
   After the Flutter SDK is setup and ready, you can build Pattle with:
   `flutter build apk` for Android, or
