@@ -25,7 +25,7 @@ import '../../../../../../../models/chat_message.dart';
 import '../state.dart';
 
 /// If [message] is `null`, will try to get the [message] from the
-/// ancestor [StateBubble]'s [StateBubble].
+/// ancestor [StateBubble].
 class TopicChangeContent extends StatelessWidget {
   final ChatMessage message;
 
