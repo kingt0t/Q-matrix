@@ -22,6 +22,8 @@ extension RoomExtension on Room {
         RedactionEvent,
         AvatarChangeEvent,
         DisplayNameChangeEvent,
+        JoinRulesChangeEvent,
+        PowerLevelsChangeEvent,
         if (isDirect) RoomCreationEvent,
       ];
 }
