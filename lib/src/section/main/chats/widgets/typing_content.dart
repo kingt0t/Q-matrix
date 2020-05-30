@@ -53,17 +53,19 @@ class TypingContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = this.style ??
-        TextStyle(color: context.pattleTheme.data.primaryColorOnBackground);
+        TextStyle(
+          color: context.pattleTheme.data.primaryColorOnBackground,
+        );
 
-    return RichText(
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      text: TextSpan(
+    return Text.rich(
+      TextSpan(
         style: style.copyWith(
           fontWeight: FontWeight.bold,
         ),
         children: _span(context, chat.room),
       ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
