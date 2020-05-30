@@ -273,7 +273,6 @@ class MessageBubble extends StatelessWidget {
       shape: border,
       child: DefaultTextStyle(
         style: Theme.of(context).textTheme.bodyText2.apply(
-              fontSizeFactor: 1.1,
               color: message.isMine ? Colors.white : null,
             ),
         child: Provider<MessageBubble>.value(

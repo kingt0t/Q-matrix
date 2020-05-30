@@ -331,6 +331,13 @@ class _MessageListState extends State<_MessageList> {
               );
             }
 
+            bubble = DefaultTextStyle(
+              style: DefaultTextStyle.of(context).style.apply(
+                    fontSizeFactor: 1.1,
+                  ),
+              child: bubble,
+            );
+
             // Insert DateHeader if there's a day difference
             if (event != null &&
                 previousMessage?.event?.time?.day != event.time.day) {
