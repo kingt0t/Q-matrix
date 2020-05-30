@@ -1,4 +1,4 @@
-// Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2020  Wilko Manger
 //
 // This file is part of Pattle.
 //
