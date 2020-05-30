@@ -36,11 +36,13 @@ class TopicChangeContent extends StatelessWidget {
     final message = this.message ?? StateBubble.of(context).message;
 
     return RichText(
+      textAlign: TextAlign.center,
       text: TextSpan(
         style: DefaultTextStyle.of(context).style,
         children: context.intl.chat.message.descriptionChange.toTextSpans(
           message.sender.person,
           message.sender.name,
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
     );
