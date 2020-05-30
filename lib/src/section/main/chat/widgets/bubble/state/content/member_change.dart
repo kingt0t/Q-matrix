@@ -23,6 +23,7 @@ import '../../../../../../../resources/intl/localizations.dart';
 import '../../../../../../../models/chat_message.dart';
 
 import '../state.dart';
+import 'state_content.dart';
 
 /// If [message] is `null`, will try to get the [message] from the
 /// ancestor [StateBubble]'s [StateBubble].
@@ -31,9 +32,9 @@ class MemberChangeContent extends StatelessWidget {
 
   const MemberChangeContent({Key key, this.message}) : super(key: key);
 
-  List<TextSpan> _span(BuildContext context, ChatMessage message) {
+  List<TextSpan> _spans(BuildContext context, ChatMessage message) {
     final event = message.event;
-    final style = TextStyle(fontWeight: FontWeight.bold);
+    final style = StateContent.highlightedStyle;
 
     var text;
     if (event is JoinEvent) {
@@ -71,11 +72,8 @@ class MemberChangeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final message = this.message ?? StateBubble.of(context).message;
 
-    return RichText(
-      text: TextSpan(
-        style: DefaultTextStyle.of(context).style,
-        children: _span(context, message),
-      ),
+    return StateContent(
+      spans: _spans(context, message),
     );
   }
 }

@@ -94,7 +94,11 @@ class StateBubble extends StatelessWidget {
                       children: <Widget>[
                         Provider<StateBubble>.value(
                           value: this,
-                          child: child,
+                          child: DefaultTextStyle(
+                            textAlign: TextAlign.center,
+                            style: DefaultTextStyle.of(context).style,
+                            child: child,
+                          ),
                         ),
                         SizedBox(height: 4),
                         Text(

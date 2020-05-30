@@ -21,25 +21,56 @@ import 'package:flutter/material.dart';
 import '../../../../../../../resources/intl/localizations.dart';
 import '../../../../../../../models/chat_message.dart';
 
-import 'state_content.dart';
 import '../state.dart';
+
+typedef SingleNameIntlContent = List<TextSpan> Function(
+  Person person,
+  String name, {
+  TextStyle style,
+});
+
+typedef PersonForMessage = Person Function(ChatMessage message);
+typedef NameForMessage = String Function(ChatMessage message);
 
 /// If [message] is `null`, will try to get the [message] from the
 /// ancestor [StateBubble]'s [StateBubble].
-class CreationContent extends StatelessWidget {
-  final ChatMessage message;
+class StateContent extends StatelessWidget {
+  static const highlightedStyle = TextStyle(fontWeight: FontWeight.bold);
 
-  const CreationContent({Key key, this.message}) : super(key: key);
+  final List<TextSpan> spans;
+
+  static Widget singleName({
+    ChatMessage message,
+    @required SingleNameIntlContent content,
+    @required PersonForMessage person,
+    @required NameForMessage name,
+  }) {
+    return Builder(
+      builder: (context) {
+        final msg = message ?? StateBubble.of(context).message;
+
+        return StateContent(
+          spans: content(
+            person(msg),
+            name(msg),
+            style: highlightedStyle,
+          ),
+        );
+      },
+    );
+  }
+
+  const StateContent({
+    Key key,
+    this.spans,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final message = this.message ?? StateBubble.of(context).message;
-
-    return StateContent.singleName(
-      message: message,
-      content: context.intl.chat.message.creation.toTextSpans,
-      person: (message) => message.sender.person,
-      name: (message) => message.sender.name,
+    return Text.rich(
+      TextSpan(
+        children: spans,
+      ),
     );
   }
 }

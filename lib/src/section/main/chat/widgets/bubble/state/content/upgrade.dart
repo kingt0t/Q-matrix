@@ -22,6 +22,7 @@ import '../../../../../../../resources/intl/localizations.dart';
 import '../../../../../../../models/chat_message.dart';
 
 import '../state.dart';
+import 'state_content.dart';
 
 /// If [message] is `null`, will try to get the [message] from the
 /// ancestor [StateBubble]'s [StateBubble].
@@ -34,14 +35,11 @@ class UpgradeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final message = this.message ?? StateBubble.of(context).message;
 
-    return RichText(
-      text: TextSpan(
-        style: DefaultTextStyle.of(context).style,
-        children: context.intl.chat.message.upgrade.toTextSpans(
-          message.sender.person,
-          message.sender.name,
-        ),
-      ),
+    return StateContent.singleName(
+      message: message,
+      content: context.intl.chat.message.upgrade.toTextSpans,
+      person: (message) => message.sender.person,
+      name: (message) => message.sender.name,
     );
   }
 }

@@ -84,6 +84,7 @@ class Subtitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
+      textAlign: TextAlign.start,
       style: Theme.of(context).textTheme.bodyText2.copyWith(
             color: Theme.of(context).textTheme.caption.color,
           ),
