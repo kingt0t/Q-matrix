@@ -1,4 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
+// Copyright (C) 2020  Cyril Dutrieux<cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //
@@ -98,7 +99,8 @@ class InputBloc extends Bloc<InputEvent, InputState> {
   void _sendMessage(String text, EventId inReplyTo) async {
     // TODO: Check if text is just whitespace
     if (text.isNotEmpty) {
-      var formatted = markdownToHtml(text);
+      var formatted = markdownToHtml(
+          text, extensionSet: ExtensionSet.commonMark);
       _room
           .send(
             TextMessage(
