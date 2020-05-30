@@ -332,9 +332,8 @@ class _MessageListState extends State<_MessageList> {
             }
 
             // Insert DateHeader if there's a day difference
-            if (previousMessage != null &&
-                event != null &&
-                previousMessage.event.time.day != event.time.day) {
+            if (event != null &&
+                previousMessage?.event?.time?.day != event.time.day) {
               return DateHeader(
                 date: event.time,
                 child: bubble,
