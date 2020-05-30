@@ -64,19 +64,19 @@ class MessageLookup extends MessageLookupByLibrary {
         'third': '${name} heeft het gesprek verlaten',
       })}";
 
-  static m9(person, name) => "${Intl.select(person, {
+  static m10(person, name) => "${Intl.select(person, {
         'second': 'Je hebt deze groep geüpgrade',
         'third': '${name} heeft deze groep geüpgrade',
       })}";
 
-  static m10(andMore, first, second) => "${Intl.select(andMore, {
+  static m11(andMore, first, second) => "${Intl.select(andMore, {
         'false': '${first} en ${second} typen...',
         'true': '${first}, ${second} en anderen typen...',
       })}";
 
-  static m11(name) => "${name} typt...";
+  static m12(name) => "${name} typt...";
 
-  static m12(version) => "Versie ${version}";
+  static m13(version) => "Versie ${version}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -95,11 +95,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "_ChatMessage_invite": m6,
         "_ChatMessage_join": m7,
         "_ChatMessage_leave": m8,
-        "_ChatMessage_upgrade": m9,
-        "_Chat_areTyping": m10,
+        "_ChatMessage_upgrade": m10,
+        "_Chat_areTyping": m11,
         "_Chat_cantSendMessages": MessageLookupByLibrary.simpleMessage(
             "Je kan geen berichten naar deze groep sturen omdat je geen deelnemer meer bent."),
-        "_Chat_isTyping": m11,
+        "_Chat_isTyping": m12,
         "_Chat_typeAMessage":
             MessageLookupByLibrary.simpleMessage("Typ een bericht"),
         "_Chat_typing":
@@ -158,7 +158,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "_Settings_editNameDescription": MessageLookupByLibrary.simpleMessage(
             "Dit is niet je gebruikersnaam. Deze naam is zichtbaar voor anderen."),
         "_Settings_title": MessageLookupByLibrary.simpleMessage("Instellingen"),
-        "_Settings_version": m12,
+        "_Settings_version": m13,
         "_StartUsername_hostnameInvalidError":
             MessageLookupByLibrary.simpleMessage("Ongeldige hostnaam"),
         "_StartUsername_title":

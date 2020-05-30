@@ -172,6 +172,14 @@
       "name": {}
     }
   },
+  "_ChatMessage_nameChange": "{person,select, second{Je hebt de naam van de groep aangepast}third{{name} heeft de naam van de groep aangepast}}",
+  "@_ChatMessage_nameChange": {
+    "type": "text",
+    "placeholders": {
+      "person": {},
+      "name": {}
+    }
+  },
   "_ChatMessage_descriptionChange": "{person,select, second{Je hebt de beschrijving van de groep aangepast}third{{name} heeft de beschrijving van de groep aangepast}}",
   "@_ChatMessage_descriptionChange": {
     "type": "text",

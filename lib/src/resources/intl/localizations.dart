@@ -537,6 +537,19 @@ class _ChatMessage extends _Category {
     );
   }
 
+  String nameChange(Person person, String name) {
+    return Intl.select(
+      person,
+      {
+        Person.second: 'You changed the name of this group',
+        Person.third: '$name changed the name of this group',
+      },
+      args: [person, name],
+      name: '_ChatMessage_nameChange',
+      locale: _localeName,
+    );
+  }
+
   String descriptionChange(Person person, String name) {
     return Intl.select(
       person,

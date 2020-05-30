@@ -26,6 +26,7 @@ import '../../../../../matrix.dart';
 
 import '../../../chat/widgets/bubble/state/content/creation.dart';
 import '../../../chat/widgets/bubble/state/content/member_change.dart';
+import '../../../chat/widgets/bubble/state/content/name_change.dart';
 import '../../../chat/widgets/bubble/state/content/topic_change.dart';
 import '../../../chat/widgets/bubble/state/content/upgrade.dart';
 
@@ -58,6 +59,8 @@ class Subtitle extends StatelessWidget {
         content = MemberChangeContent(message: chat.latestMessage);
       } else if (event is RedactedEvent) {
         content = RedactedSubtitleContent();
+      } else if (event is NameChangeContent) {
+        content = NameChangeContent(message: chat.latestMessage);
       } else if (event is TopicChangeEvent) {
         content = TopicChangeContent(message: chat.latestMessage);
       } else if (event is RoomUpgradeEvent) {

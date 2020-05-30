@@ -25,6 +25,7 @@ import '../../../../../../models/chat_message.dart';
 
 import 'content/creation.dart';
 import 'content/member_change.dart';
+import 'content/name_change.dart';
 import 'content/topic_change.dart';
 import 'content/upgrade.dart';
 
@@ -50,6 +51,8 @@ class StateBubble extends StatelessWidget {
       content = MemberChangeContent();
     } else if (event is RoomCreationEvent) {
       content = CreationContent();
+    } else if (event is RoomNameChangeEvent) {
+      content = NameChangeContent();
     } else if (event is TopicChangeEvent) {
       content = TopicChangeContent();
     } else if (event is UpgradeContent) {

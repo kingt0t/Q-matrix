@@ -65,18 +65,23 @@ class MessageLookup extends MessageLookupByLibrary {
       })}";
 
   static m9(person, name) => "${Intl.select(person, {
+        'second': 'You changed the name of this group',
+        'third': '${name} changed the name of this group',
+      })}";
+
+  static m10(person, name) => "${Intl.select(person, {
         'second': 'You upgraded this group',
         'third': '${name} upgraded this group',
       })}";
 
-  static m10(andMore, first, second) => "${Intl.select(andMore, {
+  static m11(andMore, first, second) => "${Intl.select(andMore, {
         'false': '${first} and ${second} are typing...',
         'true': '${first}, ${second} and more are typing...',
       })}";
 
-  static m11(name) => "${name} is typing...";
+  static m12(name) => "${name} is typing...";
 
-  static m12(version) => "Version ${version}";
+  static m13(version) => "Version ${version}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -95,11 +100,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "_ChatMessage_invite": m6,
         "_ChatMessage_join": m7,
         "_ChatMessage_leave": m8,
-        "_ChatMessage_upgrade": m9,
-        "_Chat_areTyping": m10,
+        "_ChatMessage_nameChange": m9,
+        "_ChatMessage_upgrade": m10,
+        "_Chat_areTyping": m11,
         "_Chat_cantSendMessages": MessageLookupByLibrary.simpleMessage(
             "You can\'t send messages to this group because you\'re no longer a participant."),
-        "_Chat_isTyping": m11,
+        "_Chat_isTyping": m12,
         "_Chat_typeAMessage":
             MessageLookupByLibrary.simpleMessage("Type a message"),
         "_Chat_typing": MessageLookupByLibrary.simpleMessage("typing..."),
@@ -155,7 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "_Settings_editNameDescription": MessageLookupByLibrary.simpleMessage(
             "This is not your username. This is the name that will be visible to others."),
         "_Settings_title": MessageLookupByLibrary.simpleMessage("Settings"),
-        "_Settings_version": m12,
+        "_Settings_version": m13,
         "_StartUsername_hostnameInvalidError":
             MessageLookupByLibrary.simpleMessage("Invalid hostname"),
         "_StartUsername_title":
