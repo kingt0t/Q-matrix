@@ -27,6 +27,7 @@ import '../widgets/login_button.dart';
 
 import '../../bloc.dart';
 import '../../../../auth/bloc.dart';
+import '../../../../settings/bloc.dart';
 import '../../../../sentry/bloc.dart';
 
 import '../bloc.dart';
@@ -65,7 +66,10 @@ class UsernameLoginPage extends StatefulWidget {
 }
 
 class UsernameLoginPageState extends State<UsernameLoginPage>
-    with TickerProviderStateMixin {
+    with
+        TickerProviderStateMixin,
+        // ignore: prefer_mixin
+        WidgetsBindingObserver {
   static const _duration = Duration(milliseconds: 200);
   static const _homeserverSectionHeight = 96.0;
 
@@ -176,6 +180,21 @@ class UsernameLoginPageState extends State<UsernameLoginPage>
       if (_passwordFocusNode.hasFocus) {
         _mainFocusNode = _passwordFocusNode;
       }
+    });
+
+    // Animate error report switch based on keyboard position
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  double _bottomInset = 0;
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+
+    setState(() {
+      _bottomInset = WidgetsBinding.instance.window.viewInsets.bottom /
+          MediaQuery.of(context).devicePixelRatio;
     });
   }
 
@@ -316,7 +335,6 @@ class UsernameLoginPageState extends State<UsernameLoginPage>
                             );
                           },
                         ),
-                        SizedBox(height: 16),
                         BlocBuilder<LoginBloc, LoginState>(
                           condition: (previousState, currentState) {
                             final newStateIsNowNotLoggedIn =
@@ -352,6 +370,31 @@ class UsernameLoginPageState extends State<UsernameLoginPage>
                             );
                           },
                         ),
+                        Expanded(
+                          child: AnimatedPadding(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.decelerate,
+                            padding: EdgeInsets.only(bottom: _bottomInset),
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: BlocBuilder<SettingsBloc, SettingsState>(
+                                builder: (context, state) {
+                                  return ListTile(
+                                    contentPadding: EdgeInsets.only(left: 16),
+                                    title: Text('Send error reports'),
+                                    trailing: Switch.adaptive(
+                                      value: state.sendErrorReports,
+                                      onChanged: (value) =>
+                                          context.bloc<SettingsBloc>().add(
+                                                UpdateSendErrorReports(value),
+                                              ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),

@@ -31,15 +31,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsBloc(this._preferences);
 
   static const _brightnessKey = 'brightness';
+  static const _sendErrorReportsKey = 'send_error_reports';
 
   @override
   SettingsState get initialState {
     final brightnessIndex = _preferences.getInt(_brightnessKey);
+    final sendErrorReports = _preferences.getBool(_sendErrorReportsKey);
 
     return SettingsState(
       themeBrightness: brightnessIndex != null
           ? Brightness.values[brightnessIndex]
           : Brightness.light,
+      sendErrorReports: sendErrorReports ?? false,
     );
   }
 
@@ -49,6 +52,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       _preferences.setInt(_brightnessKey, event.value.index);
       yield state.copyWith(
         themeBrightness: event.value,
+      );
+    }
+
+    if (event is UpdateSendErrorReports) {
+      _preferences.setBool(_sendErrorReportsKey, event.value);
+      yield state.copyWith(
+        sendErrorReports: event.value,
       );
     }
   }

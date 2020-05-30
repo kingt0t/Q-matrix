@@ -28,6 +28,8 @@ import 'package:sentry/sentry.dart';
 import 'package:package_info/package_info.dart';
 import 'package:device_info/device_info.dart';
 
+import '../settings/bloc.dart';
+
 import '../app.dart' as pattle;
 
 import 'event.dart';
@@ -37,10 +39,26 @@ export 'event.dart';
 export 'state.dart';
 
 class SentryBloc extends Bloc<SentryEvent, SentryState> {
+  final SettingsBloc _settingsBloc;
+
+  StreamSubscription _settingsSubscription;
+
   SentryClient _client;
 
+  SentryBloc(this._settingsBloc) {
+    _settingsSubscription = _settingsBloc.listen(_onSettingsBlocStateChange);
+  }
+
+  void _onSettingsBlocStateChange(SettingsState state) {
+    // Initialize if may report crashes was false before but now true,
+    // otherwise just reyield the updated current state
+    if (!state.sendErrorReports && state is NotInitialized) {
+      add(Initialize());
+    }
+  }
+
   Future<void> _reportError(dynamic error, dynamic stackTrace) async {
-    if (!state.mayReportCrashes) {
+    if (!_settingsBloc.state.sendErrorReports) {
       return;
     }
 
@@ -129,9 +147,7 @@ class SentryBloc extends Bloc<SentryEvent, SentryState> {
       );
 
       device = Device(
-        model: info.model,
-        manufacturer: info.manufacturer,
-        brand: info.brand,
+        model: '${info.brand} ${info.model}',
         simulator: !info.isPhysicalDevice,
       );
     } else if (Platform.isIOS) {
@@ -174,9 +190,11 @@ class SentryBloc extends Bloc<SentryEvent, SentryState> {
   @override
   Stream<SentryState> mapEventToState(SentryEvent event) async* {
     if (event is Initialize) {
-      if (!state.mayReportCrashes) {
+      if (!_settingsBloc.state.sendErrorReports) {
         return;
       }
+
+      await DotEnv().load();
 
       _client = SentryClient(
         dsn: DotEnv().env['SENTRY_DSN'],
@@ -192,26 +210,14 @@ class SentryBloc extends Bloc<SentryEvent, SentryState> {
         }
       };
 
-      yield Initialized(mayReportCrashes: state.mayReportCrashes);
+      yield Initialized();
     }
+  }
 
-    if (event is ChangeMayReportCrashes) {
-      // TODO: Listen to SettingsBloc changes
+  @override
+  Future<void> close() async {
+    await _settingsSubscription.cancel();
 
-      // Initialize if may report crashes was false before but now true,
-      // otherwise just reyield the updated current state
-      if (!state.mayReportCrashes &&
-          event.mayReportCrashes &&
-          state is NotInitialized) {
-        yield NotInitialized(mayReportCrashes: event.mayReportCrashes);
-        add(Initialize());
-      } else if (state is NotInitialized) {
-        yield NotInitialized(mayReportCrashes: event.mayReportCrashes);
-      } else if (state is Initialized) {
-        if (state is NotInitialized) {
-          yield Initialized(mayReportCrashes: event.mayReportCrashes);
-        }
-      }
-    }
+    return super.close();
   }
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2019  Wilko Manger
+// Copyright (C) 2020  Wilko Manger
 //
 // This file is part of Pattle.
 //
@@ -119,18 +119,22 @@ class Routes {
 }
 
 class App extends StatelessWidget {
-  static Future<void> run() async => _sentryBloc.wrap(() async {
-        WidgetsFlutterBinding.ensureInitialized();
+  static Future<void> run() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-        final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
-        final settingsBloc = SettingsBloc(prefs);
-        final chatOrderBloc = ChatOrderBloc(prefs);
+    final settingsBloc = SettingsBloc(prefs);
+    final chatOrderBloc = ChatOrderBloc(prefs);
 
-        final authBloc = AuthBloc(chatOrderBloc);
+    final authBloc = AuthBloc(chatOrderBloc);
 
-        runApp(App(settingsBloc, chatOrderBloc, authBloc));
-      });
+    App._sentryBloc = SentryBloc(settingsBloc);
+
+    await _sentryBloc.wrap(
+      () => runApp(App(settingsBloc, chatOrderBloc, authBloc)),
+    );
+  }
 
   App(
     this._settingsBloc,
@@ -138,9 +142,10 @@ class App extends StatelessWidget {
     this._authBloc,
   );
 
+  // TODO: EnvBloc
   static String get buildType => DotEnv().env['BUILD_TYPE'];
 
-  static final _sentryBloc = SentryBloc();
+  static SentryBloc _sentryBloc;
 
   final ChatOrderBloc _chatOrderBloc;
 

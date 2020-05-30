@@ -18,3 +18,8 @@ abstract class UpdateSetting<T> extends SettingsEvent {
 class UpdateThemeBrightness extends UpdateSetting<Brightness> {
   UpdateThemeBrightness(Brightness setting) : super(setting);
 }
+
+class UpdateSendErrorReports extends UpdateSetting<bool> {
+  // ignore: avoid_positional_boolean_parameters
+  UpdateSendErrorReports(bool setting) : super(setting);
+}
