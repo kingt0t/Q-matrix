@@ -30,9 +30,7 @@ dependencies:
   path_provider: ^1.6.5
   path: ^1.6.4
 
-  # TODO: Use official package when PR is merged
-  sentry:
-    git: https://git.pattle.im/forks/sentry.git
+  sentry: ^3.0.1
 
   device_info: ^0.4.1+1
   package_info: ^0.4.0+5

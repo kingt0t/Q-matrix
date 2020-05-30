@@ -506,12 +506,10 @@ packages:
   sentry:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: a0df7b60da60809993f11471bd39f9d72a461e97
-      url: "https://git.pattle.im/forks/sentry.git"
-    source: git
-    version: "2.2.0"
+      name: sentry
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   shared_preferences:
     dependency: "direct main"
     description:
