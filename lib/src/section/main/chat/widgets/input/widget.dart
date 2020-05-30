@@ -1,4 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
+// Copyright (C) 2020  Cyril Dutrieux<cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //
@@ -30,6 +31,7 @@ import '../../../../../resources/theme.dart';
 import '../../../../../resources/intl/localizations.dart';
 
 import 'bloc.dart';
+import 'markdown_highlight.dart';
 
 class Input extends StatefulWidget {
   final Chat chat;
@@ -62,7 +64,7 @@ class Input extends StatefulWidget {
 }
 
 class InputState extends State<Input> with TickerProviderStateMixin {
-  final _textController = TextEditingController();
+  final _textController = MarkdownEditingController();
 
   ChatMessage _replyTo;
 
@@ -160,6 +162,7 @@ class InputState extends State<Input> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     const elevation = 8.0;
+    _textController.setMarkdownTheme(context);
 
     if (widget.canSendMessages) {
       return Material(

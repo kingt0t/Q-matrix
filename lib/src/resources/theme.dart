@@ -1,4 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
+// Copyright (C) 2020  Cyril Dutrieux<cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //
@@ -137,6 +138,21 @@ final PattleThemeData pattleLightTheme = PattleThemeData(
     myRedactedContentColor: Colors.grey[300],
     theirRedactedContentColor: Colors.grey[700],
   ),
+  markdown: {
+    'quote': TextStyle(color: Colors.grey[800]),
+    'code': TextStyle(
+        color: Colors.grey[800],
+        fontFamily: "Monospace"),
+    'section': TextStyle(
+        fontWeight: FontWeight.w700,
+        fontSize: 16),
+    'string': TextStyle(decoration: TextDecoration.underline),
+    'symbol': TextStyle(color: Colors.grey[800]),
+    'bullet': TextStyle(color: Colors.grey[800]),
+    'link': TextStyle(color: Colors.grey[800]),
+    'emphasis': TextStyle(fontStyle: FontStyle.italic),
+    'strong': TextStyle(fontWeight: FontWeight.w600),
+  },
   userColors: {
     DisplayColor.greenYellow: Color(0xFF79740E),
     DisplayColor.yellow: Color(0xFFB57614),
@@ -175,6 +191,21 @@ final PattleThemeData pattleDarkTheme = PattleThemeData(
     myRedactedContentColor: Colors.white30,
     theirRedactedContentColor: Colors.white70,
   ),
+  markdown: {
+    'quote': TextStyle(color: Colors.grey[300]),
+    'code': TextStyle(
+        color: Colors.grey[300],
+        fontFamily: "Monospace"),
+    'section': TextStyle(
+        fontWeight: FontWeight.w700,
+        fontSize: 16),
+    'string': TextStyle(decoration: TextDecoration.underline),
+    'symbol': TextStyle(color: Colors.grey[300]),
+    'bullet': TextStyle(color: Colors.grey[300]),
+    'link': TextStyle(color: Colors.grey[300]),
+    'emphasis': TextStyle(fontStyle: FontStyle.italic),
+    'strong': TextStyle(fontWeight: FontWeight.w600),
+  },
   userColors: {
     DisplayColor.greenYellow: Color(0xFFE7DF35),
     DisplayColor.yellow: Color(0xFFECB258),
@@ -261,6 +292,7 @@ class PattleThemeData {
     @required this.linkColor,
     @required this.listTileIconColor,
     @required this.chat,
+    @required this.markdown,
     @required this.userColors,
     ThemeData Function(ThemeData base) themeData,
   }) : themeData = themeData == null
@@ -280,6 +312,8 @@ class PattleThemeData {
   final Color listTileIconColor;
 
   final ChatThemeData chat;
+
+  final  Map <String, TextStyle> markdown;
 
   final Map<DisplayColor, Color> userColors;
 
