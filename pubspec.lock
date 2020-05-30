@@ -337,9 +337,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "860810c564c371ecb1e26675d375ecf6b29c49ce"
-      resolved-ref: "860810c564c371ecb1e26675d375ecf6b29c49ce"
-      url: "https://git.pattle.im/pattle/library/matrix-dart-sdk.git"
+      ref: "12bbb95fea53ae4f0ce35ba381c9fa084d1b8605"
+      resolved-ref: "12bbb95fea53ae4f0ce35ba381c9fa084d1b8605"
+      url: "https://pattle.dev/pattle/library/matrix-dart-sdk.git"
     source: git
     version: "0.0.0"
   mdi:
@@ -369,7 +369,7 @@ packages:
       name: moor
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.0"
   moor_ffi:
     dependency: "direct overridden"
     description:

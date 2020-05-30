@@ -47,7 +47,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         isolated: true,
       );
 
-      if (user != null) {
+      if (user != null && user.hasSynced) {
+        // TODO: Should use Matrix.logout() ?
+        await user.logout();
         yield Authenticated(user, fromStore: true);
       } else {
         yield NotAuthenticated();
