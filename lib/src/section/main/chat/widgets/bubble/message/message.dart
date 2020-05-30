@@ -33,7 +33,6 @@ import '../../../../widgets/message_state.dart';
 import 'content/image.dart';
 import 'content/redacted.dart';
 import 'content/text.dart';
-import 'content/loading.dart';
 
 import '../../../../../../util/date_format.dart';
 import '../../../../../../util/chat_member.dart';
@@ -144,28 +143,6 @@ class MessageBubble extends StatelessWidget {
       nextMessage: nextMessage,
       reply: reply,
       child: content,
-    );
-  }
-
-  factory MessageBubble.loading({@required Chat chat, bool isMine = false}) {
-    return MessageBubble(
-      chat: chat,
-      color: Colors.grey[300],
-      message: ChatMessage(
-        chat.room,
-        TextMessageEvent(
-          RoomEventArgs(
-            id: EventId('1234'),
-            senderId: UserId('@wilko:pattle.im'),
-            time: DateTime.now(),
-          ),
-          content: TextMessage(
-            body: 'Blabla',
-          ),
-        ),
-        isMe: (id) => isMine,
-      ),
-      child: LoadingContent(),
     );
   }
 
