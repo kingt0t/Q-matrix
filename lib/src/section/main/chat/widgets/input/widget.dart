@@ -82,48 +82,39 @@ class _InputState extends State<Input> {
     if (widget.canSendMessages) {
       return Material(
         elevation: elevation,
-        color: context.pattleTheme.data.chat.backgroundColor,
+        color: context.pattleTheme.data.chat.inputColor,
         // On dark theme, draw a divider line because the shadow is gone
         shape: Theme.of(context).brightness == Brightness.dark
             ? Border(top: BorderSide(color: Colors.grey[800]))
             : null,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: Material(
-            elevation: elevation,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(8),
-              topRight: Radius.circular(8),
-            ),
-            color: context.pattleTheme.data.chat.inputColor,
-            child: TextField(
-              controller: _textController,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              textInputAction: TextInputAction.newline,
-              autocorrect: true,
-              textCapitalization: TextCapitalization.sentences,
-              onChanged: _notifyInputChanged,
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(8),
-                  ),
-                ),
-                filled: true,
-                fillColor: Colors.transparent,
-                hintText: context.intl.chat.typeAMessage,
-                prefixIcon: IconButton(
-                  icon: Icon(Icons.attach_file),
-                  onPressed: _sendImage,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _sendMessage,
-                ),
+        child: TextField(
+          controller: _textController,
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          textInputAction: TextInputAction.newline,
+          autocorrect: true,
+          textCapitalization: TextCapitalization.sentences,
+          style: DefaultTextStyle.of(context).style.apply(
+                fontSizeFactor: 1.2,
               ),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.transparent,
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.zero,
+            ),
+            hintText: context.intl.chat.typeAMessage,
+            prefixIcon: IconButton(
+              icon: Icon(Icons.attach_file),
+              onPressed: _sendImage,
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(Icons.send),
+              onPressed: _sendMessage,
             ),
           ),
+          onChanged: _notifyInputChanged,
         ),
       );
     } else {
