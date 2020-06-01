@@ -234,7 +234,8 @@ class _ContentLayoutRenderBox extends RenderBox
         final fitsLastLine =
             constraints.maxWidth - lastLineBox.right > info.size.width;
 
-        if (width.floor() != constraints.maxWidth.floor()) {
+        if (constraints.maxWidth == double.infinity ||
+            width.floor() != constraints.maxWidth.floor()) {
           width = constraints.constrainWidth(width + info.size.width);
         }
 
