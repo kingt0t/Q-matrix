@@ -23,6 +23,8 @@ import 'package:flutter_html/flutter_html.dart';
 
 import '../../../../../../../resources/theme.dart';
 
+import '../../../../../../../util/reply.dart';
+
 import '../../message.dart';
 
 /// Content for a [MessageBubble] with a [TextMessageEvent].
@@ -68,49 +70,65 @@ class _Content extends StatelessWidget {
     assert(bubble.message.event is TextMessageEvent);
     final event = bubble.message.event as TextMessageEvent;
 
-    Widget widget = Html(
-      data: event.content.formattedBody ?? '',
-      useRichText: true,
-      shrinkToFit: true,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      defaultTextStyle: TextStyle(
-        color: bubble.message.isMine
-            ? bubble.isRepliedTo
-                ? context.pattleTheme.data.chat.myMessage.repliedTo.contentColor
-                : context.pattleTheme.data.chat.myMessage.contentColor
-            : bubble.isRepliedTo
-                ? context
-                    .pattleTheme.data.chat.theirMessage.repliedTo.contentColor
-                : context.pattleTheme.data.chat.theirMessage.contentColor,
-      ),
-      linkStyle: TextStyle(
-        decoration: TextDecoration.underline,
-        color:
-            !bubble.message.isMine ? context.pattleTheme.data.linkColor : null,
-      ),
-      renderNewlines: true,
-      onLinkTap: (url) async {
-        if (await canLaunch(url)) {
-          await launch(url);
-        }
-      },
+    final textStyle = TextStyle(
+      // Temp until own Html widget
+      fontSize: 14,
+      color: bubble.message.isMine
+          ? bubble.isRepliedTo
+              ? context.pattleTheme.data.chat.myMessage.repliedTo.contentColor
+              : context.pattleTheme.data.chat.myMessage.contentColor
+          : bubble.isRepliedTo
+              ? context
+                  .pattleTheme.data.chat.theirMessage.repliedTo.contentColor
+              : context.pattleTheme.data.chat.theirMessage.contentColor,
     );
 
+    Widget content;
+    if (bubble.dense) {
+      content = Text(
+        stripReply(event.content.body),
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+        style: textStyle.apply(fontSizeFactor: 1.15),
+      );
+    } else {
+      // TODO: Use own HtmlText widget
+      content = Html(
+        data: event.content.formattedBody ?? event.content.body ?? '',
+        useRichText: true,
+        shrinkToFit: true,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        defaultTextStyle: textStyle,
+        linkStyle: TextStyle(
+          decoration: TextDecoration.underline,
+          color: !bubble.message.isMine
+              ? context.pattleTheme.data.linkColor
+              : null,
+        ),
+        renderNewlines: true,
+        onLinkTap: (url) async {
+          if (await canLaunch(url)) {
+            await launch(url);
+          }
+        },
+      );
+    }
+
     if (event is EmoteMessageEvent) {
-      widget = Row(
+      content = Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           if (Sender.necessary(context)) Sender(),
           Flexible(
-            child: widget,
+            child: content,
           )
         ],
       );
     }
 
-    return widget;
+    return content;
   }
 }
 

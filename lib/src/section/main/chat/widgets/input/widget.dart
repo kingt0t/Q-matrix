@@ -132,6 +132,7 @@ class InputState extends State<Input> with TickerProviderStateMixin {
                         child: MessageBubble.withContent(
                           chat: widget.chat,
                           message: replyTo,
+                          dense: true,
                         ),
                       ),
                     ),

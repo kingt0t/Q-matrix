@@ -20,6 +20,8 @@ import 'package:matrix_sdk/matrix_sdk.dart';
 
 import '../../../../widgets/message_state.dart';
 
+import '../../../../../../util/reply.dart';
+
 import '../subtitle.dart';
 
 class TextSubtitleContent extends StatelessWidget {
@@ -35,7 +37,7 @@ class TextSubtitleContent extends StatelessWidget {
 
     if (isReply) {
       // Strip replied-to content
-      text = text.replaceAll(RegExp(r'> <@[^:]+:[^>]+>.+\n\n'), '');
+      text = stripReply(text);
     }
 
     return Row(

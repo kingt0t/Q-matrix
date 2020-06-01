@@ -61,6 +61,10 @@ class MessageBubble extends StatelessWidget {
   /// laid out.
   final bool inList;
 
+  /// If marked as dense, content should try to be smaller. Always true
+  /// if [isRepliedTo] is.
+  final bool dense;
+
   final BorderRadius borderRadius;
 
   final Color color;
@@ -84,6 +88,7 @@ class MessageBubble extends StatelessWidget {
     this.previousMessage,
     this.nextMessage,
     this.inList = false,
+    bool dense,
     @required this.isStartOfGroup,
     @required this.isEndOfGroup,
     this.reply,
@@ -91,7 +96,8 @@ class MessageBubble extends StatelessWidget {
     @required this.borderRadius,
     @required this.child,
     this.color,
-  }) : super(
+  })  : dense = reply != null ? true : dense ?? false,
+        super(
           key: ValueKey(
             message.event.transactionId ?? message.event.id.toString(),
           ),
@@ -103,6 +109,7 @@ class MessageBubble extends StatelessWidget {
     ChatMessage previousMessage,
     ChatMessage nextMessage,
     bool inList = false,
+    bool dense,
     ChatMessage reply,
     VoidCallback onReply,
     Color color,
@@ -119,6 +126,7 @@ class MessageBubble extends StatelessWidget {
       isStartOfGroup: isStartOfGroup,
       isEndOfGroup: isEndOfGroup,
       inList: inList,
+      dense: dense,
       reply: reply,
       onReply: onReply,
       borderRadius: _borderRadius(message, isEndOfGroup, isStartOfGroup),
@@ -134,6 +142,7 @@ class MessageBubble extends StatelessWidget {
     ChatMessage previousMessage,
     ChatMessage nextMessage,
     bool inList = false,
+    bool dense,
     ChatMessage reply,
     VoidCallback onReply,
   }) {
@@ -158,6 +167,7 @@ class MessageBubble extends StatelessWidget {
       previousMessage: previousMessage,
       nextMessage: nextMessage,
       inList: inList,
+      dense: dense,
       reply: reply,
       onReply: onReply,
       child: content,

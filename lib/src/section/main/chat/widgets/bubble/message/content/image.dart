@@ -70,7 +70,7 @@ class _ImageContentState extends State<ImageContent> {
     final bubble = MessageBubble.of(context);
     final event = bubble.message.event as ImageMessageEvent;
 
-    return OpenContainer(
+    final content = OpenContainer(
       tappable: false,
       closedElevation: 0,
       closedShape: RoundedRectangleBorder(borderRadius: bubble.borderRadius),
@@ -86,7 +86,9 @@ class _ImageContentState extends State<ImageContent> {
               children: <Widget>[
                 Positioned.fill(
                   child: ClipRRect(
-                    borderRadius: bubble.borderRadius,
+                    borderRadius: bubble.isRepliedTo
+                        ? BorderRadius.all(bubble.borderRadius.bottomLeft)
+                        : bubble.borderRadius,
                     child: Image(
                       image: imageProvider(
                         context: context,
@@ -118,6 +120,16 @@ class _ImageContentState extends State<ImageContent> {
         );
       },
     );
+
+    if (bubble.dense) {
+      return SizedBox(
+        height: 96,
+        width: 96,
+        child: content,
+      );
+    } else {
+      return content;
+    }
   }
 }
 
