@@ -18,6 +18,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:matrix_sdk/matrix_sdk.dart';
 
 abstract class InputEvent extends Equatable {
   @override
@@ -35,8 +36,9 @@ class NotifyInputChanged extends InputEvent {
 
 class SendTextMessage extends InputEvent {
   final String message;
+  final EventId inReplyTo;
 
-  SendTextMessage(this.message);
+  SendTextMessage(this.message, {this.inReplyTo});
 
   @override
   List<Object> get props => [message];

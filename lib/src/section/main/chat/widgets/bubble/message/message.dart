@@ -30,6 +30,7 @@ import '../../../../../../resources/theme.dart';
 
 import '../../../../widgets/message_state.dart';
 
+import '../../replyable.dart';
 import 'content/image.dart';
 import 'content/redacted.dart';
 import 'content/text.dart';
@@ -53,6 +54,13 @@ class MessageBubble extends StatelessWidget {
 
   bool get isRepliedTo => reply != null;
 
+  /// Called when this message is chosen to be replied to by the user.
+  final VoidCallback onReply;
+
+  /// Whether this message is in a list, which will affect how it will be
+  /// laid out.
+  final bool inList;
+
   final BorderRadius borderRadius;
 
   final Color color;
@@ -75,9 +83,11 @@ class MessageBubble extends StatelessWidget {
     @required this.message,
     this.previousMessage,
     this.nextMessage,
+    this.inList = false,
     @required this.isStartOfGroup,
     @required this.isEndOfGroup,
     this.reply,
+    this.onReply,
     @required this.borderRadius,
     @required this.child,
     this.color,
@@ -92,7 +102,9 @@ class MessageBubble extends StatelessWidget {
     @required ChatMessage message,
     ChatMessage previousMessage,
     ChatMessage nextMessage,
+    bool inList = false,
     ChatMessage reply,
+    VoidCallback onReply,
     Color color,
     @required Widget child,
   }) {
@@ -106,7 +118,9 @@ class MessageBubble extends StatelessWidget {
       nextMessage: nextMessage,
       isStartOfGroup: isStartOfGroup,
       isEndOfGroup: isEndOfGroup,
+      inList: inList,
       reply: reply,
+      onReply: onReply,
       borderRadius: _borderRadius(message, isEndOfGroup, isStartOfGroup),
       color: color,
       child: child,
@@ -119,7 +133,9 @@ class MessageBubble extends StatelessWidget {
     @required ChatMessage message,
     ChatMessage previousMessage,
     ChatMessage nextMessage,
+    bool inList = false,
     ChatMessage reply,
+    VoidCallback onReply,
   }) {
     final event = message.event;
 
@@ -141,7 +157,9 @@ class MessageBubble extends StatelessWidget {
       message: message,
       previousMessage: previousMessage,
       nextMessage: nextMessage,
+      inList: inList,
       reply: reply,
+      onReply: onReply,
       child: content,
     );
   }
@@ -295,8 +313,8 @@ class MessageBubble extends StatelessWidget {
       );
     }
 
-    if (!isRepliedTo) {
-      return Align(
+    if (inList) {
+      widget = Align(
         alignment:
             message.isMine ? Alignment.centerRight : Alignment.centerLeft,
         child: Padding(
@@ -312,9 +330,16 @@ class MessageBubble extends StatelessWidget {
           child: widget,
         ),
       );
-    } else {
-      return widget;
+
+      if (onReply != null) {
+        widget = Replyable(
+          onReply: onReply,
+          child: widget,
+        );
+      }
     }
+
+    return widget;
   }
 
   static MessageBubble of(BuildContext context) =>

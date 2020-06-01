@@ -25,6 +25,7 @@ import '../../../app.dart';
 import '../../../notifications/bloc.dart';
 import '../../../resources/theme.dart';
 import '../../../models/chat.dart';
+import '../../../models/chat_message.dart';
 import '../chats/widgets/typing_content.dart';
 import '../widgets/chat_name.dart';
 import '../widgets/title_with_sub.dart';
@@ -129,10 +130,7 @@ class _ChatPageWithBloc extends StatefulWidget {
 }
 
 class _ChatPageWithBlocState extends State<_ChatPageWithBloc> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  final _inputKey = GlobalKey<InputState>();
 
   @override
   void didChangeDependencies() {
@@ -170,6 +168,10 @@ class _ChatPageWithBlocState extends State<_ChatPageWithBloc> {
     context.bloc<NotificationsBloc>().add(
           UnhideNotifications(state.chat.room.id),
         );
+  }
+
+  void _onReply(ChatMessage message) {
+    _inputKey.currentState.updateReplyTo(message);
   }
 
   @override
@@ -219,11 +221,15 @@ class _ChatPageWithBlocState extends State<_ChatPageWithBloc> {
             avatar: avatar,
             title: title,
             body: !isInvite
-                ? _MessageList(chat: chat)
+                ? _MessageList(
+                    chat: chat,
+                    onReply: _onReply,
+                  )
                 : _InviteSplash(chat: chat),
             input: !isInvite
                 ? Input.withBloc(
-                    roomId: chat.room.id,
+                    key: _inputKey,
+                    chat: chat,
                     canSendMessages: chat.room.me.hasJoined,
                   )
                 : InviteInput.withBloc(roomId: chat.room.id),
@@ -236,8 +242,13 @@ class _ChatPageWithBlocState extends State<_ChatPageWithBloc> {
 
 class _MessageList extends StatefulWidget {
   final Chat chat;
+  final void Function(ChatMessage message) onReply;
 
-  const _MessageList({Key key, @required this.chat}) : super(key: key);
+  const _MessageList({
+    Key key,
+    @required this.chat,
+    this.onReply,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MessageListState();
@@ -328,6 +339,8 @@ class _MessageListState extends State<_MessageList> {
                 message: message,
                 previousMessage: previousMessage,
                 nextMessage: nextMessage,
+                inList: true,
+                onReply: () => widget.onReply(message),
               );
             }
 

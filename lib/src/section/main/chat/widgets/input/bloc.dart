@@ -48,7 +48,7 @@ class InputBloc extends Bloc<InputEvent, InputState> {
     }
 
     if (event is SendTextMessage) {
-      _sendMessage(event.message);
+      _sendMessage(event.message, event.inReplyTo);
     }
 
     if (event is SendImageMessage) {
@@ -94,10 +94,17 @@ class InputBloc extends Bloc<InputEvent, InputState> {
     });
   }
 
-  void _sendMessage(String text) async {
+  void _sendMessage(String text, EventId inReplyTo) async {
     // TODO: Check if text is just whitespace
     if (text.isNotEmpty) {
-      _room.send(TextMessage(body: text)).forEach((_) {});
+      _room
+          .send(
+            TextMessage(
+              body: text,
+              inReplyToId: inReplyTo,
+            ),
+          )
+          .forEach((_) {});
     }
   }
 
