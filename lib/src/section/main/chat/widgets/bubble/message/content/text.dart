@@ -305,14 +305,13 @@ class _ContentLayoutRenderBox extends RenderBox
   int _getContentTextLength(RenderParagraph renderParagraph) {
     final span = renderParagraph.text as TextSpan;
 
-    if (span.children == null) {
-      return 0;
-    }
+    var length = span.text?.length ?? 0;
 
-    var length = 0;
-    for (final childSpan in span?.children) {
-      if (childSpan is TextSpan) {
-        length += childSpan.text?.length ?? 0;
+    if (span.children != null) {
+      for (final childSpan in span?.children) {
+        if (childSpan is TextSpan) {
+          length += childSpan.text?.length ?? 0;
+        }
       }
     }
 
