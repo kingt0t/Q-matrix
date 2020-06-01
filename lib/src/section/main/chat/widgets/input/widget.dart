@@ -120,8 +120,7 @@ class InputState extends State<Input> with TickerProviderStateMixin {
                 key: ValueKey(replyTo.event.id),
                 padding: EdgeInsets.only(
                   top: 16,
-                  left: 16 + kMinInteractiveDimension,
-                  right: 8,
+                  left: kMinInteractiveDimension,
                   bottom: 8,
                 ),
                 child: Row(
