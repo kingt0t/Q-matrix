@@ -100,7 +100,8 @@ class InputBloc extends Bloc<InputEvent, InputState> {
     // TODO: Check if text is just whitespace
     if (text.isNotEmpty) {
       var formatted = markdownToHtml(
-          text, extensionSet: ExtensionSet.commonMark);
+          text.replaceAllMapped(RegExp("(\\\\)([+-]\\s+)"), (m) => "\\${m[2]}"),
+          extensionSet: ExtensionSet.commonMark);
       _room
           .send(
             TextMessage(
