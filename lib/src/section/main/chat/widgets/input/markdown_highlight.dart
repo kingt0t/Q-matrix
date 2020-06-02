@@ -48,7 +48,13 @@ class MarkdownEditingController extends TextEditingController  {
         pos += node.value.length;
       } else if (node.children != null) {
         List<TextSpan> tmp = [];
-        currentSpans.add(TextSpan(children: tmp, style: theme[node.className]));
+        var style = theme[node.className];
+        if(node.className == "bullet"
+            && node.children.length > 0
+            && node.children.first.value.startsWith(RegExp("^\s*[+-]"))){
+          style = null;
+        }
+        currentSpans.add(TextSpan(children: tmp, style: style));
         stack.add(currentSpans);
         currentSpans = tmp;
 
