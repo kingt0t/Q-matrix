@@ -174,6 +174,21 @@ class _FlexibleSpaceBackgroundState extends State<_FlexibleSpaceBackground> {
             color: Theme.of(context).primaryColor.withOpacity(_opacity),
           ),
         ),
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(-_opacity + 0.5),
+                Colors.black.withOpacity(0),
+                Colors.black.withOpacity(0),
+                Colors.black.withOpacity(-_opacity + 0.5),
+              ],
+              stops: [0, 0.35, 0.75, 1],
+            ),
+          ),
+        )
       ],
     );
   }
