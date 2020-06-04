@@ -14,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with Pattle.  If not, see <https://www.gnu.org/licenses/>.
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +54,13 @@ class ChatSettingsPage extends StatefulWidget {
 }
 
 class _ChatSettingsPageState extends State<ChatSettingsPage> {
+  static const _expandedHeight = 296.0;
+
   Room get room => widget.chat.room;
+
+  final _scrollController = ScrollController(
+    initialScrollOffset: _expandedHeight / 2,
+  );
 
   @override
   void didChangeDependencies() {
@@ -65,34 +73,26 @@ class _ChatSettingsPageState extends State<ChatSettingsPage> {
     return Scaffold(
       backgroundColor: context.pattleTheme.data.chat.backgroundColor,
       body: NestedScrollView(
+        controller: _scrollController,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           final url = widget.chat.avatarUrl?.toHttps(
             context,
-            thumbnail: true,
+            thumbnail: false,
           );
           return <Widget>[
             SliverAppBar(
-              expandedHeight: 128.0,
+              expandedHeight: _expandedHeight,
               floating: false,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
-                title: DefaultTextStyle(
-                  style: TextStyle(
-                    shadows: [
-                      Shadow(
-                        offset: Offset(0.25, 0.25),
-                        blurRadius: 1,
-                      )
-                    ],
-                  ),
-                  child: ChatName(
-                    chat: widget.chat,
-                  ),
-                ),
+                title: ChatName(chat: widget.chat),
                 background: url != null
-                    ? CachedNetworkImage(
-                        imageUrl: url,
-                        fit: BoxFit.cover,
+                    ? _FlexibleSpaceBackground(
+                        scrollController: _scrollController,
+                        child: CachedNetworkImage(
+                          imageUrl: url,
+                          fit: BoxFit.cover,
+                        ),
                       )
                     : null,
               ),
@@ -116,6 +116,70 @@ class _ChatSettingsPageState extends State<ChatSettingsPage> {
         ),
       ),
     );
+  }
+}
+
+class _FlexibleSpaceBackground extends StatefulWidget {
+  final ScrollController scrollController;
+  final Widget child;
+
+  const _FlexibleSpaceBackground({
+    Key key,
+    @required this.scrollController,
+    @required this.child,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _FlexibleSpaceBackgroundState();
+}
+
+class _FlexibleSpaceBackgroundState extends State<_FlexibleSpaceBackground> {
+  static const _initialSigma = 5.0;
+  double _sigma = _initialSigma;
+
+  static const _initialOpacity = 0.5;
+  double _opacity = _initialOpacity;
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final initialScrollOffset = widget.scrollController.initialScrollOffset;
+    final pixels = widget.scrollController.position.pixels;
+
+    if (pixels <= initialScrollOffset) {
+      setState(() {
+        _sigma = _initialSigma * pixels / initialScrollOffset;
+        _opacity = _initialOpacity * pixels / initialScrollOffset;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: <Widget>[
+        widget.child,
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: _sigma, sigmaY: _sigma),
+          child: Container(
+            color: Theme.of(context).primaryColor.withOpacity(_opacity),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    widget.scrollController.removeListener(_onScroll);
   }
 }
 
