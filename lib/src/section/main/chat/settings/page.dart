@@ -31,7 +31,6 @@ import '../../widgets/chat_name.dart';
 import '../../widgets/chat_member_tile.dart';
 
 import '../../../../models/chat.dart';
-import '../../../../models/chat_member.dart';
 
 import '../../../../matrix.dart';
 import '../../../../util/url.dart';
@@ -274,10 +273,7 @@ class _MemberListState extends State<_MemberList> {
                 SizedBox(height: 4),
                 BlocBuilder<ChatSettingsBloc, ChatSettingsState>(
                   builder: (context, state) {
-                    var members = <ChatMember>[];
-                    if (state is MembersLoaded) {
-                      members = state.members;
-                    }
+                    final members = state.members;
 
                     final isLoading = state is MembersLoading;
                     final allShown = members.length ==
