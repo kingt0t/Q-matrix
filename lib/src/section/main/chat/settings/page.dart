@@ -350,7 +350,12 @@ class _ShowMoreItem extends StatelessWidget {
           room.summary.joinedMembersCount - shownMembersCount,
         ),
       ),
-      subtitle: isLoading ? LinearProgressIndicator() : null,
+      subtitle: AnimatedSwitcher(
+        switchInCurve: Curves.decelerate,
+        switchOutCurve: Curves.decelerate.flipped,
+        duration: Duration(milliseconds: 300),
+        child: isLoading ? LinearProgressIndicator() : SizedBox(height: 6),
+      ),
       onTap: onTap,
     );
   }
