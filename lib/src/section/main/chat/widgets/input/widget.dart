@@ -1,5 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
-// Copyright (C) 2020  Cyril Dutrieux<cyril@cdutrieux.fr>
+// Copyright (C) 2020  Cyril Dutrieux <cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //

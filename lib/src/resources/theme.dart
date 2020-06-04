@@ -1,5 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
-// Copyright (C) 2020  Cyril Dutrieux<cyril@cdutrieux.fr>
+// Copyright (C) 2020  Cyril Dutrieux <cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //
@@ -142,10 +142,10 @@ final PattleThemeData pattleLightTheme = PattleThemeData(
     'quote': TextStyle(color: Colors.grey[800]),
     'code': TextStyle(
         color: Colors.grey[800],
-        fontFamily: "Monospace"),
+        fontFamily: "Monospace",),
     'section': TextStyle(
         fontWeight: FontWeight.w700,
-        fontSize: 16),
+        fontSize: 16,),
     'string': TextStyle(decoration: TextDecoration.underline),
     'symbol': TextStyle(color: Colors.grey[800]),
     'bullet': TextStyle(color: Colors.grey[800]),
@@ -195,10 +195,10 @@ final PattleThemeData pattleDarkTheme = PattleThemeData(
     'quote': TextStyle(color: Colors.grey[300]),
     'code': TextStyle(
         color: Colors.grey[300],
-        fontFamily: "Monospace"),
+        fontFamily: "Monospace",),
     'section': TextStyle(
         fontWeight: FontWeight.w700,
-        fontSize: 16),
+        fontSize: 16,),
     'string': TextStyle(decoration: TextDecoration.underline),
     'symbol': TextStyle(color: Colors.grey[300]),
     'bullet': TextStyle(color: Colors.grey[300]),

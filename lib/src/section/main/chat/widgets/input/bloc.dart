@@ -1,5 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
-// Copyright (C) 2020  Cyril Dutrieux<cyril@cdutrieux.fr>
+// Copyright (C) 2020  Cyril Dutrieux <cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //
@@ -100,7 +100,7 @@ class InputBloc extends Bloc<InputEvent, InputState> {
     // TODO: Check if text is just whitespace
     if (text.isNotEmpty) {
       var formatted = markdownToHtml(
-          text.replaceAllMapped(RegExp("(\\\\)([+-]\\s+)"), (m) => "\\${m[2]}"),
+          text.replaceAllMapped(RegExp(r'(\\)([+-]\s+)'), (m) => '\\${m[2]}'),
           extensionSet: ExtensionSet.commonMark);
       _room
           .send(
