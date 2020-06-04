@@ -99,6 +99,10 @@ class InputBloc extends Bloc<InputEvent, InputState> {
   void _sendMessage(String text, EventId inReplyTo) async {
     // TODO: Check if text is just whitespace
     if (text.isNotEmpty) {
+      /*
+       Converts to html, automatically escaping +,- except if it was already
+      escaped
+       */
       var formatted = markdownToHtml(
           text.replaceAllMapped(RegExp(r'(\\)([+-]\s+)'), (m) => '\\${m[2]}'),
           extensionSet: ExtensionSet.commonMark);
