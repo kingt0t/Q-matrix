@@ -38,7 +38,7 @@ class ChatSettingsBloc extends Bloc<ChatSettingsEvent, ChatSettingsState> {
       : _room = _matrix.user.rooms[roomId];
 
   @override
-  ChatSettingsState get initialState => ChatSettingsUninitialized();
+  ChatSettingsState get initialState => _loadMembers();
 
   @override
   Stream<ChatSettingsState> mapEventToState(ChatSettingsEvent event) async* {
@@ -54,25 +54,29 @@ class ChatSettingsBloc extends Bloc<ChatSettingsEvent, ChatSettingsState> {
         _room = update.user.rooms[_room.id];
       }
 
-      var members = List.of(_room.members);
-
-      members = members.where((m) => m.membership is Joined).toList();
-
-      final me = _room.members[_matrix.user.id];
-      members.remove(me);
-      members.insert(0, me);
-
-      yield MembersLoaded(
-        members
-            .map(
-              (u) => ChatMember.fromRoomAndUserId(
-                _room,
-                u.id,
-                isMe: _matrix.user.id == u.id,
-              ),
-            )
-            .toList(),
-      );
+      yield _loadMembers();
     }
+  }
+
+  ChatSettingsState _loadMembers() {
+    var members = List.of(_room.members);
+
+    members = members.where((m) => m.membership is Joined).toList();
+
+    final me = _room.members[_matrix.user.id];
+    members.remove(me);
+    members.insert(0, me);
+
+    return MembersLoaded(
+      members
+          .map(
+            (u) => ChatMember.fromRoomAndUserId(
+              _room,
+              u.id,
+              isMe: _matrix.user.id == u.id,
+            ),
+          )
+          .toList(),
+    );
   }
 }
