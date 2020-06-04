@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../../../resources/intl/localizations.dart';
 import '../../../../resources/theme.dart';
@@ -89,9 +90,12 @@ class _ChatSettingsPageState extends State<ChatSettingsPage> {
                 background: url != null
                     ? _FlexibleSpaceBackground(
                         scrollController: _scrollController,
-                        child: CachedNetworkImage(
-                          imageUrl: url,
+                        child: FadeInImage(
+                          image: CachedNetworkImageProvider(
+                            url,
+                          ),
                           fit: BoxFit.cover,
+                          placeholder: MemoryImage(kTransparentImage),
                         ),
                       )
                     : null,
