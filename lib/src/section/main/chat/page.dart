@@ -202,6 +202,7 @@ class _ChatPageWithBlocState extends State<_ChatPageWithBloc> {
                 subtitle: TypingContent(
                   chat: chat,
                   style: TextStyle(
+                    fontSize: 14,
                     color: Theme.of(context)
                             .appBarTheme
                             .textTheme
