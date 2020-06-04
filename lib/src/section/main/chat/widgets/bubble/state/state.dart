@@ -21,8 +21,11 @@ import 'package:matrix_sdk/matrix_sdk.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../../resources/theme.dart';
+
+import '../../../../../../models/chat.dart';
 import '../../../../../../models/chat_message.dart';
 
+import 'content/avatar_change.dart';
 import 'content/creation.dart';
 import 'content/member_change.dart';
 import 'content/name_change.dart';
@@ -32,15 +35,22 @@ import 'content/upgrade.dart';
 import '../../../../../../util/date_format.dart';
 
 class StateBubble extends StatelessWidget {
+  final Chat chat;
   final ChatMessage message;
   final Widget child;
 
-  StateBubble({Key key, this.message, this.child}) : super(key: key) {
+  StateBubble({
+    Key key,
+    @required this.chat,
+    @required this.message,
+    this.child,
+  }) : super(key: key) {
     assert(message.event is StateEvent);
   }
 
   /// Create a [StateBubble] with the correct [child] for the given [message].
   factory StateBubble.withContent({
+    @required Chat chat,
     @required ChatMessage message,
   }) {
     final event = message.event;
@@ -55,11 +65,14 @@ class StateBubble extends StatelessWidget {
       content = NameChangeContent();
     } else if (event is TopicChangeEvent) {
       content = TopicChangeContent();
+    } else if (event is RoomAvatarChangeEvent) {
+      content = AvatarChangeContent(withImage: true);
     } else if (event is UpgradeContent) {
       content = UpgradeContent();
     }
 
     return StateBubble(
+      chat: chat,
       message: message,
       child: content,
     );

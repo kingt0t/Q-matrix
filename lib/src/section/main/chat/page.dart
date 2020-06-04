@@ -333,7 +333,10 @@ class _MessageListState extends State<_MessageList> {
 
             Widget bubble;
             if (event is StateEvent) {
-              bubble = StateBubble.withContent(message: message);
+              bubble = StateBubble.withContent(
+                chat: widget.chat,
+                message: message,
+              );
             } else {
               bubble = MessageBubble.withContent(
                 chat: widget.chat,
@@ -454,6 +457,7 @@ class _InviteSplash extends StatelessWidget {
         ),
         SizedBox(height: 16),
         StateBubble.withContent(
+          chat: chat,
           // Latest message should be the invite event
           message: chat.latestMessage,
         ),

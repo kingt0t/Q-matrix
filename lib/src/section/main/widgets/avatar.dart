@@ -25,6 +25,7 @@ import '../../../util/url.dart';
 
 class Avatar extends StatelessWidget {
   final Uri url;
+  final double radius;
   final Color placeholderColor;
 
   final _AvatarType _type;
@@ -32,18 +33,22 @@ class Avatar extends StatelessWidget {
   const Avatar._({
     Key key,
     this.url,
+    double radius,
     this.placeholderColor,
     @required _AvatarType type,
   })  : _type = type,
+        radius = radius ?? 24,
         super(key: key);
 
   Avatar.direct({
     Key key,
     Uri url,
+    double radius,
     Color placeholderColor,
   }) : this._(
           key: key,
           url: url,
+          radius: radius,
           placeholderColor: placeholderColor,
           type: _AvatarType.direct,
         );
@@ -51,10 +56,12 @@ class Avatar extends StatelessWidget {
   Avatar.group({
     Key key,
     Uri url,
+    double radius,
     Color placeholderColor,
   }) : this._(
           key: key,
           url: url,
+          radius: radius,
           placeholderColor: placeholderColor,
           type: _AvatarType.group,
         );
@@ -62,10 +69,12 @@ class Avatar extends StatelessWidget {
   Avatar.channel({
     Key key,
     Uri url,
+    double radius,
     Color placeholderColor,
   }) : this._(
           key: key,
           url: url,
+          radius: radius,
           placeholderColor: placeholderColor,
           type: _AvatarType.channel,
         );
@@ -79,8 +88,8 @@ class Avatar extends StatelessWidget {
 
     if (url != null) {
       return Container(
-        width: 48,
-        height: 48,
+        width: radius * 2,
+        height: radius * 2,
         child: ClipOval(
           child: FadeInImage(
             fit: BoxFit.cover,
@@ -102,11 +111,13 @@ class Avatar extends StatelessWidget {
 
 class _PlaceholderAvatar extends StatelessWidget {
   final _AvatarType type;
+  final double radius;
   final Color color;
 
   const _PlaceholderAvatar({
     Key key,
     @required this.type,
+    this.radius,
     this.color,
   }) : super(key: key);
 
@@ -115,7 +126,7 @@ class _PlaceholderAvatar extends StatelessWidget {
     return CircleAvatar(
       foregroundColor: Colors.white,
       backgroundColor: color ?? context.pattleTheme.data.primarySwatch[500],
-      radius: 24,
+      radius: radius,
       child: _icon,
     );
   }

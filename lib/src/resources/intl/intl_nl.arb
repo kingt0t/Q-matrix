@@ -188,6 +188,23 @@
       "name": {}
     }
   },
+  "_ChatMessage_iconChange": "{person,select, second{Je hebt het icoon van de groep verandert}third{{name} heeft het icoon van de groep verandert}}",
+  "@_ChatMessage_iconChange": {
+    "type": "text",
+    "placeholders": {
+      "person": {},
+      "name": {}
+    }
+  },
+  "_ChatMessage_iconChangeTo": "{person,select, second{Je hebt het icoon van de groep verandert naar}third{{name} heeft het icoon van de groep verandert naar}}",
+  "@_ChatMessage_iconChangeTo": {
+    "description": "After the end of the sentence a small version of the chat icon is placed.",
+    "type": "text",
+    "placeholders": {
+      "person": {},
+      "name": {}
+    }
+  },
   "_ChatMessage_join": "{person,select, second{Je bent aan het gesprek toegevoegd}third{{name} is aan het gesprek toegevoegd}}",
   "@_ChatMessage_join": {
     "type": "text",

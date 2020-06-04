@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-30T16:46:37.614297",
+  "@@last_modified": "2020-06-04T16:02:06.691997",
   "appName": "Pattle",
   "@appName": {
     "type": "text",
@@ -182,6 +182,23 @@
   },
   "_ChatMessage_descriptionChange": "{person,select, second{You changed the description of this group}third{{name} changed the description of this group}}",
   "@_ChatMessage_descriptionChange": {
+    "type": "text",
+    "placeholders": {
+      "person": {},
+      "name": {}
+    }
+  },
+  "_ChatMessage_iconChange": "{person,select, second{You changed this group''s icon}third{{name} changed this group''s icon}}",
+  "@_ChatMessage_iconChange": {
+    "type": "text",
+    "placeholders": {
+      "person": {},
+      "name": {}
+    }
+  },
+  "_ChatMessage_iconChangeTo": "{person,select, second{You changed this group''s icon to}third{{name} changed this group''s icon to}}",
+  "@_ChatMessage_iconChangeTo": {
+    "description": "After the end of the sentence a small version of the chat icon is placed.",
     "type": "text",
     "placeholders": {
       "person": {},

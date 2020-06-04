@@ -47,41 +47,51 @@ class MessageLookup extends MessageLookupByLibrary {
         'third': '${name} changed the description of this group',
       })}";
 
-  static m6(person, invitee, inviter) => "${Intl.select(person, {
+  static m6(person, name) => "${Intl.select(person, {
+        'second': 'You changed this group\'s icon',
+        'third': '${name} changed this group\'s icon',
+      })}";
+
+  static m7(person, name) => "${Intl.select(person, {
+        'second': 'You changed this group\'s icon to',
+        'third': '${name} changed this group\'s icon to',
+      })}";
+
+  static m8(person, invitee, inviter) => "${Intl.select(person, {
         'secondOnSecond': 'You were invited by yourself',
         'secondOnThird': 'You were invited by ${inviter}',
         'thirdOnThird': '${invitee} was invited by ${inviter}',
         'thirdOnSecond': '${invitee} was invited by you',
       })}";
 
-  static m7(person, name) => "${Intl.select(person, {
+  static m9(person, name) => "${Intl.select(person, {
         'second': 'You joined',
         'third': '${name} joined',
       })}";
 
-  static m8(person, name) => "${Intl.select(person, {
+  static m10(person, name) => "${Intl.select(person, {
         'second': 'You left',
         'third': '${name} left',
       })}";
 
-  static m9(person, name) => "${Intl.select(person, {
+  static m11(person, name) => "${Intl.select(person, {
         'second': 'You changed the name of this group',
         'third': '${name} changed the name of this group',
       })}";
 
-  static m10(person, name) => "${Intl.select(person, {
+  static m12(person, name) => "${Intl.select(person, {
         'second': 'You upgraded this group',
         'third': '${name} upgraded this group',
       })}";
 
-  static m11(andMore, first, second) => "${Intl.select(andMore, {
+  static m13(andMore, first, second) => "${Intl.select(andMore, {
         'false': '${first} and ${second} are typing...',
         'true': '${first}, ${second} and more are typing...',
       })}";
 
-  static m12(name) => "${name} is typing...";
+  static m14(name) => "${name} is typing...";
 
-  static m13(version) => "Version ${version}";
+  static m15(version) => "Version ${version}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -97,15 +107,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "_ChatMessage_creation": m3,
         "_ChatMessage_deletion": m4,
         "_ChatMessage_descriptionChange": m5,
-        "_ChatMessage_invite": m6,
-        "_ChatMessage_join": m7,
-        "_ChatMessage_leave": m8,
-        "_ChatMessage_nameChange": m9,
-        "_ChatMessage_upgrade": m10,
-        "_Chat_areTyping": m11,
+        "_ChatMessage_iconChange": m6,
+        "_ChatMessage_iconChangeTo": m7,
+        "_ChatMessage_invite": m8,
+        "_ChatMessage_join": m9,
+        "_ChatMessage_leave": m10,
+        "_ChatMessage_nameChange": m11,
+        "_ChatMessage_upgrade": m12,
+        "_Chat_areTyping": m13,
         "_Chat_cantSendMessages": MessageLookupByLibrary.simpleMessage(
             "You can\'t send messages to this group because you\'re no longer a participant."),
-        "_Chat_isTyping": m12,
+        "_Chat_isTyping": m14,
         "_Chat_typeAMessage":
             MessageLookupByLibrary.simpleMessage("Type a message"),
         "_Chat_typing": MessageLookupByLibrary.simpleMessage("typing..."),
@@ -161,7 +173,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "_Settings_editNameDescription": MessageLookupByLibrary.simpleMessage(
             "This is not your username. This is the name that will be visible to others."),
         "_Settings_title": MessageLookupByLibrary.simpleMessage("Settings"),
-        "_Settings_version": m13,
+        "_Settings_version": m15,
         "_StartUsername_hostnameInvalidError":
             MessageLookupByLibrary.simpleMessage("Invalid hostname"),
         "_StartUsername_title":

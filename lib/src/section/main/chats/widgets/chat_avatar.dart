@@ -24,8 +24,9 @@ import '../../../../util/chat_member.dart';
 
 class ChatAvatar extends StatelessWidget {
   final Chat chat;
+  final double radius;
 
-  const ChatAvatar({Key key, this.chat}) : super(key: key);
+  const ChatAvatar({Key key, this.chat, this.radius}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +38,19 @@ class ChatAvatar extends StatelessWidget {
     if (chat.isDirect) {
       return Avatar.direct(
         url: avatarUrl,
+        radius: radius,
         placeholderColor: placeholderColor,
       );
     } else if (chat.isChannel) {
       return Avatar.channel(
         url: avatarUrl,
+        radius: radius,
         placeholderColor: placeholderColor,
       );
     } else {
       return Avatar.group(
         url: avatarUrl,
+        radius: radius,
         placeholderColor: placeholderColor,
       );
     }

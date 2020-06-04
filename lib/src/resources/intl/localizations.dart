@@ -563,6 +563,34 @@ class _ChatMessage extends _Category {
     );
   }
 
+  String iconChange(Person person, String name) {
+    return Intl.select(
+      person,
+      {
+        Person.second: 'You changed this group\'s icon',
+        Person.third: '$name changed this group\'s icon',
+      },
+      args: [person, name],
+      name: '_ChatMessage_iconChange',
+      locale: _localeName,
+    );
+  }
+
+  String iconChangeTo(Person person, String name) {
+    return Intl.select(
+      person,
+      {
+        Person.second: 'You changed this group\'s icon to',
+        Person.third: '$name changed this group\'s icon to',
+      },
+      args: [person, name],
+      name: '_ChatMessage_iconChangeTo',
+      desc: 'After the end of the sentence a small version of the chat icon is'
+          ' placed.',
+      locale: _localeName,
+    );
+  }
+
   String join(Person person, String name) {
     return Intl.select(
       person,

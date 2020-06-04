@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../../../resources/theme.dart';
@@ -28,6 +29,7 @@ import '../../../chat/widgets/bubble/state/content/creation.dart';
 import '../../../chat/widgets/bubble/state/content/member_change.dart';
 import '../../../chat/widgets/bubble/state/content/name_change.dart';
 import '../../../chat/widgets/bubble/state/content/topic_change.dart';
+import '../../../chat/widgets/bubble/state/content/avatar_change.dart';
 import '../../../chat/widgets/bubble/state/content/upgrade.dart';
 
 import '../typing_content.dart';
@@ -63,6 +65,8 @@ class Subtitle extends StatelessWidget {
         content = NameChangeContent(message: chat.latestMessage);
       } else if (event is TopicChangeEvent) {
         content = TopicChangeContent(message: chat.latestMessage);
+      } else if (event is RoomAvatarChangeEvent) {
+        content = AvatarChangeContent(chat: chat, message: chat.latestMessage);
       } else if (event is RoomUpgradeEvent) {
         content = UpgradeContent(message: chat.latestMessage);
       } else if (event is RoomCreationEvent) {
