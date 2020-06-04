@@ -174,6 +174,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             .toList()
         : <ChatMessage>[];
 
+    if (messages.length + newMessages.length < _pageSize) {
+      add(LoadMoreFromTimeline());
+    }
+
     return ChatState(
       chat: chat,
       messages: messages,
