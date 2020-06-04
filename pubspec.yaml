@@ -10,10 +10,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  matrix_sdk:
-    git:
-      url: https://pattle.dev/pattle/library/matrix-dart-sdk.git
-      ref: e1f4ab98d34270253b4ebafdf0f1443b76104d13
+  matrix_sdk: ^0.32.0
 
   async: ^2.3.0
 
