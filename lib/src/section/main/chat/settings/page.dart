@@ -103,8 +103,12 @@ class _ChatSettingsPageState extends State<ChatSettingsPage> {
           slivers: <Widget>[
             SliverList(
               delegate: SliverChildListDelegate.fixed([
-                if (!room.isDirect) _Description(),
-                SizedBox(height: 16),
+                if (!room.isDirect &&
+                    room.topic != null &&
+                    room.topic.isNotEmpty) ...[
+                  _Description(description: room.topic),
+                  SizedBox(height: 16),
+                ],
                 if (!room.isDirect) _MemberList(room: room)
               ]),
             )
