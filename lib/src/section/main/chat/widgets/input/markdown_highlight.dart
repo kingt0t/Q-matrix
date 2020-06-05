@@ -22,35 +22,37 @@ import 'package:highlight/highlight.dart';
 
 import '../../../../../resources/theme.dart';
 
-class MarkdownEditingController extends TextEditingController  {
-
+class MarkdownEditingController extends TextEditingController {
   Map<String, TextStyle> _theme;
 
   List<TextSpan> _convert(List<Node> nodes, bool withComposing) {
-    var currentSpans =  <TextSpan>[];
+    var spans = <TextSpan>[];
+    var currentSpans = spans;
     final stack = <List<TextSpan>>[];
     var pos = 0;
 
     _traverse(Node node) {
       if (node.value != null) {
         var relativeComposing = TextRange(
-            start: max(0, value.composing.start - pos),
-            end: max(0, value.composing.end - pos),
+          start: max(0, value.composing.start - pos),
+          end: max(0, value.composing.end - pos),
         );
         var style = _theme[node.className];
-        currentSpans.add(composingTextSpan(
+        currentSpans.add(
+          composingTextSpan(
             text: node.value,
             style: style,
             withComposing: withComposing,
-            composing: relativeComposing
-        ,),);
+            composing: relativeComposing,
+          ),
+        );
         pos += node.value.length;
       } else if (node.children != null) {
         List<TextSpan> tmp = [];
         var style = _theme[node.className];
-        if(node.className == "bullet"
-            && node.children.length > 0
-            && node.children.first.value.startsWith(RegExp(r'^\s*[+-]'))){
+        if (node.className == "bullet" &&
+            node.children.length > 0 &&
+            node.children.first.value.startsWith(RegExp(r'^\s*[+-]'))) {
           style = null;
         }
 
@@ -61,22 +63,21 @@ class MarkdownEditingController extends TextEditingController  {
         node.children.forEach((n) {
           _traverse(n);
           if (n == node.children.last) {
-            currentSpans = stack.isEmpty ? currentSpans : stack.removeLast();
+            currentSpans = stack.isEmpty ? spans : stack.removeLast();
           }
         });
       }
     }
 
-
     for (final node in nodes) {
       _traverse(node);
     }
 
-    return currentSpans;
+    return spans;
   }
 
   @override
-  TextSpan buildTextSpan({TextStyle style , bool withComposing}) {
+  TextSpan buildTextSpan({TextStyle style, bool withComposing}) {
     final result = highlight.parse(value.text, language: 'markdown');
     final spans = _convert(result.nodes, withComposing);
     return TextSpan(style: style, children: spans);
@@ -86,30 +87,30 @@ class MarkdownEditingController extends TextEditingController  {
     String text,
     TextStyle style,
     bool withComposing,
-    TextRange composing,}) {
-    if (!composing.isValid || !withComposing || composing.isCollapsed
-      || composing.start >= text.length) {
+    TextRange composing,
+  }) {
+    if (!composing.isValid ||
+        !withComposing ||
+        composing.isCollapsed ||
+        composing.start >= text.length) {
       return TextSpan(style: style, text: text);
     }
 
-    final TextStyle composingStyle = style == null ?
-      const TextStyle(decoration: TextDecoration.underline):
-      style.merge(const TextStyle(decoration: TextDecoration.underline));
+    final TextStyle composingStyle = style == null
+        ? const TextStyle(decoration: TextDecoration.underline)
+        : style.merge(const TextStyle(decoration: TextDecoration.underline));
 
-    return TextSpan(
-        style: style,
-        children: <TextSpan>[
-          TextSpan(text: composing.textBefore(text)),
-          TextSpan(
-            style: composingStyle,
-            text: composing.textInside(text),
-          ),
-          TextSpan(text: composing.textAfter(text)),
-        ]);
+    return TextSpan(style: style, children: <TextSpan>[
+      TextSpan(text: composing.textBefore(text)),
+      TextSpan(
+        style: composingStyle,
+        text: composing.textInside(text),
+      ),
+      TextSpan(text: composing.textAfter(text)),
+    ]);
   }
 
-  void setMarkdownTheme(BuildContext context){
+  void setMarkdownTheme(BuildContext context) {
     _theme = context.pattleTheme.data.markdown;
   }
 }
-

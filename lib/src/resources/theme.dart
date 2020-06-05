@@ -141,11 +141,13 @@ final PattleThemeData pattleLightTheme = PattleThemeData(
   markdown: {
     'quote': TextStyle(color: Colors.grey[800]),
     'code': TextStyle(
-        color: Colors.grey[800],
-        fontFamily: "Monospace",),
+      color: Colors.grey[800],
+      fontFamily: "Monospace",
+    ),
     'section': TextStyle(
-        fontWeight: FontWeight.w700,
-        fontSize: 16,),
+      fontWeight: FontWeight.w700,
+      fontSize: 16,
+    ),
     'string': TextStyle(decoration: TextDecoration.underline),
     'symbol': TextStyle(color: Colors.grey[800]),
     'bullet': TextStyle(color: Colors.grey[800]),
@@ -194,11 +196,13 @@ final PattleThemeData pattleDarkTheme = PattleThemeData(
   markdown: {
     'quote': TextStyle(color: Colors.grey[300]),
     'code': TextStyle(
-        color: Colors.grey[300],
-        fontFamily: "Monospace",),
+      color: Colors.grey[300],
+      fontFamily: "Monospace",
+    ),
     'section': TextStyle(
-        fontWeight: FontWeight.w700,
-        fontSize: 16,),
+      fontWeight: FontWeight.w700,
+      fontSize: 16,
+    ),
     'string': TextStyle(decoration: TextDecoration.underline),
     'symbol': TextStyle(color: Colors.grey[300]),
     'bullet': TextStyle(color: Colors.grey[300]),
@@ -313,7 +317,7 @@ class PattleThemeData {
 
   final ChatThemeData chat;
 
-  final  Map <String, TextStyle> markdown;
+  final Map<String, TextStyle> markdown;
 
   final Map<DisplayColor, Color> userColors;
 
