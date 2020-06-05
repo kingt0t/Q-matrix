@@ -197,7 +197,7 @@ final PattleThemeData pattleDarkTheme = PattleThemeData(
     'quote': TextStyle(color: Colors.grey[300]),
     'code': TextStyle(
       color: Colors.grey[300],
-      fontFamily: "Monospace",
+      fontFamily: 'monospace',
     ),
     'section': TextStyle(
       fontWeight: FontWeight.w700,
