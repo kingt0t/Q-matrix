@@ -48,7 +48,7 @@ class MarkdownEditingController extends TextEditingController {
         );
         pos += node.value.length;
       } else if (node.children != null) {
-        List<TextSpan> tmp = [];
+        var tmp = <TextSpan>[];
         var style = _theme[node.className];
         if (node.className == "bullet" &&
             node.children.length > 0 &&
@@ -60,12 +60,8 @@ class MarkdownEditingController extends TextEditingController {
         stack.add(currentSpans);
         currentSpans = tmp;
 
-        node.children.forEach((n) {
-          _traverse(n);
-          if (n == node.children.last) {
-            currentSpans = stack.isEmpty ? spans : stack.removeLast();
-          }
-        });
+        node.children.forEach(_traverse);
+        currentSpans = stack.isEmpty ? spans : stack.removeLast();
       }
     }
 
@@ -96,7 +92,7 @@ class MarkdownEditingController extends TextEditingController {
       return TextSpan(style: style, text: text);
     }
 
-    final TextStyle composingStyle = style == null
+    final composingStyle = style == null
         ? const TextStyle(decoration: TextDecoration.underline)
         : style.merge(const TextStyle(decoration: TextDecoration.underline));
 

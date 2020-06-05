@@ -103,7 +103,7 @@ class InputBloc extends Bloc<InputEvent, InputState> {
        Converts to html, automatically escaping +,- except if it was already
       escaped
        */
-      var formatted = markdownToHtml(
+      final formatted = markdownToHtml(
           text.replaceAllMapped(RegExp(r'(\\)([+-]\s+)'), (m) => '\\${m[2]}'),
           extensionSet: ExtensionSet.commonMark);
       _room
