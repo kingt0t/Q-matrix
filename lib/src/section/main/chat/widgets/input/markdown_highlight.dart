@@ -37,7 +37,8 @@ class MarkdownEditingController extends TextEditingController {
           start: max(0, value.composing.start - pos),
           end: max(0, value.composing.end - pos),
         );
-        var style = _theme[node.className];
+
+        final style = _theme[node.className];
         currentSpans.add(
           composingTextSpan(
             text: node.value,
