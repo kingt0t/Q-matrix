@@ -33,7 +33,7 @@ class MarkdownEditingController extends TextEditingController {
 
     _traverse(Node node) {
       if (node.value != null) {
-        var relativeComposing = TextRange(
+        final relativeComposing = TextRange(
           start: max(0, value.composing.start - pos),
           end: max(0, value.composing.end - pos),
         );
