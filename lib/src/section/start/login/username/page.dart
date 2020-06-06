@@ -409,6 +409,7 @@ class UsernameLoginPageState extends State<UsernameLoginPage>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _visiblityController.dispose();
     super.dispose();
   }
