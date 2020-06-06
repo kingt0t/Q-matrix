@@ -28,7 +28,7 @@ import '../../../models/chat.dart';
 import '../../../models/chat_message.dart';
 import '../chats/widgets/typing_content.dart';
 import '../widgets/chat_name.dart';
-import '../widgets/title_with_sub.dart';
+import '../widgets/title_group.dart';
 
 import '../../../matrix.dart';
 import '../../../util/url.dart';
@@ -197,7 +197,7 @@ class _ChatPageWithBlocState extends State<_ChatPageWithBloc> {
         }
 
         Widget title = chat.room.isSomeoneElseTyping
-            ? TitleWithSub(
+            ? TitleGroup(
                 title: ChatName(chat: chat),
                 subtitle: TypingContent(
                   chat: chat,

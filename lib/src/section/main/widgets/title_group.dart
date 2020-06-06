@@ -17,11 +17,11 @@
 
 import 'package:flutter/cupertino.dart';
 
-class TitleWithSub extends StatelessWidget {
+class TitleGroup extends StatelessWidget {
   final Widget title;
   final Widget subtitle;
 
-  const TitleWithSub({
+  const TitleGroup({
     Key key,
     @required this.title,
     @required this.subtitle,
@@ -29,6 +29,7 @@ class TitleWithSub extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
