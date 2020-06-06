@@ -687,6 +687,29 @@ class _ChatDetails extends _Category {
       locale: _localeName,
     );
   }
+
+  String get publicAddress {
+    return Intl.message(
+      'Public address',
+      name: '_ChatDetails_publicAddress',
+      locale: _localeName,
+    );
+  }
+
+  // ignore: avoid_positional_boolean_parameters
+  String publicAddressInfo(bool isChannel) {
+    return Intl.select(
+      isChannel,
+      {
+        true: 'People can use a channel\'s address'
+            ' to find and join this channel.',
+        false: 'People can use a group\'s address to find this group.',
+      },
+      args: [isChannel],
+      name: '_ChatDetails_publicAddressInfo',
+      locale: _localeName,
+    );
+  }
 }
 
 class _Chats extends _Category {

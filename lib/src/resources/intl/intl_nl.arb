@@ -263,6 +263,18 @@
       "count": {}
     }
   },
+  "_ChatDetails_publicAddress": "Openbaar adres",
+  "@_ChatDetails_publicAddress": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatDetails_publicAddressInfo": "{isChannel,select, true{Mensen kunnen een adres van een kanaal gebruiken om dit kanaal te vinden en deel te nemen.}false{Mensen kunnen een adres van een groep gebruiken om deze groep te vinden.}}",
+  "@_ChatDetails_publicAddressInfo": {
+    "type": "text",
+    "placeholders": {
+      "isChannel": {}
+    }
+  },
   "_Chats_chats": "Chats",
   "@_Chats_chats": {
     "type": "text",

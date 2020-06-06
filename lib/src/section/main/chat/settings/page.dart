@@ -112,6 +112,13 @@ class _ChatSettingsPageState extends State<ChatSettingsPage> {
                   _Description(description: room.topic),
                   SizedBox(height: 16),
                 ],
+                if (room.canonicalAlias != null) ...[
+                  _PublicAlias(
+                    alias: room.canonicalAlias.toString(),
+                    isChannel: widget.chat.isChannel,
+                  ),
+                  SizedBox(height: 16),
+                ],
                 if (!room.isDirect) _MemberList(room: room)
               ]),
             )
@@ -201,10 +208,43 @@ class _FlexibleSpaceBackgroundState extends State<_FlexibleSpaceBackground> {
   }
 }
 
-class _Description extends StatelessWidget {
-  final String description;
+class _SectionTitle extends StatelessWidget {
+  final Widget child;
 
-  const _Description({Key key, this.description}) : super(key: key);
+  const _SectionTitle({Key key, @required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        DefaultTextStyle.merge(
+          style: TextStyle(
+            color: context.pattleTheme.data.primaryColorOnBackground,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+          child: child,
+        ),
+        SizedBox(height: 4),
+      ],
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  static const defaultPadding = EdgeInsets.all(16);
+
+  final EdgeInsets padding;
+  final Widget title;
+  final List<Widget> children;
+
+  const _Section({
+    Key key,
+    this.padding = defaultPadding,
+    this.title,
+    this.children,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -212,30 +252,123 @@ class _Description extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Material(
-            elevation: 4,
+            elevation: 2,
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: padding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    context.intl.chat.details.description,
-                    style: TextStyle(
-                      color: context.pattleTheme.data.primaryColorOnBackground,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    description ?? context.intl.chat.details.description,
-                    style: TextStyle(
-                      fontStyle: description == null
-                          ? FontStyle.italic
-                          : FontStyle.normal,
-                    ),
-                  ),
+                  if (title != null) _SectionTitle(child: title),
+                  ...children,
                 ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Description extends StatelessWidget {
+  final String description;
+
+  const _Description({Key key, this.description}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _Section(
+      title: Text(context.intl.chat.details.description),
+      children: <Widget>[
+        Text(
+          description ?? context.intl.chat.details.description,
+          style: TextStyle(
+            fontStyle:
+                description == null ? FontStyle.italic : FontStyle.normal,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PublicAlias extends StatefulWidget {
+  final String alias;
+  final bool isChannel;
+
+  const _PublicAlias({
+    Key key,
+    @required this.alias,
+    @required this.isChannel,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _PublicAliasState();
+}
+
+class _PublicAliasState extends State<_PublicAlias> {
+  static const _duration = Duration(milliseconds: 75);
+
+  bool _showInfo = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return _Section(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: _Section.defaultPadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _SectionTitle(
+                      child: Text(context.intl.chat.details.publicAddress),
+                    ),
+                    Text(widget.alias)
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                right: _Section.defaultPadding.right / 2,
+              ),
+              child: IconButton(
+                onPressed: () => setState(() => _showInfo = !_showInfo),
+                icon: AnimatedSwitcher(
+                  duration: _duration,
+                  child: !_showInfo
+                      ? Icon(Icons.info_outline, key: ValueKey(_showInfo))
+                      : Icon(Icons.keyboard_arrow_up, key: ValueKey(_showInfo)),
+                ),
+                color: context.pattleTheme.data.primaryColorOnBackground,
+              ),
+            ),
+          ],
+        ),
+        AnimatedCrossFade(
+          crossFadeState:
+              !_showInfo ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          duration: _duration,
+          firstCurve: Curves.decelerate,
+          secondCurve: Curves.decelerate,
+          firstChild: Container(),
+          secondChild: Padding(
+            padding: _Section.defaultPadding.copyWith(
+              top: 0,
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                context.intl.chat.details.publicAddressInfo(widget.isChannel),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.caption.color,
+                ),
               ),
             ),
           ),
@@ -264,75 +397,63 @@ class _MemberListState extends State<_MemberList> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Material(
-            elevation: 4,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 16, top: 16),
-                  child: Text(
-                    context.intl.chat.details.participants(
-                      widget.room.summary.joinedMembersCount,
-                    ),
-                    style: TextStyle(
-                      color: context.pattleTheme.data.primaryColorOnBackground,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 4),
-                BlocBuilder<ChatSettingsBloc, ChatSettingsState>(
-                  builder: (context, state) {
-                    final members = state.members;
-
-                    final isLoading = state is MembersLoading;
-                    final allShown = members.length ==
-                        widget.room.summary.joinedMembersCount;
-
-                    return MediaQuery.removePadding(
-                      context: context,
-                      removeLeft: true,
-                      removeRight: true,
-                      child: ListView.builder(
-                        primary: false,
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        itemCount: (_previewMembers && !allShown) || isLoading
-                            ? members.length + 1
-                            : members.length,
-                        itemBuilder: (context, index) {
-                          // Item after all members
-                          if (index == members.length) {
-                            return _ShowMoreItem(
-                              room: widget.room,
-                              shownMembersCount: members.length,
-                              isLoading: isLoading,
-                              onTap: () => setState(() {
-                                BlocProvider.of<ChatSettingsBloc>(context)
-                                    .add(FetchMembers(all: true));
-                                _previewMembers = false;
-                              }),
-                            );
-                          }
-
-                          return ChatMemberTile(
-                            member: members[index],
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: 12)
-              ],
-            ),
+    return _Section(
+      padding: EdgeInsets.zero,
+      title: Padding(
+        padding: _Section.defaultPadding.copyWith(
+          right: 0,
+          bottom: 0,
+        ),
+        child: Text(
+          context.intl.chat.details.participants(
+            widget.room.summary.joinedMembersCount,
           ),
         ),
+      ),
+      children: <Widget>[
+        BlocBuilder<ChatSettingsBloc, ChatSettingsState>(
+          builder: (context, state) {
+            final members = state.members;
+
+            final isLoading = state is MembersLoading;
+            final allShown =
+                members.length == widget.room.summary.joinedMembersCount;
+
+            return MediaQuery.removePadding(
+              context: context,
+              removeLeft: true,
+              removeRight: true,
+              child: ListView.builder(
+                primary: false,
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemCount: (_previewMembers && !allShown) || isLoading
+                    ? members.length + 1
+                    : members.length,
+                itemBuilder: (context, index) {
+                  // Item after all members
+                  if (index == members.length) {
+                    return _ShowMoreItem(
+                      room: widget.room,
+                      shownMembersCount: members.length,
+                      isLoading: isLoading,
+                      onTap: () => setState(() {
+                        BlocProvider.of<ChatSettingsBloc>(context)
+                            .add(FetchMembers(all: true));
+                        _previewMembers = false;
+                      }),
+                    );
+                  }
+
+                  return ChatMemberTile(
+                    member: members[index],
+                  );
+                },
+              ),
+            );
+          },
+        ),
+        SizedBox(height: 12),
       ],
     );
   }

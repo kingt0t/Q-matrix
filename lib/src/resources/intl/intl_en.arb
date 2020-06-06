@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-06-04T16:02:06.691997",
+  "@@last_modified": "2020-06-06T18:19:25.574081",
   "appName": "Pattle",
   "@appName": {
     "type": "text",
@@ -261,6 +261,18 @@
     "type": "text",
     "placeholders": {
       "count": {}
+    }
+  },
+  "_ChatDetails_publicAddress": "Public address",
+  "@_ChatDetails_publicAddress": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_ChatDetails_publicAddressInfo": "{isChannel,select, true{People can use a channel''s address to find and join this channel.}false{People can use a group''s address to find this group.}}",
+  "@_ChatDetails_publicAddressInfo": {
+    "type": "text",
+    "placeholders": {
+      "isChannel": {}
     }
   },
   "_Chats_chats": "Chats",

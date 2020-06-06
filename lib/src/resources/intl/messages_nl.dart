@@ -25,73 +25,73 @@ class MessageLookup extends MessageLookupByLibrary {
   static m1(count) =>
       "${Intl.plural(count, zero: 'Geen deelnemers', one: '${count} deelnemer', other: '${count} deelnemers')}";
 
-  static m2(person, bannee, banner) => "${Intl.select(person, {
+  static m3(person, bannee, banner) => "${Intl.select(person, {
         'secondOnSecond': 'Je bent door jezelf verbannen',
         'secondOnThird': 'Je bent verbannen door ${banner}',
         'thirdOnThird': '${bannee} is verbannen door ${banner}',
         'thirdOnSecond': '${bannee} is verbannen door jou',
       })}";
 
-  static m3(person, name) => "${Intl.select(person, {
+  static m4(person, name) => "${Intl.select(person, {
         'second': 'Je hebt deze groep gemaakt',
         'third': '${name} heeft deze groep gemaakt',
       })}";
 
-  static m4(person, name) => "${Intl.select(person, {
+  static m5(person, name) => "${Intl.select(person, {
         'second': 'Je hebt dit bericht verwijderd',
         'third': '${name} heeft dit bericht verwijderd',
       })}";
 
-  static m5(person, name) => "${Intl.select(person, {
+  static m6(person, name) => "${Intl.select(person, {
         'second': 'Je hebt de beschrijving van de groep aangepast',
         'third': '${name} heeft de beschrijving van de groep aangepast',
       })}";
 
-  static m6(person, name) => "${Intl.select(person, {
+  static m7(person, name) => "${Intl.select(person, {
         'second': 'Je hebt het icoon van de groep verandert',
         'third': '${name} heeft het icoon van de groep verandert',
       })}";
 
-  static m7(person, name) => "${Intl.select(person, {
+  static m8(person, name) => "${Intl.select(person, {
         'second': 'Je hebt het icoon van de groep verandert naar',
         'third': '${name} heeft het icoon van de groep verandert naar',
       })}";
 
-  static m8(person, invitee, inviter) => "${Intl.select(person, {
+  static m9(person, invitee, inviter) => "${Intl.select(person, {
         'secondOnSecond': 'Je bent door jezelf uitgenodigd',
         'secondOnThird': 'Je bent uitgenodigd door ${inviter}',
         'thirdOnThird': '${invitee} is uitgenodigd door ${inviter}',
         'thirdOnSecond': '${invitee} is uitgenodigd door jou',
       })}";
 
-  static m9(person, name) => "${Intl.select(person, {
+  static m10(person, name) => "${Intl.select(person, {
         'second': 'Je bent aan het gesprek toegevoegd',
         'third': '${name} is aan het gesprek toegevoegd',
       })}";
 
-  static m10(person, name) => "${Intl.select(person, {
+  static m11(person, name) => "${Intl.select(person, {
         'second': 'Je hebt het gesprek verlaten',
         'third': '${name} heeft het gesprek verlaten',
       })}";
 
-  static m11(person, name) => "${Intl.select(person, {
+  static m12(person, name) => "${Intl.select(person, {
         'second': 'Je hebt de naam van de groep aangepast',
         'third': '${name} heeft de naam van de groep aangepast',
       })}";
 
-  static m12(person, name) => "${Intl.select(person, {
+  static m13(person, name) => "${Intl.select(person, {
         'second': 'Je hebt deze groep geüpgrade',
         'third': '${name} heeft deze groep geüpgrade',
       })}";
 
-  static m13(andMore, first, second) => "${Intl.select(andMore, {
+  static m14(andMore, first, second) => "${Intl.select(andMore, {
         'false': '${first} en ${second} typen...',
         'true': '${first}, ${second} en anderen typen...',
       })}";
 
-  static m14(name) => "${name} typt...";
+  static m15(name) => "${name} typt...";
 
-  static m15(version) => "Versie ${version}";
+  static m16(version) => "Versie ${version}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -103,21 +103,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "_ChatDetails_noDescriptionSet": MessageLookupByLibrary.simpleMessage(
             "Er is geen beschrijving ingesteld"),
         "_ChatDetails_participants": m1,
-        "_ChatMessage_ban": m2,
-        "_ChatMessage_creation": m3,
-        "_ChatMessage_deletion": m4,
-        "_ChatMessage_descriptionChange": m5,
-        "_ChatMessage_iconChange": m6,
-        "_ChatMessage_iconChangeTo": m7,
-        "_ChatMessage_invite": m8,
-        "_ChatMessage_join": m9,
-        "_ChatMessage_leave": m10,
-        "_ChatMessage_nameChange": m11,
-        "_ChatMessage_upgrade": m12,
-        "_Chat_areTyping": m13,
+        "_ChatMessage_ban": m3,
+        "_ChatMessage_creation": m4,
+        "_ChatMessage_deletion": m5,
+        "_ChatMessage_descriptionChange": m6,
+        "_ChatMessage_iconChange": m7,
+        "_ChatMessage_iconChangeTo": m8,
+        "_ChatMessage_invite": m9,
+        "_ChatMessage_join": m10,
+        "_ChatMessage_leave": m11,
+        "_ChatMessage_nameChange": m12,
+        "_ChatMessage_upgrade": m13,
+        "_Chat_areTyping": m14,
         "_Chat_cantSendMessages": MessageLookupByLibrary.simpleMessage(
             "Je kan geen berichten naar deze groep sturen omdat je geen deelnemer meer bent."),
-        "_Chat_isTyping": m14,
+        "_Chat_isTyping": m15,
         "_Chat_typeAMessage":
             MessageLookupByLibrary.simpleMessage("Typ een bericht"),
         "_Chat_typing":
@@ -176,7 +176,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "_Settings_editNameDescription": MessageLookupByLibrary.simpleMessage(
             "Dit is niet je gebruikersnaam. Deze naam is zichtbaar voor anderen."),
         "_Settings_title": MessageLookupByLibrary.simpleMessage("Instellingen"),
-        "_Settings_version": m15,
+        "_Settings_version": m16,
         "_StartUsername_hostnameInvalidError":
             MessageLookupByLibrary.simpleMessage("Ongeldige hostnaam"),
         "_StartUsername_title":
