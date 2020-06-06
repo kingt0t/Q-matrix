@@ -83,6 +83,7 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final placeholder = _PlaceholderAvatar(
       type: _type,
+      radius: radius,
       color: placeholderColor,
     );
 
