@@ -84,9 +84,11 @@ class _Content extends StatelessWidget {
     );
 
     Widget content;
-    if (bubble.dense) {
+    if (bubble.dense ||
+        event.content.formattedBody == null ||
+        event.content.body == event.content.formattedBody) {
       content = Text(
-        stripReply(event.content.body),
+        stripReply(event.content.body ?? ''),
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
         style: textStyle.apply(fontSizeFactor: 1.15),
@@ -94,7 +96,7 @@ class _Content extends StatelessWidget {
     } else {
       // TODO: Use own HtmlText widget
       content = Html(
-        data: event.content.formattedBody ?? event.content.body ?? '',
+        data: event.content.formattedBody ?? '',
         useRichText: true,
         shrinkToFit: true,
         crossAxisAlignment: CrossAxisAlignment.start,
