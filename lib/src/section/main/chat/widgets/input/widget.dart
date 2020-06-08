@@ -184,34 +184,36 @@ class InputState extends State<Input> with TickerProviderStateMixin {
               firstChild: _firstChild,
               secondChild: _secondChild,
             ),
-            TextField(
-              controller: _textController,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              textInputAction: TextInputAction.newline,
-              autocorrect: true,
-              textCapitalization: TextCapitalization.sentences,
-              style: DefaultTextStyle.of(context).style.apply(
-                    fontSizeFactor: 1.2,
+            Flexible(
+              child: TextField(
+                controller: _textController,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                textInputAction: TextInputAction.newline,
+                autocorrect: true,
+                textCapitalization: TextCapitalization.sentences,
+                style: DefaultTextStyle.of(context).style.apply(
+                      fontSizeFactor: 1.2,
+                    ),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.transparent,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.zero,
                   ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.transparent,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.zero,
+                  hintText: context.intl.chat.typeAMessage,
+                  prefixIcon: IconButton(
+                    icon: Icon(Icons.attach_file),
+                    onPressed: _sendImage,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: _sendMessage,
+                  ),
                 ),
-                hintText: context.intl.chat.typeAMessage,
-                prefixIcon: IconButton(
-                  icon: Icon(Icons.attach_file),
-                  onPressed: _sendImage,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _sendMessage,
-                ),
+                onChanged: _notifyInputChanged,
               ),
-              onChanged: _notifyInputChanged,
             ),
           ],
         ),
