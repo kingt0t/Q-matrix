@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_html/rich_text_parser.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -311,7 +312,10 @@ class _ContentLayoutRenderBox extends RenderBox
 
     if (span.children != null) {
       for (final childSpan in span?.children) {
-        if (childSpan is TextSpan) {
+        // Needed because of flutter_html
+        if (childSpan is LinkTextSpan) {
+          length += childSpan.url?.length ?? 0;
+        } else if (childSpan is TextSpan) {
           length += childSpan.text?.length ?? 0;
         }
       }
