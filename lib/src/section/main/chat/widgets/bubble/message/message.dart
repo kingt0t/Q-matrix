@@ -273,22 +273,21 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pattleTheme = context.pattleTheme;
     var color = this.color;
 
     if (color == null) {
       if (message.isMine) {
         if (!isRepliedTo) {
-          color = context.pattleTheme.data.chat.myMessage.backgroundColor;
+          color = pattleTheme.data.chat.myMessage.backgroundColor;
         } else {
-          color =
-              context.pattleTheme.data.chat.myMessage.repliedTo.backgroundColor;
+          color = pattleTheme.data.chat.myMessage.repliedTo.backgroundColor;
         }
       } else {
         if (!isRepliedTo) {
-          color = context.pattleTheme.data.chat.theirMessage.backgroundColor;
+          color = pattleTheme.data.chat.theirMessage.backgroundColor;
         } else {
-          color = context
-              .pattleTheme.data.chat.theirMessage.repliedTo.backgroundColor;
+          color = pattleTheme.data.chat.theirMessage.repliedTo.backgroundColor;
         }
       }
     }
