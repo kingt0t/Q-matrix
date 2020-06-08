@@ -23,10 +23,8 @@ import 'package:pedantic/pedantic.dart';
 import 'package:meta/meta.dart';
 
 import '../../../models/chat.dart';
-import '../../../models/chat_message.dart';
 
 import '../../../matrix.dart';
-import '../../../util/room.dart';
 
 import '../../../notifications/bloc.dart';
 
@@ -54,25 +52,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) : _chat = _matrix.chats[roomId] {
     _syncSub = _matrix.updatesFor(roomId).listen((update) {
       _chat = update.chat;
-      print('${update.type}');
-      add(
-        RefreshChat(
-          chat: _chat,
-          delta: update.delta,
-          isBecauseOfTimelineRequest: update.type == RequestType.loadRoomEvents,
-        ),
-      );
+      add(RefreshChat(chat: _chat));
     });
   }
 
   MyUser get me => _matrix.user;
 
   @override
-  ChatState get initialState => _loadMessages(
-        chat: _chat,
-        delta: _room.delta(),
-        becauseOfTimelineLoad: false,
-      );
+  ChatState get initialState => _processChat(chat: _chat);
 
   @override
   Stream<ChatState> mapEventToState(ChatEvent event) async* {
@@ -82,11 +69,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
 
     if (event is RefreshChat) {
-      yield _loadMessages(
-        chat: event.chat,
-        delta: event.delta,
-        becauseOfTimelineLoad: event.isBecauseOfTimelineRequest,
-      );
+      yield _processChat(chat: event.chat);
     }
 
     if (event is MarkAsRead) {
@@ -94,96 +77,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  ChatState _loadMessages({
+  ChatState _processChat({
     @required Chat chat,
-    @required Room delta,
-    @required bool becauseOfTimelineLoad,
   }) {
-    final room = chat.room;
-    final messages = <ChatMessage>[];
-
-    RoomEvent event;
-    for (event in room.timeline) {
-      var shouldIgnore = false;
-      // In direct chats, don't show the invite event between this user
-      // and the direct user.
-      //
-      // Also in direct chats, don't show the join events between this user
-      // and the direct user.
-      if (room.isDirect) {
-        if (event is InviteEvent) {
-          final iInvitedYou =
-              event.senderId == me && event.subjectId == room.directUserId;
-
-          final youInvitedMe =
-              event.senderId == room.directUserId && event.subjectId == me.id;
-
-          shouldIgnore = iInvitedYou || youInvitedMe;
-        } else if (event is JoinEvent) {
-          final subject = event.subjectId;
-          shouldIgnore = subject == me || subject == room.directUserId;
-        }
-      }
-
-      shouldIgnore |= event is JoinEvent &&
-          event is! DisplayNameChangeEvent &&
-          room.creatorId == event.subjectId;
-
-      // Don't show creation events in rooms that are replacements
-      shouldIgnore |= event is RoomCreationEvent && room.isReplacement;
-
-      if (room.ignoredEvents.contains(event.runtimeType) || shouldIgnore) {
-        continue;
-      }
-
-      ChatMessage inReplyTo;
-      if (event is MessageEvent && event.content?.inReplyToId != null) {
-        // TODO: Might not be loaded?
-        final inReplyToEvent = room.timeline[event.content.inReplyToId];
-
-        if (inReplyToEvent != null) {
-          inReplyTo = ChatMessage(
-            room,
-            inReplyToEvent,
-            isMe: (id) => id == _matrix.user.id,
-          );
-        }
-      }
-
-      messages.add(
-        ChatMessage(
-          room,
-          event,
-          inReplyTo: inReplyTo,
-          isMe: (id) => id == _matrix.user.id,
-        ),
-      );
-    }
-
-    var endReached = false;
-    if (event is RoomCreationEvent) {
-      endReached = true;
-    }
-
-    // Get messages new in update
-    final newMessages = delta.timeline != null
-        ? messages
-            .where(
-              (msg) => delta.timeline.any((event) => event.id == msg.event.id),
-            )
-            .toList()
-        : <ChatMessage>[];
-
-    if (messages.length + newMessages.length < _pageSize) {
+    if (!chat.endReached &&
+        chat.messages.length + chat.newMessages.length < _pageSize) {
       add(LoadMoreFromTimeline());
     }
 
     return ChatState(
       chat: chat,
-      messages: messages,
-      newMessages: newMessages,
-      endReached: endReached,
-      wasTimelineLoad: becauseOfTimelineLoad,
     );
   }
 

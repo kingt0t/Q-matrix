@@ -154,7 +154,7 @@ class _ChatPageWithBlocState extends State<_ChatPageWithBloc> {
   }
 
   void _onStateChange(BuildContext context, ChatState state) {
-    if (!state.wasTimelineLoad) {
+    if (!state.chat.wasTimelineLoad) {
       context.bloc<ChatBloc>().add(MarkAsRead());
     }
   }
@@ -274,7 +274,7 @@ class _MessageListState extends State<_MessageList> {
       final state = bloc.state;
 
       if (maxScroll - currentScroll <= _scrollThreshold &&
-          !state.endReached &&
+          !state.chat.endReached &&
           !_requestingMore) {
         _requestingMore = true;
         bloc.add(LoadMoreFromTimeline());
@@ -291,22 +291,22 @@ class _MessageListState extends State<_MessageList> {
     return BlocConsumer<ChatBloc, ChatState>(
       listener: (context, state) => _onStateChange(state),
       builder: (context, state) {
-        var messages = state.messages;
-        if (state.wasTimelineLoad) {
-          messages = [...state.newMessages, ...messages];
+        final chat = state.chat;
+        var messages = chat.messages;
+        if (chat.wasTimelineLoad) {
+          messages = [...chat.newMessages, ...messages];
         } else {
-          messages = [...messages, ...state.newMessages];
+          messages = [...messages, ...chat.newMessages];
         }
 
         return ListView.builder(
           controller: _scrollController,
           reverse: true,
           padding: EdgeInsets.symmetric(horizontal: 16),
-          itemCount: state.endReached
-              ? state.messages.length
-              : state.messages.length + 1,
+          itemCount:
+              chat.endReached ? chat.messages.length : chat.messages.length + 1,
           itemBuilder: (context, index) {
-            if (index >= state.messages.length) {
+            if (index >= chat.messages.length) {
               return Center(
                 child: Padding(
                   padding: EdgeInsets.all(8),
@@ -315,7 +315,7 @@ class _MessageListState extends State<_MessageList> {
               );
             }
 
-            final message = state.messages[index];
+            final message = chat.messages[index];
 
             final event = message.event;
 
@@ -323,12 +323,12 @@ class _MessageListState extends State<_MessageList> {
             // Note: Because the items are reversed in the
             // ListView.builder, the 'previous' event is actually the next
             // one in the list.
-            if (index != state.messages.length - 1) {
-              previousMessage = state.messages[index + 1];
+            if (index != chat.messages.length - 1) {
+              previousMessage = chat.messages[index + 1];
             }
 
             if (index != 0) {
-              nextMessage = state.messages[index - 1];
+              nextMessage = chat.messages[index - 1];
             }
 
             Widget bubble;

@@ -96,21 +96,31 @@ class Matrix {
     }
   }
 
-  void _processUser(MyUser user) {
+  void _processUser(MyUser user, {MyUser delta, bool wasTimelineLoad = false}) {
     _user = user;
 
     _chats = Map.fromEntries(
       _user.rooms.where((r) => !r.isUpgraded).map(
             (r) => MapEntry(
               r.id,
-              r.toChat(myId: _user.id),
+              r.toChat(
+                myId: _user.id,
+                delta: delta != null ? delta.rooms[r.id] : null,
+                wasTimelineLoad: wasTimelineLoad,
+              ),
             ),
           ),
     );
   }
 
   void _processUpdate(Update update) {
-    _processUser(update.user);
+    final requestType = update is RequestUpdate ? update.type : null;
+
+    _processUser(
+      update.user,
+      delta: update.delta,
+      wasTimelineLoad: requestType == RequestType.loadRoomEvents,
+    );
 
     _chatOrderBloc.add(
       UpdateChatOrder(

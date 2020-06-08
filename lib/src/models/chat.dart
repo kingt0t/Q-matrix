@@ -37,6 +37,13 @@ class Chat {
   final ChatMessage latestMessage;
   final ChatMessage latestMessageForSorting;
 
+  final List<ChatMessage> messages;
+  final List<ChatMessage> newMessages;
+  final bool endReached;
+
+  /// Whether this Chat instance was created because of a Timeline load.
+  final bool wasTimelineLoad;
+
   final bool isJustMe;
 
   final ChatMember directMember;
@@ -53,6 +60,10 @@ class Chat {
     @required this.room,
     this.latestMessage,
     this.latestMessageForSorting,
+    this.messages,
+    this.newMessages,
+    this.endReached,
+    this.wasTimelineLoad,
     this.isJustMe = false,
     this.directMember,
   })  : name = room.name ??
@@ -71,7 +82,11 @@ class Chat {
 }
 
 extension RoomToChat on Room {
-  Chat toChat({@required UserId myId}) {
+  Chat toChat({
+    @required UserId myId,
+    @required Room delta,
+    @required bool wasTimelineLoad,
+  }) {
     // We should always have at least 30 items in the timeline, so don't load
     var latestEvent = timeline.firstWhere(
       (event) => !ignoredEvents.contains(event.runtimeType),
@@ -101,6 +116,80 @@ extension RoomToChat on Room {
       latestEventForSorting = latestEvent;
     }
 
+    final messages = <ChatMessage>[];
+
+    RoomEvent event;
+    for (event in timeline) {
+      var shouldIgnore = false;
+      // In direct chats, don't show the invite event between this user
+      // and the direct user.
+      //
+      // Also in direct chats, don't show the join events between this user
+      // and the direct user.
+      if (isDirect) {
+        if (event is InviteEvent) {
+          final iInvitedYou =
+              event.senderId == me && event.subjectId == directUserId;
+
+          final youInvitedMe =
+              event.senderId == directUserId && event.subjectId == me.id;
+
+          shouldIgnore = iInvitedYou || youInvitedMe;
+        } else if (event is JoinEvent) {
+          final subject = event.subjectId;
+          shouldIgnore = subject == me || subject == directUserId;
+        }
+      }
+
+      shouldIgnore |= event is JoinEvent &&
+          event is! DisplayNameChangeEvent &&
+          creatorId == event.subjectId;
+
+      // Don't show creation events in rooms that are replacements
+      shouldIgnore |= event is RoomCreationEvent && isReplacement;
+
+      if (ignoredEvents.contains(event.runtimeType) || shouldIgnore) {
+        continue;
+      }
+
+      ChatMessage inReplyTo;
+      if (event is MessageEvent && event.content?.inReplyToId != null) {
+        // TODO: Might not be loaded?
+        final inReplyToEvent = timeline[event.content.inReplyToId];
+
+        if (inReplyToEvent != null) {
+          inReplyTo = ChatMessage(
+            this,
+            inReplyToEvent,
+            isMe: (id) => id == myId,
+          );
+        }
+      }
+
+      messages.add(
+        ChatMessage(
+          this,
+          event,
+          inReplyTo: inReplyTo,
+          isMe: (id) => id == myId,
+        ),
+      );
+    }
+
+    var endReached = false;
+    if (event is RoomCreationEvent) {
+      endReached = true;
+    }
+
+    // Get messages new in update
+    final newMessages = delta?.timeline != null
+        ? messages
+            .where(
+              (msg) => delta.timeline.any((event) => event.id == msg.event.id),
+            )
+            .toList()
+        : <ChatMessage>[];
+
     return Chat(
       room: this,
       isJustMe: summary.joinedMembersCount == 1,
@@ -118,6 +207,10 @@ extension RoomToChat on Room {
               isMe: (id) => id == myId,
             )
           : null,
+      messages: messages,
+      newMessages: newMessages,
+      endReached: endReached,
+      wasTimelineLoad: wasTimelineLoad,
       directMember: isDirect
           ? ChatMember.fromRoomAndUserId(
               this,

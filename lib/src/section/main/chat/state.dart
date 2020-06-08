@@ -19,23 +19,14 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../../models/chat.dart';
-import '../../../models/chat_message.dart';
 
 class ChatState extends Equatable {
   final Chat chat;
-  final List<ChatMessage> messages;
-  final List<ChatMessage> newMessages;
-  final bool endReached;
-  final bool wasTimelineLoad;
 
   ChatState({
     @required this.chat,
-    @required this.messages,
-    @required this.newMessages,
-    @required this.endReached,
-    @required this.wasTimelineLoad,
   });
 
   @override
-  List<Object> get props => [chat, messages, endReached, wasTimelineLoad];
+  List<Object> get props => [chat];
 }
