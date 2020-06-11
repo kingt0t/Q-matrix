@@ -1,4 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
+// Copyright (C) 2020  Guillermo Vilas
 //
 // This file is part of Pattle.
 //
@@ -153,6 +154,9 @@ class App extends StatelessWidget {
 
   final SettingsBloc _settingsBloc;
 
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -182,6 +186,7 @@ class App extends StatelessWidget {
                 create: (context) => NotificationsBloc(Matrix.of(c), _authBloc),
                 lazy: false,
                 child: MaterialApp(
+                  navigatorKey: navigatorKey,
                   onGenerateTitle: (context) => context.intl.appName,
                   localizationsDelegates: [
                     const PattleLocalizationsDelegate(),

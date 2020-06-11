@@ -1,4 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
+// Copyright (C) 2020  Guillermo Vilas
 //
 // This file is part of Pattle.
 //
@@ -22,6 +23,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -29,12 +31,14 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
 
+import '../app.dart';
 import '../models/chat.dart';
 import '../models/chat_member.dart';
 
 import '../auth/bloc.dart';
 import '../matrix.dart';
 
+import '../section/main/chat/page.dart';
 import '../util/url.dart';
 
 import 'event.dart';
@@ -188,10 +192,18 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
           AndroidInitializationSettings('notification_icon'),
           IOSInitializationSettings(),
         ),
+        onSelectNotification: _showRoom
       );
     }
 
     return _plugin;
+  }
+
+  static Future _showRoom(String payload) async {
+    await Future.delayed(
+        const Duration(milliseconds: 200),
+        () => App.navigatorKey.currentState.push(MaterialPageRoute(
+            builder: (context) => ChatPage.withBloc(RoomId(payload)))));
   }
 
   static Message _eventToMessage(RoomEvent event, Person person) {
@@ -271,6 +283,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
             ),
             IOSNotificationDetails(),
           ),
+          payload: data.roomId.value
         );
       }
 
