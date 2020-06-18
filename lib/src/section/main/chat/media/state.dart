@@ -2,10 +2,10 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../models/chat_message.dart';
 
-class ImageState extends Equatable {
+class MediaState extends Equatable {
   final List<ChatMessage> messages;
 
-  ImageState(this.messages);
+  MediaState(this.messages);
 
   @override
   List<Object> get props => [messages];

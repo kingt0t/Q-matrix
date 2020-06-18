@@ -13,7 +13,7 @@ dependencies:
   matrix_sdk:
     git:
       url: https://pattle.dev/pattle/library/matrix-dart-sdk
-      ref: 7bee19e1ec141a19c527ea6ab9aaa029dc9a9933
+      ref: f97a7c33a1c423c85e8eaa58291702d1117e0bd5
 
   async: ^2.3.0
 
@@ -55,6 +55,7 @@ dependencies:
   animations: ^1.0.0+5
   characters: ^0.5.0
   vibration: ^1.2.4
+  video_player: '>=0.10.11+1 <2.0.0'
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

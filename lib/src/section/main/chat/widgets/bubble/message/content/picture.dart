@@ -18,31 +18,35 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
-
 import 'package:provider/provider.dart';
 
-import '../../../../image/page.dart';
+import '../../../video_button.dart';
+import '../../../../media/page.dart';
 import '../../message.dart';
 
 import '../../../../util/image_provider.dart';
 
-/// Creates an [ImageContent] widget for a [MessageBubble].
+/// Creates an [PictureContent] widget for a [MessageBubble].
+///
+/// Can be either for an `ImageMessageEvent` or a thumbnail for a
+/// `VideoMessageEvent`.
 ///
 /// Must have a [MessageBubble] ancestor.
-class ImageContent extends StatefulWidget {
-  ImageContent({Key key}) : super(key: key);
+class PictureContent extends StatefulWidget {
+  PictureContent({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ImageContentState();
+  State<StatefulWidget> createState() => _PictureContentState();
 }
 
-class _ImageContentState extends State<ImageContent> {
+class _PictureContentState extends State<PictureContent> {
   static const double _width = 256;
   static const double _minHeight = 72;
   static const double _maxHeight = 292;
 
-  bool get _isFile => _fileUri != null;
-  Uri _fileUri;
+  bool _isVideo;
+
+  Uri _uri;
 
   double _height;
 
@@ -51,24 +55,30 @@ class _ImageContentState extends State<ImageContent> {
     super.didChangeDependencies();
 
     final bubble = MessageBubble.of(context);
-    assert(bubble.message.event is ImageMessageEvent);
+    final event = bubble.message.event;
 
-    final event = bubble.message.event as ImageMessageEvent;
+    var height = 0, width = 0;
+    if (event is ImageMessageEvent) {
+      height = event.content.info?.height;
+      width = event.content.info?.width;
 
-    _height = (event.content.info?.height ??
-            0 / (event.content.info?.width ?? 0 / _width))
-        .clamp(_minHeight, _maxHeight)
-        .toDouble();
+      _uri = event.content.url;
+      _isVideo = false;
+    } else if (event is VideoMessageEvent) {
+      height = event.content.info?.thumbnail?.height ?? 0;
+      width = event.content.info?.thumbnail?.width ?? 0;
 
-    if (event.content.url.isScheme('file')) {
-      _fileUri = event.content.url;
+      _uri = event.content.info?.thumbnail?.url;
+      _isVideo = true;
     }
+
+    _height =
+        (height / (width / _width)).clamp(_minHeight, _maxHeight).toDouble();
   }
 
   @override
   Widget build(BuildContext context) {
     final bubble = MessageBubble.of(context);
-    final event = bubble.message.event as ImageMessageEvent;
 
     final content = OpenContainer(
       tappable: false,
@@ -92,7 +102,7 @@ class _ImageContentState extends State<ImageContent> {
                     child: Image(
                       image: imageProvider(
                         context: context,
-                        url: _isFile ? _fileUri : event.content.url,
+                        url: _uri,
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -100,6 +110,10 @@ class _ImageContentState extends State<ImageContent> {
                 ),
                 if (MessageInfo.necessary(context)) _MessageInfo(),
                 if (Sender.necessary(context)) _Sender(),
+                if (_isVideo)
+                  Center(
+                    child: PlayIcon(),
+                  ),
                 Positioned.fill(
                   child: Clickable(
                     extraMaterial: true,
@@ -114,7 +128,7 @@ class _ImageContentState extends State<ImageContent> {
       openBuilder: (_, void Function() action) {
         final bubble = MessageBubble.of(context);
 
-        return ImagePage.withBloc(
+        return MediaPage.withBloc(
           bubble.chat.room.id,
           bubble.message.event.id,
         );

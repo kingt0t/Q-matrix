@@ -31,7 +31,7 @@ import 'resources/intl/localizations.dart';
 import 'resources/theme.dart';
 
 import 'section/main/chat/page.dart';
-import 'section/main/chat/image/page.dart';
+import 'section/main/chat/media//page.dart';
 import 'section/main/chat/settings/page.dart';
 import 'section/main/chats/page.dart';
 import 'section/main/chats/new/page.dart';
@@ -87,7 +87,7 @@ final Map<String, MaterialPageRoute Function(Object)> routes = {
       ),
   Routes.image: (dynamic arguments) => MaterialPageRoute(
       settings: RouteSettings(name: Routes.image),
-      builder: (context) => ImagePage.withBloc(arguments[0], arguments[1])),
+      builder: (context) => MediaPage.withBloc(arguments[0], arguments[1])),
   Routes.login: (params) => MaterialPageRoute(
         settings: RouteSettings(name: Routes.login),
         builder: (context) => StartPage.withBloc(),

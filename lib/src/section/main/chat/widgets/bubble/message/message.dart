@@ -31,7 +31,7 @@ import '../../../../../../resources/theme.dart';
 import '../../../../widgets/message_state.dart';
 
 import '../../replyable.dart';
-import 'content/image.dart';
+import 'content/picture.dart';
 import 'content/redacted.dart';
 import 'content/text.dart';
 
@@ -152,11 +152,8 @@ class MessageBubble extends StatelessWidget {
         Container(); // TODO: Create default unsupported event content
     if (event is TextMessageEvent) {
       content = TextContent();
-    } else if (event is ImageMessageEvent) {
-      content = ImageContent(
-          key: ValueKey(
-        message.event.transactionId ?? message.event.id.toString(),
-      ));
+    } else if (event is ImageMessageEvent || event is VideoMessageEvent) {
+      content = PictureContent();
     } else if (event is RedactedEvent) {
       content = RedactedContent();
     }

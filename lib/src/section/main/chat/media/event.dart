@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-abstract class ImageEvent extends Equatable {
+abstract class MediaEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class FetchImages extends ImageEvent {}
+class FetchImages extends MediaEvent {}

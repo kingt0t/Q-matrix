@@ -28,13 +28,13 @@ import 'state.dart';
 export 'state.dart';
 export 'event.dart';
 
-class ImageBloc extends Bloc<ImageEvent, ImageState> {
+class MediaBloc extends Bloc<MediaEvent, MediaState> {
   final Matrix _matrix;
   Room _room;
 
   StreamSubscription _sub;
 
-  ImageBloc(this._matrix, RoomId roomId) : _room = _matrix.user.rooms[roomId] {
+  MediaBloc(this._matrix, RoomId roomId) : _room = _matrix.user.rooms[roomId] {
     _sub = _room.updates.listen((update) {
       _room = update.user.rooms[_room.id];
       add(FetchImages());
@@ -42,25 +42,25 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   }
 
   @override
-  ImageState get initialState => _loadImages();
+  MediaState get initialState => _loadImages();
 
   @override
-  Stream<ImageState> mapEventToState(ImageEvent event) async* {
+  Stream<MediaState> mapEventToState(MediaEvent event) async* {
     if (event is FetchImages) {
       yield _loadImages();
     }
   }
 
-  ImageState _loadImages() {
-    final imageMessageEvents = <ImageMessageEvent>[];
+  MediaState _loadImages() {
+    final imageMessageEvents = <RoomEvent>[];
 
     for (final event in _room.timeline) {
-      if (event is ImageMessageEvent) {
+      if (event is ImageMessageEvent || event is VideoMessageEvent) {
         imageMessageEvents.add(event);
       }
     }
 
-    return ImageState(
+    return MediaState(
       imageMessageEvents
           .map(
             (i) => ChatMessage(

@@ -256,6 +256,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   glob:
     dependency: transitive
     description:
@@ -337,8 +342,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "7bee19e1ec141a19c527ea6ab9aaa029dc9a9933"
-      resolved-ref: "7bee19e1ec141a19c527ea6ab9aaa029dc9a9933"
+      ref: f97a7c33a1c423c85e8eaa58291702d1117e0bd5
+      resolved-ref: f97a7c33a1c423c85e8eaa58291702d1117e0bd5
       url: "https://pattle.dev/pattle/library/matrix-dart-sdk"
     source: git
     version: "0.0.0"
@@ -662,6 +667,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.4"
+  video_player:
+    dependency: "direct main"
+    description:
+      name: video_player
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.11+1"
+  video_player_platform_interface:
+    dependency: transitive
+    description:
+      name: video_player_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
+  video_player_web:
+    dependency: transitive
+    description:
+      name: video_player_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.3+1"
   watcher:
     dependency: transitive
     description:
@@ -685,4 +711,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.1 <2.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"
