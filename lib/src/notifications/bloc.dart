@@ -364,6 +364,12 @@ class NotificationData {
     }
 
     var room = user.rooms[message.roomId];
+    if (room == null) {
+      room = await user.rooms.load(
+        roomIds: [message.roomId],
+      ).then((u) => u.user.rooms[message.roomId]);
+    }
+
     var event = room.timeline[message.eventId];
 
     if (event == null) {
