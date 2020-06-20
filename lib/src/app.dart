@@ -31,7 +31,7 @@ import 'resources/intl/localizations.dart';
 import 'resources/theme.dart';
 
 import 'section/main/chat/page.dart';
-import 'section/main/chat/media//page.dart';
+import 'section/main/chat/media/page.dart';
 import 'section/main/chat/settings/page.dart';
 import 'section/main/chats/page.dart';
 import 'section/main/chats/new/page.dart';
