@@ -25,6 +25,13 @@ class MessageLookup extends MessageLookupByLibrary {
   static m1(count) =>
       "${Intl.plural(count, zero: 'Geen deelnemers', one: '${count} deelnemer', other: '${count} deelnemers')}";
 
+  static m2(isChannel) => "${Intl.select(isChannel, {
+        'true':
+            'Mensen kunnen een adres van een kanaal gebruiken om dit kanaal te vinden en deel te nemen.',
+        'false':
+            'Mensen kunnen een adres van een groep gebruiken om deze groep te vinden.',
+      })}";
+
   static m3(person, bannee, banner) => "${Intl.select(person, {
         'secondOnSecond': 'Je bent door jezelf verbannen',
         'secondOnThird': 'Je bent verbannen door ${banner}',
@@ -103,6 +110,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "_ChatDetails_noDescriptionSet": MessageLookupByLibrary.simpleMessage(
             "Er is geen beschrijving ingesteld"),
         "_ChatDetails_participants": m1,
+        "_ChatDetails_publicAddress":
+            MessageLookupByLibrary.simpleMessage("Openbaar adres"),
+        "_ChatDetails_publicAddressInfo": m2,
         "_ChatMessage_ban": m3,
         "_ChatMessage_creation": m4,
         "_ChatMessage_deletion": m5,

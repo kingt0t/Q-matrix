@@ -153,6 +153,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "_Common_password": MessageLookupByLibrary.simpleMessage("Password"),
         "_Common_photo": MessageLookupByLibrary.simpleMessage("Photo"),
         "_Common_username": MessageLookupByLibrary.simpleMessage("Username"),
+        "_Common_video": MessageLookupByLibrary.simpleMessage("Video"),
         "_Common_you": MessageLookupByLibrary.simpleMessage("You"),
         "_Error_anErrorHasOccurred":
             MessageLookupByLibrary.simpleMessage("An error has occurred:"),

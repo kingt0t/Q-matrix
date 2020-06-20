@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-06-06T18:19:25.574081",
+  "@@last_modified": "2020-06-20T20:22:21.601164",
   "appName": "Pattle",
   "@appName": {
     "type": "text",
@@ -32,6 +32,11 @@
   },
   "_Common_photo": "Photo",
   "@_Common_photo": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "_Common_video": "Video",
+  "@_Common_video": {
     "type": "text",
     "placeholders": {}
   },

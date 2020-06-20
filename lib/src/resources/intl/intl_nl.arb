@@ -35,6 +35,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "_Common_video": "Video",
+  "@_Common_video": {
+    "type": "text",
+    "placeholders": {}
+  },
   "_Common_you": "Jij",
   "@_Common_you": {
     "description": "Used to denote the user using the app instead of their name",

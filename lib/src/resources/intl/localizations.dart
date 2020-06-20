@@ -294,6 +294,14 @@ class _Common extends _Category {
     );
   }
 
+  String get video {
+    return Intl.message(
+      'Video',
+      name: '_Common_video',
+      locale: _localeName,
+    );
+  }
+
   String get you {
     return Intl.message(
       'You',

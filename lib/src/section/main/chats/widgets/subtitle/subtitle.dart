@@ -34,6 +34,7 @@ import '../../../chat/widgets/bubble/state/content/upgrade.dart';
 
 import '../typing_content.dart';
 import 'content/image.dart';
+import 'content/video.dart';
 import 'content/redacted.dart';
 import 'content/text.dart';
 import 'content/unsupported.dart';
@@ -57,6 +58,8 @@ class Subtitle extends StatelessWidget {
         content = TextSubtitleContent();
       } else if (event is ImageMessageEvent) {
         content = ImageSubtitleContent();
+      } else if (event is VideoMessageEvent) {
+        content = VideoSubtitleContent();
       } else if (event is MemberChangeEvent) {
         content = MemberChangeContent(message: chat.latestMessage);
       } else if (event is RedactedEvent) {
