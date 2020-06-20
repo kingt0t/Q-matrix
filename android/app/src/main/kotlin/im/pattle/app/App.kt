@@ -1,4 +1,4 @@
-package im.pattle.pattle
+package im.pattle.app
 
 import io.flutter.app.FlutterApplication
 import io.flutter.plugin.common.PluginRegistry
