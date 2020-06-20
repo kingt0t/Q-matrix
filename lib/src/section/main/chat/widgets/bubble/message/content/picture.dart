@@ -152,17 +152,15 @@ class _MessageInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final bubble = MessageBubble.of(context);
 
-    var alignment, borderRadius;
+    BorderRadius borderRadius;
     if (bubble.message.isMine) {
-      alignment = Alignment.bottomRight;
       borderRadius = bubble.borderRadius;
     } else {
-      alignment = Alignment.bottomLeft;
-      borderRadius = BorderRadius.all(bubble.borderRadius.bottomLeft);
+      borderRadius = BorderRadius.all(bubble.borderRadius.bottomRight);
     }
 
     return Align(
-      alignment: alignment,
+      alignment: Alignment.bottomRight,
       child: Padding(
         padding: bubble.contentPadding,
         child: Container(
