@@ -403,9 +403,16 @@ class NotificationData {
 
     File senderAvatar;
     if (sender.avatarUrl != null) {
-      senderAvatar = await DefaultCacheManager().getSingleFile(
-        sender.avatarUrl.toHttpsWith(user.context.homeserver, thumbnail: true),
-      );
+      try {
+        senderAvatar = await DefaultCacheManager().getSingleFile(
+          sender.avatarUrl.toHttpsWith(
+            user.context.homeserver,
+            thumbnail: true,
+          ),
+        );
+      } on Exception {
+        senderAvatar = null;
+      }
     }
 
     final chat = Chat(
