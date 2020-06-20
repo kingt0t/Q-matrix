@@ -28,6 +28,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/chat.dart';
 import '../models/chat_member.dart';
@@ -47,6 +48,83 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   final Matrix _matrix;
   final AuthBloc _authBloc;
 
+  // Static because it's also needed in the background
+  static SharedPreferences __prefs;
+
+  static Future<SharedPreferences> get _prefs async {
+    if (__prefs == null) {
+      __prefs = await SharedPreferences.getInstance();
+    }
+
+    return __prefs;
+  }
+
+  static const _pendingNotificationsKey = 'pending_notifications';
+
+  static Map<RoomId, List<Message>> _pending;
+  static Future<Map<RoomId, List<Message>>> _getPending() async {
+    final prefs = await _prefs;
+
+    if (_pending == null) {
+      _pending = prefs.containsKey(_pendingNotificationsKey)
+          ? (json.decode(prefs.getString(_pendingNotificationsKey))
+                  as Map<String, dynamic>)
+              .map(
+              (key, value) => MapEntry(
+                RoomId(key),
+                (value as List<dynamic>).map(
+                  (m) {
+                    final person = m['person'];
+
+                    return Message(
+                      m['text'],
+                      DateTime.fromMillisecondsSinceEpoch(
+                        m['timestamp'],
+                      ),
+                      Person(
+                        bot: person['bot'] ?? false,
+                        icon: person['icon'],
+                        iconSource: person['iconSource'] != null
+                            ? IconSource.values[person['iconSource']]
+                            : null,
+                        important: person['important'] ?? false,
+                        key: person['key'],
+                        name: person['name'],
+                        uri: person['uri'],
+                      ),
+                      dataMimeType: person['dataMimeType'],
+                      dataUri: person['dataUri'],
+                    );
+                  },
+                ).toList(),
+              ),
+            )
+          : <RoomId, List<Message>>{};
+    }
+
+    return _pending;
+  }
+
+  static Future<void> _setPending(Map<RoomId, List<Message>> value) async {
+    (await _prefs).setString(
+      _pendingNotificationsKey,
+      json.encode(
+        value.map(
+          (key, value) => MapEntry(
+            key.toString(),
+            value
+                .map(
+                  (m) => m.toMap(),
+                )
+                .toList(),
+          ),
+        ),
+      ),
+    );
+
+    _pending = value;
+  }
+
   StreamSubscription _authSubscription;
   StreamSubscription _receivePortSubscription;
 
@@ -57,7 +135,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   /// This port is used purely to detect whether there's another isolate.
   ///
-  /// If there is, the background handler will not save it's sync.
+  /// If there is, the background handler will sync.
   static const _sendPortName = 'notifications';
 
   final _receivePort = ReceivePort();
@@ -149,12 +227,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     final room = _matrix.user.rooms[blocEvent.roomId];
 
-    for (final event in room.timeline.reversed) {
-      plugin.cancel(event.id.hashCode);
-      if (event.id == blocEvent.until) {
-        break;
-      }
-    }
+    await _setPending({
+      ...await _getPending(),
+      ...{blocEvent.roomId: []}
+    });
+
+    plugin.cancel(room.id.hashCode);
   }
 
   Future<void> _setPusher(MyUser user) async {
@@ -194,7 +272,15 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     return _plugin;
   }
 
-  static Message _eventToMessage(RoomEvent event, Person person) {
+  static Message _dataToMessage(NotificationData data) {
+    final event = data.event;
+    final person = Person(
+      bot: false,
+      name: data.senderName,
+      icon: data.senderAvatarPath,
+      iconSource: IconSource.FilePath,
+    );
+
     if (event is EmoteMessageEvent) {
       return Message(
         '${person.name} ${event.content.body}',
@@ -231,25 +317,36 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     final plugin = await NotificationsBloc._getPlugin();
 
-    final senderPerson = Person(
-      bot: false,
-      name: data.senderName,
-      icon: data.senderAvatarPath,
-      iconSource: IconSource.FilePath,
-    );
-
     if (data.event is MessageEvent) {
-      final message = _eventToMessage(data.event, senderPerson);
+      final pending = await _getPending();
 
-      if (message == null) {
+      var messages = [_dataToMessage(data)];
+
+      if (pending.isNotEmpty && pending.containsKey(data.roomId)) {
+        messages = [...pending[data.roomId], ...messages];
+      }
+
+      messages = messages.where((m) => m != null).toList();
+
+      if (messages.isEmpty) {
         return;
       }
 
+      _setPending(
+        {
+          ...pending,
+          ...{
+            data.roomId: messages,
+          }
+        },
+      );
+
       Future<void> show({@required bool isGroupSummary}) async {
         await plugin.show(
-          isGroupSummary ? data.roomId.hashCode : data.event.id.hashCode,
+          // TODO: Don't hardcode app id
+          isGroupSummary ? 'im.pattle.app'.hashCode : data.roomId.hashCode,
           data.chatName,
-          message.text,
+          messages.last.text,
           NotificationDetails(
             AndroidNotificationDetails(
               _channelId,
@@ -260,13 +357,13 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
               enableVibration: true,
               playSound: true,
               style: AndroidNotificationStyle.Messaging,
-              groupKey: data.roomId.toString(),
+              groupKey: 'im.pattle.app',
               setAsGroupSummary: isGroupSummary,
               styleInformation: MessagingStyleInformation(
-                senderPerson,
+                messages.last.person,
                 conversationTitle: !data.isDirect ? await data.chatName : null,
                 groupConversation: !data.isDirect,
-                messages: [message],
+                messages: messages,
               ),
             ),
             IOSNotificationDetails(),
