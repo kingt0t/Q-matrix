@@ -1,5 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'base.dart';
 
 class DummyService implements MessagingService {
