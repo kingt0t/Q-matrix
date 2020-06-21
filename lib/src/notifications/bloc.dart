@@ -27,8 +27,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
-import 'package:pattle/src/notifications/service/base.dart';
-import 'package:pattle/src/notifications/service/dummy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/chat.dart';
@@ -38,6 +36,9 @@ import '../auth/bloc.dart';
 import '../matrix.dart';
 
 import '../util/url.dart';
+
+import 'service/base.dart';
+import 'service/dummy.dart';
 
 import 'event.dart';
 import 'service/firebase.dart';
