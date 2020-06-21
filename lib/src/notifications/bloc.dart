@@ -39,9 +39,9 @@ import '../util/url.dart';
 
 import 'service/base.dart';
 import 'service/dummy.dart';
+import 'service/firebase.dart';
 
 import 'event.dart';
-import 'service/firebase.dart';
 import 'state.dart';
 
 export 'event.dart';
