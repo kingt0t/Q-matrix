@@ -117,11 +117,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         value.map(
           (key, value) => MapEntry(
             key.toString(),
-            value
-                .map(
-                  (m) => m.toMap(),
-                )
-                .toList(),
+            value.map((m) => m.toMap()).toList(),
           ),
         ),
       ),
