@@ -21,13 +21,14 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:matrix_sdk/matrix_sdk.dart';
+import 'package:pattle/src/notifications/service/base.dart';
+import 'package:pattle/src/notifications/service/dummy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/chat.dart';
@@ -39,6 +40,7 @@ import '../matrix.dart';
 import '../util/url.dart';
 
 import 'event.dart';
+import 'service/firebase.dart';
 import 'state.dart';
 
 export 'event.dart';
@@ -47,6 +49,8 @@ export 'state.dart';
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   final Matrix _matrix;
   final AuthBloc _authBloc;
+
+  MessagingService _service;
 
   // Static because it's also needed in the background
   static SharedPreferences __prefs;
@@ -176,8 +180,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     _authSubscription = _authBloc.listen((authState) async {
       if (authState is Authenticated) {
-        FirebaseMessaging()
-          ..configure(
+        _service = FirebaseService()
+          ..initialize(
             onMessage: (message) async {
               final dataMessage = DataMessage.fromJson(message);
               if (dataMessage.roomId == _hiddenRoomId) {
@@ -238,17 +242,19 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   Future<void> _setPusher(MyUser user) async {
     await DotEnv().load();
 
-    await user.pushers.set(
-      HttpPusher(
-        appId: 'im.pattle.app',
-        appName: 'Pattle',
-        deviceName: user.currentDevice.name,
-        key: await FirebaseMessaging().getToken(),
-        url: Uri.parse(
-          DotEnv().env['PUSH_URL'],
+    if (_service is! DummyService) {
+      await user.pushers.set(
+        HttpPusher(
+          appId: 'im.pattle.app',
+          appName: 'Pattle',
+          deviceName: user.currentDevice.name,
+          key: await _service.token,
+          url: Uri.parse(
+            DotEnv().env['PUSH_URL'],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override
