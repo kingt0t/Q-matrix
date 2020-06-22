@@ -109,11 +109,13 @@ class InputBloc extends Bloc<InputEvent, InputState> {
   }
 
   Future<void> _sendImage(File file) async {
-    final message = ImageMessage(
-      url: Uri.file(file.path),
-      body: file.path.split(Platform.pathSeparator).last,
-    );
+    if (file != null) {
+      final message = ImageMessage(
+        url: Uri.file(file.path),
+        body: file.path.split(Platform.pathSeparator).last,
+      );
 
-    _room.send(message).forEach((_) {});
+      _room.send(message).forEach((_) {});
+    }
   }
 }

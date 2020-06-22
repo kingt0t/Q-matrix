@@ -59,8 +59,8 @@ class _PictureContentState extends State<PictureContent> {
 
     var height = 0, width = 0;
     if (event is ImageMessageEvent) {
-      height = event.content.info?.height;
-      width = event.content.info?.width;
+      height = event.content.info?.height ?? 0;
+      width = event.content.info?.width ?? 0;
 
       _uri = event.content.url;
       _isVideo = false;
