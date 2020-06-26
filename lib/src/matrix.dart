@@ -134,7 +134,7 @@ class Matrix {
         chats: _chats,
         // TODO: Add toMap in SDK
         delta: Map.fromEntries(
-          update.delta.rooms.map((room) => MapEntry(room.id, room)),
+          update.delta.rooms?.map((room) => MapEntry(room.id, room)) ?? [],
         ),
         type: update is RequestUpdate ? update.type : null,
       ),
