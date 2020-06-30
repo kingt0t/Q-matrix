@@ -1,4 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
+// Copyright (C) 2020  Cyril Dutrieux  <cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //
@@ -47,14 +48,7 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
   Stream<ChatOrderState> mapEventToState(ChatOrderEvent event) async* {
     if (event is UpdateChatOrder) {
       Map<RoomId, SortData> set(List<Chat> chats, String key) {
-        var map = chats.toSortData();
-
-        final current = key == _personalKey ? state.personal : state.public;
-
-        map = {
-          ...current,
-          ...map,
-        }.sorted;
+        var map = chats.toSortData().sorted;
 
         _preferences.setString(
           key,
