@@ -1,4 +1,5 @@
 // Copyright (C) 2020  Wilko Manger
+// Copyright (C) 2020  Cyril Dutrieux <cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //
@@ -69,6 +70,32 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
         );
 
         return map;
+      }
+
+      yield ChatOrderState(
+        personal: set(event.personal, _personalKey),
+        public: set(event.public, _publicKey),
+      );
+    }
+    if (event is RemoveChats) {
+      Map<RoomId, SortData> set(List<Chat> chats, String key) {
+        final current = key == _personalKey ? state.personal : state.public;
+        for (var chat in chats) {
+          current.remove(chat.room.id);
+        }
+        _preferences.setString(
+          key,
+          json.encode(
+            current.map(
+              (key, value) => MapEntry(
+                key.toString(),
+                value.toJson(),
+              ),
+            ),
+          ),
+        );
+
+        return current;
       }
 
       yield ChatOrderState(
