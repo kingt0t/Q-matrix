@@ -1,5 +1,4 @@
 // Copyright (C) 2020  Wilko Manger
-// Copyright (C) 2020  Cyril Dutrieux <cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //
@@ -123,18 +122,10 @@ class Matrix {
       wasTimelineLoad: requestType == RequestType.loadRoomEvents,
     );
 
-    final notChannels = _chats.values.notChannels.toList();
-    final channels = _chats.values.channels.toList();
-    _chatOrderBloc.add(
-      RemoveChats(
-        personal: channels,
-        public: notChannels,
-      ),
-    );
     _chatOrderBloc.add(
       UpdateChatOrder(
-        personal: notChannels,
-        public: channels,
+        personal: _chats.values.notChannels.toList(),
+        public: _chats.values.channels.toList(),
       ),
     );
 

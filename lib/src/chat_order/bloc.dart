@@ -47,10 +47,17 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
   @override
   Stream<ChatOrderState> mapEventToState(ChatOrderEvent event) async* {
     if (event is UpdateChatOrder) {
-      Map<RoomId, SortData> set(List<Chat> chats, String key) {
-        var map = chats.toSortData();
+      Map<RoomId, SortData> remove(
+          List<Chat> chats, Map<RoomId, SortData> current) {
+        for (var chat in chats) {
+          current.remove(chat.room.id);
+        }
+        return current;
+      }
 
-        final current = key == _personalKey ? state.personal : state.public;
+      Map<RoomId, SortData> set(
+          List<Chat> chats, Map<RoomId, SortData> current, String key) {
+        var map = chats.toSortData();
 
         map = {
           ...current,
@@ -72,35 +79,12 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
         return map;
       }
 
-      yield ChatOrderState(
-        personal: set(event.personal, _personalKey),
-        public: set(event.public, _publicKey),
-      );
-    }
-    if (event is RemoveChats) {
-      Map<RoomId, SortData> set(List<Chat> chats, String key) {
-        final current = key == _personalKey ? state.personal : state.public;
-        for (var chat in chats) {
-          current.remove(chat.room.id);
-        }
-        _preferences.setString(
-          key,
-          json.encode(
-            current.map(
-              (key, value) => MapEntry(
-                key.toString(),
-                value.toJson(),
-              ),
-            ),
-          ),
-        );
-
-        return current;
-      }
+      final stateChatsPersonal = remove(event.public, state.personal);
+      final stateChatsPublic = remove(event.personal, state.public);
 
       yield ChatOrderState(
-        personal: set(event.personal, _personalKey),
-        public: set(event.public, _publicKey),
+        personal: set(event.personal, stateChatsPersonal, _personalKey),
+        public: set(event.public, stateChatsPublic, _publicKey),
       );
     }
   }

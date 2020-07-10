@@ -1,5 +1,4 @@
 // Copyright (C) 2020  Wilko Manger
-// Copyright (C) 2020  Cyril Dutrieux <cyril@cdutrieux.fr>
 //
 // This file is part of Pattle.
 //
@@ -25,27 +24,13 @@ abstract class ChatOrderEvent extends Equatable {
   List<Object> get props => [];
 }
 
-abstract class ChatCategoryEvent extends ChatOrderEvent {
+class UpdateChatOrder extends ChatOrderEvent {
   final List<Chat> personal;
   final List<Chat> public;
 
-  ChatCategoryEvent({
+  UpdateChatOrder({
     List<Chat> personal,
     List<Chat> public,
   })  : personal = personal ?? [],
         public = public ?? [];
-}
-
-class UpdateChatOrder extends ChatCategoryEvent {
-  UpdateChatOrder({
-    List<Chat> personal,
-    List<Chat> public,
-  }) : super(personal: personal, public: public);
-}
-
-class RemoveChats extends ChatCategoryEvent {
-  RemoveChats({
-    List<Chat> personal,
-    List<Chat> public,
-  }) : super(personal: personal, public: public);
 }
