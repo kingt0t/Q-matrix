@@ -47,21 +47,21 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
   @override
   Stream<ChatOrderState> mapEventToState(ChatOrderEvent event) async* {
     if (event is UpdateChatOrder) {
-      Map<RoomId, SortData> remove(
-          List<Chat> chats, Map<RoomId, SortData> current) {
-        for (var chat in chats) {
-          current.remove(chat.room.id);
-        }
-        return current;
-      }
-
       Map<RoomId, SortData> set(
-          List<Chat> chats, Map<RoomId, SortData> current, String key) {
-        var map = chats.toSortData();
+        List<Chat> chats,
+        List<Chat> outdatedChats,
+        String key,
+      ) {
+        var current = key == _personalKey ? state.personal : state.public;
+        var map = <RoomId, SortData>{...current};
+
+        for (var chat in outdatedChats) {
+          map.remove(chat.room.id);
+        }
 
         map = {
-          ...current,
           ...map,
+          ...chats.toSortData(),
         }.sorted;
 
         _preferences.setString(
@@ -79,12 +79,9 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
         return map;
       }
 
-      final stateChatsPersonal = remove(event.public, state.personal);
-      final stateChatsPublic = remove(event.personal, state.public);
-
       yield ChatOrderState(
-        personal: set(event.personal, stateChatsPersonal, _personalKey),
-        public: set(event.public, stateChatsPublic, _publicKey),
+        personal: set(event.personal, event.public, _personalKey),
+        public: set(event.public, event.personal, _publicKey),
       );
     }
   }
