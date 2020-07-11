@@ -52,22 +52,22 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
         List<Chat> outdatedChats,
         String key,
       ) {
-        var current = key == _personalKey ? state.personal : state.public;
-        var map = <RoomId, SortData>{...current};
+        var current = Map<RoomId, SortData>.from(
+            key == _personalKey ? state.personal : state.public);
 
         for (var chat in outdatedChats) {
-          map.remove(chat.room.id);
+          current.remove(chat.room.id);
         }
 
-        map = {
-          ...map,
+        current = {
+          ...current,
           ...chats.toSortData(),
         }.sorted;
 
         _preferences.setString(
           key,
           json.encode(
-            map.map(
+            current.map(
               (key, value) => MapEntry(
                 key.toString(),
                 value.toJson(),
@@ -76,7 +76,7 @@ class ChatOrderBloc extends Bloc<ChatOrderEvent, ChatOrderState> {
           ),
         );
 
-        return map;
+        return current;
       }
 
       yield ChatOrderState(
