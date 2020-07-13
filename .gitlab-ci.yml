@@ -61,7 +61,7 @@ analyze:
 #      - pattle.apk
 #    expire_in: 1 week
 
-build_debug:
+build debug:
   stage: build
   image: cirrusci/flutter:beta
   only:
@@ -69,8 +69,6 @@ build_debug:
   tags:
     - docker
   script:
-    - cd /home/cirrus/sdks/flutter && git remote add origin https://github.com/flutter/flutter
-    - flutter channel beta
     - flutter upgrade
     - flutter build apk --debug --flavor standard
 
