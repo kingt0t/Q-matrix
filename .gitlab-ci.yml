@@ -70,6 +70,7 @@ build debug:
     - docker
   script:
     - cd /home/cirrus/sdks/flutter && git checkout stable
+    - cd -
     - flutter upgrade
     - flutter build apk --debug --flavor standard
 
