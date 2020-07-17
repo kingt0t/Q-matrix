@@ -61,18 +61,18 @@ analyze:
 #      - pattle.apk
 #    expire_in: 1 week
 
-build debug:
-  stage: build
-  image: cirrusci/flutter:beta
-  only:
-    - merge_requests
-  tags:
-    - docker
-  script:
-    - cd /home/cirrus/sdks/flutter && git checkout stable
-    - cd -
-    - flutter upgrade
-    - flutter build apk --debug --flavor fdroid
+#build debug:
+#  stage: build
+#  image: cirrusci/flutter:beta
+#  only:
+#    - merge_requests
+#  tags:
+#    - docker
+#  script:
+#    - cd /home/cirrus/sdks/flutter && git checkout stable
+#    - cd -
+#    - flutter upgrade
+#    - flutter build apk --debug --flavor fdroid
 
 release:
   stage: release
