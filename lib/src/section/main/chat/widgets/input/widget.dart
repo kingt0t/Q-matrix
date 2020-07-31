@@ -162,7 +162,7 @@ class InputState extends State<Input> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     const elevation = 8.0;
-    _textController.theme =  context.pattleTheme.data.markdown;
+    _textController.theme = context.pattleTheme.data.markdown;
 
     if (widget.canSendMessages) {
       return Material(

@@ -104,8 +104,9 @@ class InputBloc extends Bloc<InputEvent, InputState> {
       escaped
        */
       final formatted = markdownToHtml(
-          text.replaceAllMapped(RegExp(r'(\\)([+-]\s+)'), (m) => '\\${m[2]}'),
-          extensionSet: ExtensionSet.commonMark,);
+        text.replaceAllMapped(RegExp(r'(\\)([+-]\s+)'), (m) => '\\${m[2]}'),
+        extensionSet: ExtensionSet.commonMark,
+      );
       _room
           .send(
             TextMessage(
